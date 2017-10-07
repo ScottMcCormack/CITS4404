@@ -25,111 +25,116 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 """
 
-#Import Required Modules--------------
+# Import Required Modules--------------
 from eLCS_Constants import cons
-#-------------------------------------
 
-class OutputFileManager:     
+
+# -------------------------------------
+
+class OutputFileManager:
     def writePopStats(self, outFile, trainEval, testEval, exploreIter, pop, correct):
         """ Makes output text file which includes all of the evaluation statistics for a complete analysis of all training and testing data on the current eLCS rule population. """
-        try:  
-            popStatsOut = open(outFile + '_'+ str(exploreIter)+'_PopStats.txt','w') 
+        try:
+            popStatsOut = open(outFile + '_' + str(exploreIter) + '_PopStats.txt', 'w')
         except Exception as inst:
             print(type(inst))
             print(inst.args)
             print(inst)
-            print('cannot open', outFile + '_'+ str(exploreIter)+'_PopStats.txt')
-            raise 
+            print('cannot open', outFile + '_' + str(exploreIter) + '_PopStats.txt')
+            raise
         else:
             print("Writing Population Statistical Summary File...")
 
-        #Evaluation of pop
-        popStatsOut.write("Performance Statistics:------------------------------------------------------------------------\n")
+        # Evaluation of pop
+        popStatsOut.write(
+            "Performance Statistics:------------------------------------------------------------------------\n")
         popStatsOut.write("Training Accuracy\tTesting Accuracy\tTraining Coverage\tTesting Coverage\n")
-        
+
         if cons.testFile != 'None':
-            popStatsOut.write(str(trainEval[0])+"\t")
-            popStatsOut.write(str(testEval[0])+"\t")
-            popStatsOut.write(str(trainEval[1]) +"\t")
-            popStatsOut.write(str(testEval[1])+"\n\n") 
+            popStatsOut.write(str(trainEval[0]) + "\t")
+            popStatsOut.write(str(testEval[0]) + "\t")
+            popStatsOut.write(str(trainEval[1]) + "\t")
+            popStatsOut.write(str(testEval[1]) + "\n\n")
         elif cons.trainFile != 'None':
-            popStatsOut.write(str(trainEval[0])+"\t")
+            popStatsOut.write(str(trainEval[0]) + "\t")
             popStatsOut.write("NA\t")
-            popStatsOut.write(str(trainEval[1]) +"\t")
+            popStatsOut.write(str(trainEval[1]) + "\t")
             popStatsOut.write("NA\n\n")
         else:
             popStatsOut.write("NA\t")
             popStatsOut.write("NA\t")
             popStatsOut.write("NA\t")
             popStatsOut.write("NA\n\n")
-        
-        popStatsOut.write("Population Characterization:------------------------------------------------------------------------\n")  
-        popStatsOut.write("MacroPopSize\tMicroPopSize\tGenerality\n") 
-        popStatsOut.write(str(len(pop.popSet))+"\t"+ str(pop.microPopSize)+"\t"+str(pop.aveGenerality)+"\n\n")
 
-        popStatsOut.write("SpecificitySum:------------------------------------------------------------------------\n")       
-        headList = cons.env.formatData.trainHeaderList #preserve order of original dataset
+        popStatsOut.write(
+            "Population Characterization:------------------------------------------------------------------------\n")
+        popStatsOut.write("MacroPopSize\tMicroPopSize\tGenerality\n")
+        popStatsOut.write(str(len(pop.popSet)) + "\t" + str(pop.microPopSize) + "\t" + str(pop.aveGenerality) + "\n\n")
 
-        for i in range(len(headList)): 
-            if i < len(headList)-1:
-                popStatsOut.write(str(headList[i])+"\t")
+        popStatsOut.write("SpecificitySum:------------------------------------------------------------------------\n")
+        headList = cons.env.formatData.trainHeaderList  # preserve order of original dataset
+
+        for i in range(len(headList)):
+            if i < len(headList) - 1:
+                popStatsOut.write(str(headList[i]) + "\t")
             else:
-                popStatsOut.write(str(headList[i])+"\n")
-                
+                popStatsOut.write(str(headList[i]) + "\n")
+
         # Prints out the Specification Sum for each attribute 
         for i in range(len(pop.attributeSpecList)):
-            if i < len(pop.attributeSpecList)-1:
-                popStatsOut.write(str(pop.attributeSpecList[i])+"\t")
+            if i < len(pop.attributeSpecList) - 1:
+                popStatsOut.write(str(pop.attributeSpecList[i]) + "\t")
             else:
-                popStatsOut.write(str(pop.attributeSpecList[i])+"\n")  
-                      
+                popStatsOut.write(str(pop.attributeSpecList[i]) + "\n")
+
         popStatsOut.write("\nAccuracySum:------------------------------------------------------------------------\n")
-        for i in range(len(headList)): 
-            if i < len(headList)-1:
-                popStatsOut.write(str(headList[i])+"\t")
+        for i in range(len(headList)):
+            if i < len(headList) - 1:
+                popStatsOut.write(str(headList[i]) + "\t")
             else:
-                popStatsOut.write(str(headList[i])+"\n")
-                
+                popStatsOut.write(str(headList[i]) + "\n")
+
         # Prints out the Accuracy Weighted Specification Count for each attribute 
         for i in range(len(pop.attributeAccList)):
-            if i < len(pop.attributeAccList)-1:
-                popStatsOut.write(str(pop.attributeAccList[i])+"\t")
+            if i < len(pop.attributeAccList) - 1:
+                popStatsOut.write(str(pop.attributeAccList[i]) + "\t")
             else:
-                popStatsOut.write(str(pop.attributeAccList[i])+"\n")    
-                  
-        #Time Track ---------------------------------------------------------------------------------------------------------     
-        popStatsOut.write("\nRun Time(in minutes):------------------------------------------------------------------------\n") 
+                popStatsOut.write(str(pop.attributeAccList[i]) + "\n")
+
+                # Time Track ---------------------------------------------------------------------------------------------------------
+        popStatsOut.write(
+            "\nRun Time(in minutes):------------------------------------------------------------------------\n")
         popStatsOut.write(cons.timer.reportTimes())
-        popStatsOut.write("\nCorrectTrackerSave:------------------------------------------------------------------------\n")
+        popStatsOut.write(
+            "\nCorrectTrackerSave:------------------------------------------------------------------------\n")
         for i in range(len(correct)):
-            popStatsOut.write(str(correct[i])+"\t")
-                
+            popStatsOut.write(str(correct[i]) + "\t")
+
         popStatsOut.close()
-        
-            
+
     def writePop(self, outFile, exploreIter, pop):
         """ Writes a tab delimited text file outputting the entire evolved rule population, including conditions, phenotypes, and all rule parameters. """
-        try:  
-            rulePopOut = open(outFile + '_'+ str(exploreIter)+'_RulePop.txt','w') 
+        try:
+            rulePopOut = open(outFile + '_' + str(exploreIter) + '_RulePop.txt', 'w')
         except Exception as inst:
             print(type(inst))
             print(inst.args)
             print(inst)
-            print('cannot open', outFile + '_'+ str(exploreIter)+'_RulePop.txt')
-            raise 
+            print('cannot open', outFile + '_' + str(exploreIter) + '_RulePop.txt')
+            raise
         else:
             print("Writing Population as Data File...")
 
-        #Write Header-----------------------------------------------------------------------------------------------------------------------------------------------
+        # Write Header-----------------------------------------------------------------------------------------------------------------------------------------------
         dataLink = cons.env.formatData
         headList = dataLink.trainHeaderList
-        for i in range(len(headList)):   
-            rulePopOut.write(str(headList[i])+"\t")
-        rulePopOut.write("Phenotype\tFitness\tAccuracy\tNumerosity\tAveMatchSetSize\tTimeStampGA\tInitTimeStamp\tSpecificity\tDeletionProb\tCorrectCount\tMatchCount\n")
+        for i in range(len(headList)):
+            rulePopOut.write(str(headList[i]) + "\t")
+        rulePopOut.write(
+            "Phenotype\tFitness\tAccuracy\tNumerosity\tAveMatchSetSize\tTimeStampGA\tInitTimeStamp\tSpecificity\tDeletionProb\tCorrectCount\tMatchCount\n")
 
-        #Write each classifier--------------------------------------------------------------------------------------------------------------------------------------
+        # Write each classifier--------------------------------------------------------------------------------------------------------------------------------------
         for cl in pop.popSet:
-            rulePopOut.write(str(cl.printClassifier())) 
+            rulePopOut.write(str(cl.printClassifier()))
 
-        rulePopOut.close()   
-        
+        rulePopOut.close()

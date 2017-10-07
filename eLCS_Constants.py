@@ -23,6 +23,7 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 """
 import os
 
+
 class Constants:
     def setConstants(self, par):
         """ Takes the parameters parsed as a dictionary from eLCS_ConfigParser and saves them as global constants. """
@@ -33,8 +34,8 @@ class Constants:
         # Major Run Parameters -----------------------------------------------------------------------------------------
         self.trainFile = os.path.join(self.datasetPath, par['trainFile'])  # Saved as text
         self.testFile = par['testFile']  # Saved as text
-        self.originalOutFileName = os.path.join(self.outputPath ,str(par['outFileName']))  # Saved as text
-        self.outFileName = os.path.join(self.outputPath , str(par['outFileName']) + '_eLCS')  # Saved as text
+        self.originalOutFileName = os.path.join(self.outputPath, str(par['outFileName']))  # Saved as text
+        self.outFileName = os.path.join(self.outputPath, str(par['outFileName']) + '_eLCS')  # Saved as text
         self.learningIterations = par['learningIterations']  # Saved as text
         self.N = int(par['N'])  # Saved as integer
         self.p_spec = float(par['p_spec'])  # Saved as float

@@ -22,18 +22,19 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 """
 
-#Import Required Modules----------
+# Import Required Modules----------
 from eLCS_Constants import cons
-#---------------------------------
+
+
+# ---------------------------------
 
 class ConfigParser:
     def __init__(self, filename):
         self.commentChar = '#'
-        self.paramChar =  '='
-        self.parameters = self.parseConfig(filename) #Parse the configuration file and get all parameters.
-        cons.setConstants(self.parameters) #Store run parameters in the 'Constants' module.
-        
- 
+        self.paramChar = '='
+        self.parameters = self.parseConfig(filename)  # Parse the configuration file and get all parameters.
+        cons.setConstants(self.parameters)  # Store run parameters in the 'Constants' module.
+
     def parseConfig(self, filename):
         """ Parses the configuration file. """
         parameters = {}
@@ -44,22 +45,21 @@ class ConfigParser:
             print(inst.args)
             print(inst)
             print('cannot open', filename)
-            raise 
+            raise
         else:
             for line in f:
-                #Remove text after comment character.
+                # Remove text after comment character.
                 if self.commentChar in line:
-                    line, comment = line.split(self.commentChar, 1) #Split on comment character, keep only the text before the character
-                    
-                #Find lines with parameters (param=something)
+                    line, comment = line.split(self.commentChar,
+                                               1)  # Split on comment character, keep only the text before the character
+
+                # Find lines with parameters (param=something)
                 if self.paramChar in line:
-                    parameter, value = line.split(self.paramChar, 1) #Split on parameter character
-                    parameter = parameter.strip() #Strip spaces
+                    parameter, value = line.split(self.paramChar, 1)  # Split on parameter character
+                    parameter = parameter.strip()  # Strip spaces
                     value = value.strip()
-                    parameters[parameter] = value #Store parameters in a dictionary
-                    
+                    parameters[parameter] = value  # Store parameters in a dictionary
+
             f.close()
-        
+
         return parameters
-    
-    
