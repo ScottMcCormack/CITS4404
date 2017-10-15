@@ -103,5 +103,6 @@ ENV/
 Local_Output/
 
 docs/build/**
-!docs/source/README.md
+!docs/build/README.md
+
 docs/source/_templates/
