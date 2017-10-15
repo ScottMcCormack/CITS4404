@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>module package &#8212; CITS4404-G1 1.0 documentation</title>
+    <title>eLCS package &#8212; CITS4404-G1 1.0 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -38,10 +38,940 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="module-package">
-<h1>module package<a class="headerlink" href="#module-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="elcs-package">
+<h1>eLCS package<a class="headerlink" href="#elcs-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-eLCS.Algorithm">
+<span id="elcs-algorithm-module"></span><h2>eLCS.Algorithm module<a class="headerlink" href="#module-eLCS.Algorithm" title="Permalink to this headline">¶</a></h2>
+<p>Name:        eLCS_Algorithm.py
+Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA
+Contact:     <a class="reference external" href="mailto:ryan&#46;j&#46;urbanowicz&#37;&#52;&#48;darmouth&#46;edu">ryan<span>&#46;</span>j<span>&#46;</span>urbanowicz<span>&#64;</span>darmouth<span>&#46;</span>edu</a>
+Created:     November 1, 2013
+Description: The major controlling module of eLCS.  Includes the major run loop which controls learning over a specified number of iterations.  Also includes</p>
+<blockquote>
+<div>periodic tracking of estimated performance, and checkpoints where complete evaluations of the eLCS rule population is performed.</div></blockquote>
+<p>algorithm published by Stewart Wilson (1995).</p>
+<p>Copyright (C) 2013 Ryan Urbanowicz 
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
+Free Software Foundation; either version 3 of the License, or (at your option) any later version.</p>
+<p>This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY 
+or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</p>
+<p>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 
+Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+———————————————————————————————————————————————————</p>
+<dl class="class">
+<dt id="eLCS.Algorithm.eLCS">
+<em class="property">class </em><code class="descclassname">eLCS.Algorithm.</code><code class="descname">eLCS</code><a class="reference internal" href="_modules/eLCS/Algorithm.html#eLCS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Algorithm.eLCS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="eLCS.Algorithm.eLCS.doContPopEvaluation">
+<code class="descname">doContPopEvaluation</code><span class="sig-paren">(</span><em>isTrain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Algorithm.html#eLCS.doContPopEvaluation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Algorithm.eLCS.doContPopEvaluation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs evaluation of population via the copied environment. Specifically developed for continuous phenotype evaulation.  
+The population is maintained unchanging throughout the evaluation.  Works on both training and testing data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Algorithm.eLCS.doPopEvaluation">
+<code class="descname">doPopEvaluation</code><span class="sig-paren">(</span><em>isTrain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Algorithm.html#eLCS.doPopEvaluation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Algorithm.eLCS.doPopEvaluation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs a complete evaluation of the current rule population.  The population is unchanged throughout this evaluation. Works on both training and testing data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Algorithm.eLCS.populationReboot">
+<code class="descname">populationReboot</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Algorithm.html#eLCS.populationReboot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Algorithm.eLCS.populationReboot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Manages the reformation of a previously saved eLCS classifier population.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Algorithm.eLCS.runIteration">
+<code class="descname">runIteration</code><span class="sig-paren">(</span><em>state_phenotype</em>, <em>exploreIter</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Algorithm.html#eLCS.runIteration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Algorithm.eLCS.runIteration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run a single eLCS learning iteration.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Algorithm.eLCS.run_eLCS">
+<code class="descname">run_eLCS</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Algorithm.html#eLCS.run_eLCS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Algorithm.eLCS.run_eLCS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs the initialized eLCS algorithm.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-eLCS.ClassAccuracy">
+<span id="elcs-classaccuracy-module"></span><h2>eLCS.ClassAccuracy module<a class="headerlink" href="#module-eLCS.ClassAccuracy" title="Permalink to this headline">¶</a></h2>
+<p>Name:        eLCS_ClassAccuracy.py
+Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA
+Contact:     <a class="reference external" href="mailto:ryan&#46;j&#46;urbanowicz&#37;&#52;&#48;darmouth&#46;edu">ryan<span>&#46;</span>j<span>&#46;</span>urbanowicz<span>&#64;</span>darmouth<span>&#46;</span>edu</a>
+Created:     November 1, 2013
+Description: Manages the logistical aspects of balance accuracy calculations which can handle unbalanced datasets, and/or datasets with multiple discrete classes.</p>
+<p>algorithm published by Stewart Wilson (1995).</p>
+<p>Copyright (C) 2013 Ryan Urbanowicz 
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
+Free Software Foundation; either version 3 of the License, or (at your option) any later version.</p>
+<p>This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY 
+or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</p>
+<p>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 
+Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+———————————————————————————————————————————————————</p>
+<dl class="class">
+<dt id="eLCS.ClassAccuracy.ClassAccuracy">
+<em class="property">class </em><code class="descclassname">eLCS.ClassAccuracy.</code><code class="descname">ClassAccuracy</code><a class="reference internal" href="_modules/eLCS/ClassAccuracy.html#ClassAccuracy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassAccuracy.ClassAccuracy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="eLCS.ClassAccuracy.ClassAccuracy.reportClassAccuracy">
+<code class="descname">reportClassAccuracy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassAccuracy.html#ClassAccuracy.reportClassAccuracy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassAccuracy.ClassAccuracy.reportClassAccuracy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print to standard out, summary on the class accuracy.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.ClassAccuracy.ClassAccuracy.updateAccuracy">
+<code class="descname">updateAccuracy</code><span class="sig-paren">(</span><em>thisIsMe</em>, <em>accurateClass</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassAccuracy.html#ClassAccuracy.updateAccuracy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassAccuracy.ClassAccuracy.updateAccuracy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increment the appropriate cell of the confusion matrix</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-eLCS.Classifier">
+<span id="elcs-classifier-module"></span><h2>eLCS.Classifier module<a class="headerlink" href="#module-eLCS.Classifier" title="Permalink to this headline">¶</a></h2>
+<p>Name:        eLCS_Classifier.py
+Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA
+Contact:     <a class="reference external" href="mailto:ryan&#46;j&#46;urbanowicz&#37;&#52;&#48;darmouth&#46;edu">ryan<span>&#46;</span>j<span>&#46;</span>urbanowicz<span>&#64;</span>darmouth<span>&#46;</span>edu</a>
+Created:     November 1, 2013
+Description: This module defines an individual classifier within the rule population, along with all respective parameters.</p>
+<blockquote>
+<div>Also included are classifier-level methods, including constructors(covering, copy, reboot) matching, subsumption, 
+crossover, and mutation.  Parameter update methods are also included.</div></blockquote>
+<p>algorithm published by Stewart Wilson (1995).</p>
+<p>Copyright (C) 2013 Ryan Urbanowicz 
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
+Free Software Foundation; either version 3 of the License, or (at your option) any later version.</p>
+<p>This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY 
+or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</p>
+<p>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 
+Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+———————————————————————————————————————————————————</p>
+<dl class="class">
+<dt id="eLCS.Classifier.Classifier">
+<em class="property">class </em><code class="descclassname">eLCS.Classifier.</code><code class="descname">Classifier</code><span class="sig-paren">(</span><em>a=None</em>, <em>b=None</em>, <em>c=None</em>, <em>d=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Classifier.html#Classifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Classifier.Classifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="eLCS.Classifier.Classifier.Mutation">
+<code class="descname">Mutation</code><span class="sig-paren">(</span><em>state</em>, <em>phenotype</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Classifier.html#Classifier.Mutation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Classifier.Classifier.Mutation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mutates the condition of the classifier. Also handles phenotype mutation. This is a niche mutation, which means that the resulting classifier will still match the current instance.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Classifier.Classifier.buildMatch">
+<code class="descname">buildMatch</code><span class="sig-paren">(</span><em>attRef</em>, <em>state</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Classifier.html#Classifier.buildMatch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Classifier.Classifier.buildMatch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds a matching condition for the classifierCovering method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Classifier.Classifier.classifierCopy">
+<code class="descname">classifierCopy</code><span class="sig-paren">(</span><em>clOld</em>, <em>exploreIter</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Classifier.html#Classifier.classifierCopy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Classifier.Classifier.classifierCopy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs an identical Classifier.  However, the experience of the copy is set to 0 and the numerosity 
+is set to 1 since this is indeed a new individual in a population. Used by the genetic algorithm to generate 
+offspring based on parent classifiers.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Classifier.Classifier.classifierCovering">
+<code class="descname">classifierCovering</code><span class="sig-paren">(</span><em>setSize</em>, <em>exploreIter</em>, <em>state</em>, <em>phenotype</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Classifier.html#Classifier.classifierCovering"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Classifier.Classifier.classifierCovering" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes a new classifier when the covering mechanism is triggered.  The new classifier will match the current training instance. 
+Covering will NOT produce a default rule (i.e. a rule with a completely general condition).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Classifier.Classifier.continuousPhenotypeMutation">
+<code class="descname">continuousPhenotypeMutation</code><span class="sig-paren">(</span><em>phenotype</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Classifier.html#Classifier.continuousPhenotypeMutation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Classifier.Classifier.continuousPhenotypeMutation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mutate this rule’s continuous phenotype.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Classifier.Classifier.discretePhenotypeMutation">
+<code class="descname">discretePhenotypeMutation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Classifier.html#Classifier.discretePhenotypeMutation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Classifier.Classifier.discretePhenotypeMutation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mutate this rule’s discrete phenotype.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Classifier.Classifier.equals">
+<code class="descname">equals</code><span class="sig-paren">(</span><em>cl</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Classifier.html#Classifier.equals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Classifier.Classifier.equals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns if the two classifiers are identical in condition and phenotype. This works for discrete or continuous attributes or phenotypes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Classifier.Classifier.getDelProp">
+<code class="descname">getDelProp</code><span class="sig-paren">(</span><em>meanFitness</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Classifier.html#Classifier.getDelProp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Classifier.Classifier.getDelProp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the vote for deletion of the classifier.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Classifier.Classifier.isMoreGeneral">
+<code class="descname">isMoreGeneral</code><span class="sig-paren">(</span><em>cl</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Classifier.html#Classifier.isMoreGeneral"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Classifier.Classifier.isMoreGeneral" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns if the classifier (self) is more general than cl. Check that all attributes specified in self are also specified in cl.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Classifier.Classifier.isSubsumer">
+<code class="descname">isSubsumer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Classifier.html#Classifier.isSubsumer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Classifier.Classifier.isSubsumer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns if the classifier (self) is a possible subsumer. A classifier must be as or more accurate than the classifier it is trying to subsume.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Classifier.Classifier.match">
+<code class="descname">match</code><span class="sig-paren">(</span><em>state</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Classifier.html#Classifier.match"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Classifier.Classifier.match" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns if the classifier matches in the current situation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Classifier.Classifier.phenotypeCrossover">
+<code class="descname">phenotypeCrossover</code><span class="sig-paren">(</span><em>cl</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Classifier.html#Classifier.phenotypeCrossover"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Classifier.Classifier.phenotypeCrossover" title="Permalink to this definition">¶</a></dt>
+<dd><p>Crossover a continuous phenotype</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Classifier.Classifier.printClassifier">
+<code class="descname">printClassifier</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Classifier.html#Classifier.printClassifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Classifier.Classifier.printClassifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Formats and returns an output string describing this classifier.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Classifier.Classifier.rebootClassifier">
+<code class="descname">rebootClassifier</code><span class="sig-paren">(</span><em>classifierList</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Classifier.html#Classifier.rebootClassifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Classifier.Classifier.rebootClassifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rebuilds a saved classifier as part of the population Reboot</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Classifier.Classifier.setAccuracy">
+<code class="descname">setAccuracy</code><span class="sig-paren">(</span><em>acc</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Classifier.html#Classifier.setAccuracy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Classifier.Classifier.setAccuracy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the accuracy of the classifier</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Classifier.Classifier.setFitness">
+<code class="descname">setFitness</code><span class="sig-paren">(</span><em>fit</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Classifier.html#Classifier.setFitness"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Classifier.Classifier.setFitness" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the fitness of the classifier.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Classifier.Classifier.subsumes">
+<code class="descname">subsumes</code><span class="sig-paren">(</span><em>cl</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Classifier.html#Classifier.subsumes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Classifier.Classifier.subsumes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns if the classifier (self) subsumes cl</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Classifier.Classifier.uniformCrossover">
+<code class="descname">uniformCrossover</code><span class="sig-paren">(</span><em>cl</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Classifier.html#Classifier.uniformCrossover"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Classifier.Classifier.uniformCrossover" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies uniform crossover and returns if the classifiers changed. Handles both discrete and continuous attributes.  
+#SWARTZ: self. is where for the better attributes are more likely to be specified
+#DEVITO: cl. is where less useful attribute are more likely to be specified</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Classifier.Classifier.updateAccuracy">
+<code class="descname">updateAccuracy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Classifier.html#Classifier.updateAccuracy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Classifier.Classifier.updateAccuracy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the accuracy tracker</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Classifier.Classifier.updateCorrect">
+<code class="descname">updateCorrect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Classifier.html#Classifier.updateCorrect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Classifier.Classifier.updateCorrect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increases the correct phenotype tracking by one. Once an epoch has completed, rule accuracy can’t change.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Classifier.Classifier.updateExperience">
+<code class="descname">updateExperience</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Classifier.html#Classifier.updateExperience"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Classifier.Classifier.updateExperience" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increases the experience of the classifier by one. Once an epoch has completed, rule accuracy can’t change.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Classifier.Classifier.updateFitness">
+<code class="descname">updateFitness</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Classifier.html#Classifier.updateFitness"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Classifier.Classifier.updateFitness" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the fitness parameter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Classifier.Classifier.updateMatchSetSize">
+<code class="descname">updateMatchSetSize</code><span class="sig-paren">(</span><em>matchSetSize</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Classifier.html#Classifier.updateMatchSetSize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Classifier.Classifier.updateMatchSetSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the average match set size.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Classifier.Classifier.updateNumerosity">
+<code class="descname">updateNumerosity</code><span class="sig-paren">(</span><em>num</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Classifier.html#Classifier.updateNumerosity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Classifier.Classifier.updateNumerosity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the numberosity of the classifier.  Notice that ‘num’ can be negative!</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Classifier.Classifier.updateTimeStamp">
+<code class="descname">updateTimeStamp</code><span class="sig-paren">(</span><em>ts</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Classifier.html#Classifier.updateTimeStamp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Classifier.Classifier.updateTimeStamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the time stamp of the classifier.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-eLCS.ClassifierSet">
+<span id="elcs-classifierset-module"></span><h2>eLCS.ClassifierSet module<a class="headerlink" href="#module-eLCS.ClassifierSet" title="Permalink to this headline">¶</a></h2>
+<p>Name:        eLCS_ClassifierSet.py
+Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA
+Contact:     <a class="reference external" href="mailto:ryan&#46;j&#46;urbanowicz&#37;&#52;&#48;darmouth&#46;edu">ryan<span>&#46;</span>j<span>&#46;</span>urbanowicz<span>&#64;</span>darmouth<span>&#46;</span>edu</a>
+Created:     November 1, 2013
+Description: This module handles all classifier sets (population, match set, correct set) along with mechanisms and heuristics that act on these sets.</p>
+<p>algorithm published by Stewart Wilson (1995).</p>
+<p>Copyright (C) 2013 Ryan Urbanowicz 
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
+Free Software Foundation; either version 3 of the License, or (at your option) any later version.</p>
+<p>This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY 
+or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</p>
+<p>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 
+Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+———————————————————————————————————————————————————</p>
+<dl class="class">
+<dt id="eLCS.ClassifierSet.ClassifierSet">
+<em class="property">class </em><code class="descclassname">eLCS.ClassifierSet.</code><code class="descname">ClassifierSet</code><span class="sig-paren">(</span><em>a=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="eLCS.ClassifierSet.ClassifierSet.addClassifierToPopulation">
+<code class="descname">addClassifierToPopulation</code><span class="sig-paren">(</span><em>cl</em>, <em>covering</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.addClassifierToPopulation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.addClassifierToPopulation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a classifier to the set and increases the microPopSize value accordingly.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.ClassifierSet.ClassifierSet.clearSets">
+<code class="descname">clearSets</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.clearSets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.clearSets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears out references in the match and correct sets for the next learning iteration.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.ClassifierSet.ClassifierSet.deleteFromCorrectSet">
+<code class="descname">deleteFromCorrectSet</code><span class="sig-paren">(</span><em>deleteRef</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.deleteFromCorrectSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.deleteFromCorrectSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete reference to classifier in population, contained in self.corectSet.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.ClassifierSet.ClassifierSet.deleteFromMatchSet">
+<code class="descname">deleteFromMatchSet</code><span class="sig-paren">(</span><em>deleteRef</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.deleteFromMatchSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.deleteFromMatchSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete reference to classifier in population, contained in self.matchSet.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.ClassifierSet.ClassifierSet.deleteFromPopulation">
+<code class="descname">deleteFromPopulation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.deleteFromPopulation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.deleteFromPopulation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes one classifier in the population.  The classifier that will be deleted is chosen by roulette wheel selection
+considering the deletion vote. Returns the macro-classifier which got decreased by one micro-classifier.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.ClassifierSet.ClassifierSet.deletion">
+<code class="descname">deletion</code><span class="sig-paren">(</span><em>exploreIter</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.deletion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.deletion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the population size back to the maximum set by the user by deleting rules.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.ClassifierSet.ClassifierSet.doCorrectSetSubsumption">
+<code class="descname">doCorrectSetSubsumption</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.doCorrectSetSubsumption"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.doCorrectSetSubsumption" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executes correct set subsumption.  The correct set subsumption looks for the most general subsumer classifier in the correct set
+and subsumes all classifiers that are more specific than the selected one.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.ClassifierSet.ClassifierSet.getFitnessSum">
+<code class="descname">getFitnessSum</code><span class="sig-paren">(</span><em>setList</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.getFitnessSum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.getFitnessSum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the sum of the fitnesses of all classifiers in the set.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.ClassifierSet.ClassifierSet.getIdenticalClassifier">
+<code class="descname">getIdenticalClassifier</code><span class="sig-paren">(</span><em>newCl</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.getIdenticalClassifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.getIdenticalClassifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Looks for an identical classifier in the population.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.ClassifierSet.ClassifierSet.getIterStampAverage">
+<code class="descname">getIterStampAverage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.getIterStampAverage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.getIterStampAverage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the average of the time stamps in the correct set.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.ClassifierSet.ClassifierSet.getPopFitnessSum">
+<code class="descname">getPopFitnessSum</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.getPopFitnessSum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.getPopFitnessSum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the sum of the fitnesses of all classifiers in the set.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.ClassifierSet.ClassifierSet.getPopTrack">
+<code class="descname">getPopTrack</code><span class="sig-paren">(</span><em>accuracy</em>, <em>exploreIter</em>, <em>trackingFrequency</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.getPopTrack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.getPopTrack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a formated output string to be printed to the Learn Track output file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.ClassifierSet.ClassifierSet.insertDiscoveredClassifiers">
+<code class="descname">insertDiscoveredClassifiers</code><span class="sig-paren">(</span><em>cl1</em>, <em>cl2</em>, <em>clP1</em>, <em>clP2</em>, <em>exploreIter</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.insertDiscoveredClassifiers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.insertDiscoveredClassifiers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inserts both discovered classifiers and activates GA subsumption if turned on. Also checks for default rule (i.e. rule with completely general condition) and 
+prevents such rules from being added to the population, as it offers no predictive value within eLCS.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.ClassifierSet.ClassifierSet.makeCorrectSet">
+<code class="descname">makeCorrectSet</code><span class="sig-paren">(</span><em>phenotype</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.makeCorrectSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.makeCorrectSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a correct set out of the given match set.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.ClassifierSet.ClassifierSet.makeEvalMatchSet">
+<code class="descname">makeEvalMatchSet</code><span class="sig-paren">(</span><em>state</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.makeEvalMatchSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.makeEvalMatchSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a match set for evaluation purposes which does not activate either covering or deletion.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.ClassifierSet.ClassifierSet.makeMatchSet">
+<code class="descname">makeMatchSet</code><span class="sig-paren">(</span><em>state_phenotype</em>, <em>exploreIter</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.makeMatchSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.makeMatchSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a match set from the population. Covering is initiated if the match set is empty or a rule with the current correct phenotype is absent.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.ClassifierSet.ClassifierSet.makePop">
+<code class="descname">makePop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.makePop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.makePop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes the rule population</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.ClassifierSet.ClassifierSet.rebootPop">
+<code class="descname">rebootPop</code><span class="sig-paren">(</span><em>remakeFile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.rebootPop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.rebootPop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remakes a previously evolved population from a saved text file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.ClassifierSet.ClassifierSet.removeMacroClassifier">
+<code class="descname">removeMacroClassifier</code><span class="sig-paren">(</span><em>ref</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.removeMacroClassifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.removeMacroClassifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes the specified (macro-) classifier from the population.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.ClassifierSet.ClassifierSet.runAttGeneralitySum">
+<code class="descname">runAttGeneralitySum</code><span class="sig-paren">(</span><em>isEvaluationSummary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.runAttGeneralitySum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.runAttGeneralitySum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine the population-wide frequency of attribute specification, and accuracy weighted specification.  Used in complete rule population evaluations.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.ClassifierSet.ClassifierSet.runGA">
+<code class="descname">runGA</code><span class="sig-paren">(</span><em>exploreIter</em>, <em>state</em>, <em>phenotype</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.runGA"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.runGA" title="Permalink to this definition">¶</a></dt>
+<dd><p>The genetic discovery mechanism in eLCS is controlled here.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.ClassifierSet.ClassifierSet.runPopAveEval">
+<code class="descname">runPopAveEval</code><span class="sig-paren">(</span><em>exploreIter</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.runPopAveEval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.runPopAveEval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates some summary evaluations across the rule population including average generality.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.ClassifierSet.ClassifierSet.selectClassifierRW">
+<code class="descname">selectClassifierRW</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.selectClassifierRW"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.selectClassifierRW" title="Permalink to this definition">¶</a></dt>
+<dd><p>Selects parents using roulette wheel selection according to the fitness of the classifiers.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.ClassifierSet.ClassifierSet.selectClassifierT">
+<code class="descname">selectClassifierT</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.selectClassifierT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.selectClassifierT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Selects parents using tournament selection according to the fitness of the classifiers.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.ClassifierSet.ClassifierSet.setIterStamps">
+<code class="descname">setIterStamps</code><span class="sig-paren">(</span><em>exploreIter</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.setIterStamps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.setIterStamps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the time stamp of all classifiers in the set to the current time. The current time
+is the number of exploration steps executed so far.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.ClassifierSet.ClassifierSet.subsumeClassifier">
+<code class="descname">subsumeClassifier</code><span class="sig-paren">(</span><em>cl=None</em>, <em>cl1P=None</em>, <em>cl2P=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.subsumeClassifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.subsumeClassifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tries to subsume a classifier in the parents. If no subsumption is possible it tries to subsume it in the current set.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.ClassifierSet.ClassifierSet.subsumeClassifier2">
+<code class="descname">subsumeClassifier2</code><span class="sig-paren">(</span><em>cl</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.subsumeClassifier2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.subsumeClassifier2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tries to subsume a classifier in the correct set. If no subsumption is possible the classifier is simply added to the population considering
+the possibility that there exists an identical classifier.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.ClassifierSet.ClassifierSet.updateSets">
+<code class="descname">updateSets</code><span class="sig-paren">(</span><em>exploreIter</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.updateSets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.updateSets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates all relevant parameters in the current match and correct sets.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-eLCS.ConfigParser">
+<span id="elcs-configparser-module"></span><h2>eLCS.ConfigParser module<a class="headerlink" href="#module-eLCS.ConfigParser" title="Permalink to this headline">¶</a></h2>
+<p>Name:        eLCS_ConfigPars.py
+Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA
+Contact:     <a class="reference external" href="mailto:ryan&#46;j&#46;urbanowicz&#37;&#52;&#48;darmouth&#46;edu">ryan<span>&#46;</span>j<span>&#46;</span>urbanowicz<span>&#64;</span>darmouth<span>&#46;</span>edu</a>
+Created:     November 1, 2013
+Description: Manages the configuration file, by loading it, parsing it and passing values to the ‘Constants’ module.</p>
+<p>algorithm published by Stewart Wilson (1995).</p>
+<p>Copyright (C) 2013 Ryan Urbanowicz 
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
+Free Software Foundation; either version 3 of the License, or (at your option) any later version.</p>
+<p>This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY 
+or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</p>
+<p>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 
+Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+———————————————————————————————————————————————————</p>
+<dl class="class">
+<dt id="eLCS.ConfigParser.ConfigParser">
+<em class="property">class </em><code class="descclassname">eLCS.ConfigParser.</code><code class="descname">ConfigParser</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ConfigParser.html#ConfigParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ConfigParser.ConfigParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This class docstring shows how to use sphinx and rst syntax</p>
+<p>The first line is brief explanation, which may be completed with
+a longer one. For instance to discuss about its methods. The only
+method here is <code class="xref py py-func docutils literal"><span class="pre">function1()</span></code>’s. The main idea is to document
+the class and methods’s arguments with</p>
+<ul>
+<li><p class="first"><strong>parameters</strong>, <strong>types</strong>, <strong>return</strong> and <strong>return types</strong>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="p">:</span><span class="n">param</span> <span class="n">arg1</span><span class="p">:</span> <span class="n">description</span>
+<span class="p">:</span><span class="n">param</span> <span class="n">arg2</span><span class="p">:</span> <span class="n">description</span>
+<span class="p">:</span><span class="nb">type</span> <span class="n">arg1</span><span class="p">:</span> <span class="nb">type</span> <span class="n">description</span>
+<span class="p">:</span><span class="nb">type</span> <span class="n">arg1</span><span class="p">:</span> <span class="nb">type</span> <span class="n">description</span>
+<span class="p">:</span><span class="k">return</span><span class="p">:</span> <span class="k">return</span> <span class="n">description</span>
+<span class="p">:</span><span class="n">rtype</span><span class="p">:</span> <span class="n">the</span> <span class="k">return</span> <span class="nb">type</span> <span class="n">description</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">and to provide sections such as <strong>Example</strong> using the double commas syntax:</p>
+<div class="highlight-default"><div class="highlight"><pre>:Example:
+
+followed by a blank line !
+</pre></div>
+</div>
+<p>which appears as follow:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>followed by a blank line</p>
+</li>
+<li><p class="first">Finally special sections such as <strong>See Also</strong>, <strong>Warnings</strong>, <strong>Notes</strong>
+use the sphinx syntax (<em>paragraph directives</em>):</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">..</span> <span class="n">seealso</span><span class="p">::</span> <span class="n">blabla</span>
+<span class="o">..</span> <span class="n">warnings</span> <span class="n">also</span><span class="p">::</span> <span class="n">blabla</span>
+<span class="o">..</span> <span class="n">note</span><span class="p">::</span> <span class="n">blabla</span>
+<span class="o">..</span> <span class="n">todo</span><span class="p">::</span> <span class="n">blabla</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<dl class="last docutils">
+<dt>There are many other Info fields but they may be redundant:</dt>
+<dd><ul class="first last simple">
+<li>param, parameter, arg, argument, key, keyword: Description of a
+parameter.</li>
+<li>type: Type of a parameter.</li>
+<li>raises, raise, except, exception: That (and when) a specific
+exception is raised.</li>
+<li>var, ivar, cvar: Description of a variable.</li>
+<li>returns, return: Description of the return value.</li>
+<li>rtype: Return type.</li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">There are many other directives such as versionadded, versionchanged,
+rubric, centered, … See the sphinx documentation for more details.</p>
+</div>
+<p>Here below is the results of the <code class="xref py py-func docutils literal"><span class="pre">function1()</span></code> docstring.</p>
+<dl class="method">
+<dt id="eLCS.ConfigParser.ConfigParser.parseConfig">
+<code class="descname">parseConfig</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ConfigParser.html#ConfigParser.parseConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ConfigParser.ConfigParser.parseConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses the configuration file.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-eLCS.Constants">
+<span id="elcs-constants-module"></span><h2>eLCS.Constants module<a class="headerlink" href="#module-eLCS.Constants" title="Permalink to this headline">¶</a></h2>
+<p>Name:        eLCS_Constants.py
+Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA
+Contact:     <a class="reference external" href="mailto:ryan&#46;j&#46;urbanowicz&#37;&#52;&#48;darmouth&#46;edu">ryan<span>&#46;</span>j<span>&#46;</span>urbanowicz<span>&#64;</span>darmouth<span>&#46;</span>edu</a>
+Created:     November 1, 2013
+Description: Stores and manages all algorithm run parameters, making them accessible anywhere in the rest of the algorithm code by (cons.) .</p>
+<p>algorithm published by Stewart Wilson (1995).</p>
+<p>Copyright (C) 2013 Ryan Urbanowicz 
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
+Free Software Foundation; either version 3 of the License, or (at your option) any later version.</p>
+<p>This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY 
+or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</p>
+<p>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 
+Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+———————————————————————————————————————————————————</p>
+<dl class="class">
+<dt id="eLCS.Constants.Constants">
+<em class="property">class </em><code class="descclassname">eLCS.Constants.</code><code class="descname">Constants</code><a class="reference internal" href="_modules/eLCS/Constants.html#Constants"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Constants.Constants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="eLCS.Constants.Constants.parseIterations">
+<code class="descname">parseIterations</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Constants.html#Constants.parseIterations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Constants.Constants.parseIterations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse the ‘learningIterations’ string to identify the maximum number of learning iterations as well as evaluation checkpoints.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Constants.Constants.referenceEnv">
+<code class="descname">referenceEnv</code><span class="sig-paren">(</span><em>e</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Constants.html#Constants.referenceEnv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Constants.Constants.referenceEnv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store reference to environment object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Constants.Constants.referenceTimer">
+<code class="descname">referenceTimer</code><span class="sig-paren">(</span><em>timer</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Constants.html#Constants.referenceTimer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Constants.Constants.referenceTimer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store reference to the timer object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Constants.Constants.setConstants">
+<code class="descname">setConstants</code><span class="sig-paren">(</span><em>par</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Constants.html#Constants.setConstants"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Constants.Constants.setConstants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes the parameters parsed as a dictionary from eLCS_ConfigParser and saves them as global constants.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-eLCS.DataManagement">
+<span id="elcs-datamanagement-module"></span><h2>eLCS.DataManagement module<a class="headerlink" href="#module-eLCS.DataManagement" title="Permalink to this headline">¶</a></h2>
+<p>Name:        eLCS_DataManagement.py
+Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA
+Contact:     <a class="reference external" href="mailto:ryan&#46;j&#46;urbanowicz&#37;&#52;&#48;darmouth&#46;edu">ryan<span>&#46;</span>j<span>&#46;</span>urbanowicz<span>&#64;</span>darmouth<span>&#46;</span>edu</a>
+Created:     November 1, 2013
+Description: Able to manage both training and testing data.  This module loads the dataset, detects and characterizes all attributes in the dataset,</p>
+<blockquote>
+<div>handles missing data, and finally formats the data so that it may be conveniently utilized by eLCS.</div></blockquote>
+<p>algorithm published by Stewart Wilson (1995).</p>
+<p>Copyright (C) 2013 Ryan Urbanowicz 
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
+Free Software Foundation; either version 3 of the License, or (at your option) any later version.</p>
+<p>This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY 
+or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</p>
+<p>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 
+Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+———————————————————————————————————————————————————</p>
+<dl class="class">
+<dt id="eLCS.DataManagement.DataManagement">
+<em class="property">class </em><code class="descclassname">eLCS.DataManagement.</code><code class="descname">DataManagement</code><span class="sig-paren">(</span><em>trainFile</em>, <em>testFile</em>, <em>infoList=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/DataManagement.html#DataManagement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.DataManagement.DataManagement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="eLCS.DataManagement.DataManagement.characterizeAttributes">
+<code class="descname">characterizeAttributes</code><span class="sig-paren">(</span><em>rawData</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/DataManagement.html#DataManagement.characterizeAttributes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.DataManagement.DataManagement.characterizeAttributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine range (if continuous) or states (if discrete) for each attribute and saves this information</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.DataManagement.DataManagement.characterizeDataset">
+<code class="descname">characterizeDataset</code><span class="sig-paren">(</span><em>rawTrainData</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/DataManagement.html#DataManagement.characterizeDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.DataManagement.DataManagement.characterizeDataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detect basic dataset parameters</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.DataManagement.DataManagement.characterizePhenotype">
+<code class="descname">characterizePhenotype</code><span class="sig-paren">(</span><em>rawData</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/DataManagement.html#DataManagement.characterizePhenotype"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.DataManagement.DataManagement.characterizePhenotype" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine range of phenotype values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.DataManagement.DataManagement.compareDataset">
+<code class="descname">compareDataset</code><span class="sig-paren">(</span><em>rawTestData</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/DataManagement.html#DataManagement.compareDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.DataManagement.DataManagement.compareDataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensures that the attributes in the testing data match those in the training data.  Also stores some information about the testing data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.DataManagement.DataManagement.discriminateAttributes">
+<code class="descname">discriminateAttributes</code><span class="sig-paren">(</span><em>rawData</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/DataManagement.html#DataManagement.discriminateAttributes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.DataManagement.DataManagement.discriminateAttributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine whether attributes in dataset are discrete or continuous and saves this information.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.DataManagement.DataManagement.discriminateClasses">
+<code class="descname">discriminateClasses</code><span class="sig-paren">(</span><em>rawData</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/DataManagement.html#DataManagement.discriminateClasses"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.DataManagement.DataManagement.discriminateClasses" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines number of classes and their identifiers. Only used if phenotype is discrete.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.DataManagement.DataManagement.discriminatePhenotype">
+<code class="descname">discriminatePhenotype</code><span class="sig-paren">(</span><em>rawData</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/DataManagement.html#DataManagement.discriminatePhenotype"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.DataManagement.DataManagement.discriminatePhenotype" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine whether the phenotype is Discrete(class-based) or Continuous</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.DataManagement.DataManagement.formatData">
+<code class="descname">formatData</code><span class="sig-paren">(</span><em>rawData</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/DataManagement.html#DataManagement.formatData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.DataManagement.DataManagement.formatData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the data into a format convenient for the algorithm to interact with. Specifically each instance is stored in a list as follows; [Attribute States, Phenotype, InstanceID]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.DataManagement.DataManagement.loadData">
+<code class="descname">loadData</code><span class="sig-paren">(</span><em>dataFile</em>, <em>doTrain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/DataManagement.html#DataManagement.loadData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.DataManagement.DataManagement.loadData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the data file.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-eLCS.OfflineEnvironment">
+<span id="elcs-offlineenvironment-module"></span><h2>eLCS.OfflineEnvironment module<a class="headerlink" href="#module-eLCS.OfflineEnvironment" title="Permalink to this headline">¶</a></h2>
+<p>Name:        eLCS_Offline_Environment.py
+Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA
+Contact:     <a class="reference external" href="mailto:ryan&#46;j&#46;urbanowicz&#37;&#52;&#48;darmouth&#46;edu">ryan<span>&#46;</span>j<span>&#46;</span>urbanowicz<span>&#64;</span>darmouth<span>&#46;</span>edu</a>
+Created:     November 1, 2013
+Description: In the context of data mining and classification tasks, the environment is a data set with a limited number of instances with X attributes</p>
+<blockquote>
+<div>and some endpoint (typically a discrete phenotype or class) of interest.  This module loads the data set, automatically detects features of the data.</div></blockquote>
+<p>algorithm published by Stewart Wilson (1995).</p>
+<p>Copyright (C) 2013 Ryan Urbanowicz 
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
+Free Software Foundation; either version 3 of the License, or (at your option) any later version.</p>
+<p>This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY 
+or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</p>
+<p>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 
+Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+———————————————————————————————————————————————————</p>
+<dl class="class">
+<dt id="eLCS.OfflineEnvironment.OfflineEnvironment">
+<em class="property">class </em><code class="descclassname">eLCS.OfflineEnvironment.</code><code class="descname">OfflineEnvironment</code><a class="reference internal" href="_modules/eLCS/OfflineEnvironment.html#OfflineEnvironment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.OfflineEnvironment.OfflineEnvironment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="eLCS.OfflineEnvironment.OfflineEnvironment.getTestInstance">
+<code class="descname">getTestInstance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/OfflineEnvironment.html#OfflineEnvironment.getTestInstance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.OfflineEnvironment.OfflineEnvironment.getTestInstance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the current training instance.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.OfflineEnvironment.OfflineEnvironment.getTrainInstance">
+<code class="descname">getTrainInstance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/OfflineEnvironment.html#OfflineEnvironment.getTrainInstance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.OfflineEnvironment.OfflineEnvironment.getTrainInstance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the current training instance.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.OfflineEnvironment.OfflineEnvironment.newInstance">
+<code class="descname">newInstance</code><span class="sig-paren">(</span><em>isTraining</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/OfflineEnvironment.html#OfflineEnvironment.newInstance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.OfflineEnvironment.OfflineEnvironment.newInstance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shifts the environment to the next instance in the data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.OfflineEnvironment.OfflineEnvironment.resetDataRef">
+<code class="descname">resetDataRef</code><span class="sig-paren">(</span><em>isTraining</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/OfflineEnvironment.html#OfflineEnvironment.resetDataRef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.OfflineEnvironment.OfflineEnvironment.resetDataRef" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets the environment back to the first instance in the current data set.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.OfflineEnvironment.OfflineEnvironment.startEvaluationMode">
+<code class="descname">startEvaluationMode</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/OfflineEnvironment.html#OfflineEnvironment.startEvaluationMode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.OfflineEnvironment.OfflineEnvironment.startEvaluationMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Turns on evaluation mode.  Saves the instance we left off in the training data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.OfflineEnvironment.OfflineEnvironment.stopEvaluationMode">
+<code class="descname">stopEvaluationMode</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/OfflineEnvironment.html#OfflineEnvironment.stopEvaluationMode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.OfflineEnvironment.OfflineEnvironment.stopEvaluationMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Turns off evaluation mode.  Re-establishes place in dataset.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-eLCS.OutputFileManager">
+<span id="elcs-outputfilemanager-module"></span><h2>eLCS.OutputFileManager module<a class="headerlink" href="#module-eLCS.OutputFileManager" title="Permalink to this headline">¶</a></h2>
+<p>Name:        eLCS_OutputFileManager.py
+Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA
+Contact:     <a class="reference external" href="mailto:ryan&#46;j&#46;urbanowicz&#37;&#52;&#48;darmouth&#46;edu">ryan<span>&#46;</span>j<span>&#46;</span>urbanowicz<span>&#64;</span>darmouth<span>&#46;</span>edu</a>
+Created:     November 1, 2013
+Description: This module contains the methods for generating the different output files generated by eLCS.</p>
+<blockquote>
+<div>These files are generated at each learning checkpoint, and the last iteration.  These include…
+writePopStats:   Summary of the population statistics
+writePop:        Outputs a snapshot of the entire rule population including classifier conditions, classes, and parameters.</div></blockquote>
+<p>algorithm published by Stewart Wilson (1995).</p>
+<p>Copyright (C) 2013 Ryan Urbanowicz 
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
+Free Software Foundation; either version 3 of the License, or (at your option) any later version.</p>
+<p>This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY 
+or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</p>
+<p>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 
+Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+———————————————————————————————————————————————————</p>
+<dl class="class">
+<dt id="eLCS.OutputFileManager.OutputFileManager">
+<em class="property">class </em><code class="descclassname">eLCS.OutputFileManager.</code><code class="descname">OutputFileManager</code><a class="reference internal" href="_modules/eLCS/OutputFileManager.html#OutputFileManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.OutputFileManager.OutputFileManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="eLCS.OutputFileManager.OutputFileManager.writePop">
+<code class="descname">writePop</code><span class="sig-paren">(</span><em>outFile</em>, <em>exploreIter</em>, <em>pop</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/OutputFileManager.html#OutputFileManager.writePop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.OutputFileManager.OutputFileManager.writePop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes a tab delimited text file outputting the entire evolved rule population, including conditions, phenotypes, and all rule parameters.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.OutputFileManager.OutputFileManager.writePopStats">
+<code class="descname">writePopStats</code><span class="sig-paren">(</span><em>outFile</em>, <em>trainEval</em>, <em>testEval</em>, <em>exploreIter</em>, <em>pop</em>, <em>correct</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/OutputFileManager.html#OutputFileManager.writePopStats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.OutputFileManager.OutputFileManager.writePopStats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes output text file which includes all of the evaluation statistics for a complete analysis of all training and testing data on the current eLCS rule population.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-eLCS.Prediction">
+<span id="elcs-prediction-module"></span><h2>eLCS.Prediction module<a class="headerlink" href="#module-eLCS.Prediction" title="Permalink to this headline">¶</a></h2>
+<p>Name:        eLCS_Prediction.py
+Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA
+Contact:     <a class="reference external" href="mailto:ryan&#46;j&#46;urbanowicz&#37;&#52;&#48;darmouth&#46;edu">ryan<span>&#46;</span>j<span>&#46;</span>urbanowicz<span>&#64;</span>darmouth<span>&#46;</span>edu</a>
+Created:     November 1, 2013
+Description: Given a match set, this module uses a voting scheme to select the phenotype prediction.  Set up to handle both discrete and continuous phenotypes.</p>
+<blockquote>
+<div>Also set up to try and handle prediction ties if possible.</div></blockquote>
+<p>algorithm published by Stewart Wilson (1995).</p>
+<p>Copyright (C) 2013 Ryan Urbanowicz 
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
+Free Software Foundation; either version 3 of the License, or (at your option) any later version.</p>
+<p>This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY 
+or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</p>
+<p>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 
+Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+———————————————————————————————————————————————————</p>
+<dl class="class">
+<dt id="eLCS.Prediction.Prediction">
+<em class="property">class </em><code class="descclassname">eLCS.Prediction.</code><code class="descname">Prediction</code><span class="sig-paren">(</span><em>population</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Prediction.html#Prediction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Prediction.Prediction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="eLCS.Prediction.Prediction.getDecision">
+<code class="descname">getDecision</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Prediction.html#Prediction.getDecision"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Prediction.Prediction.getDecision" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns prediction decision.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Prediction.Prediction.getFitnessSum">
+<code class="descname">getFitnessSum</code><span class="sig-paren">(</span><em>population</em>, <em>low</em>, <em>high</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Prediction.html#Prediction.getFitnessSum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Prediction.Prediction.getFitnessSum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the fitness sum of rules in the rule-set. For continuous phenotype prediction.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-eLCS.Timer">
+<span id="elcs-timer-module"></span><h2>eLCS.Timer module<a class="headerlink" href="#module-eLCS.Timer" title="Permalink to this headline">¶</a></h2>
+<p>Name:        eLCS_Timer.py
+Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA
+Contact:     <a class="reference external" href="mailto:ryan&#46;j&#46;urbanowicz&#37;&#52;&#48;darmouth&#46;edu">ryan<span>&#46;</span>j<span>&#46;</span>urbanowicz<span>&#64;</span>darmouth<span>&#46;</span>edu</a>
+Created:     November 1, 2013
+Description: Tracks and stores the run time of algorithm and some of it’s major components</p>
+<p>algorithm published by Stewart Wilson (1995).</p>
+<p>Copyright (C) 2013 Ryan Urbanowicz 
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
+Free Software Foundation; either version 3 of the License, or (at your option) any later version.</p>
+<p>This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY 
+or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</p>
+<p>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 
+Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+———————————————————————————————————————————————————</p>
+<dl class="class">
+<dt id="eLCS.Timer.Timer">
+<em class="property">class </em><code class="descclassname">eLCS.Timer.</code><code class="descname">Timer</code><a class="reference internal" href="_modules/eLCS/Timer.html#Timer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Timer.Timer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="eLCS.Timer.Timer.reportTimes">
+<code class="descname">reportTimes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Timer.html#Timer.reportTimes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Timer.Timer.reportTimes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reports the time summaries for this run. Returns a string ready to be printed out.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Timer.Timer.returnGlobalTimer">
+<code class="descname">returnGlobalTimer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Timer.html#Timer.returnGlobalTimer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Timer.Timer.returnGlobalTimer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the global end timer, call at very end of algorithm.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Timer.Timer.setTimerRestart">
+<code class="descname">setTimerRestart</code><span class="sig-paren">(</span><em>remakeFile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Timer.html#Timer.setTimerRestart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Timer.Timer.setTimerRestart" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets all time values to the those previously evolved in the loaded popFile.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Timer.Timer.startTimeDeletion">
+<code class="descname">startTimeDeletion</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Timer.html#Timer.startTimeDeletion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Timer.Timer.startTimeDeletion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tracks Deletion Time</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Timer.Timer.startTimeEvaluation">
+<code class="descname">startTimeEvaluation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Timer.html#Timer.startTimeEvaluation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Timer.Timer.startTimeEvaluation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tracks Evaluation Time</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Timer.Timer.startTimeMatching">
+<code class="descname">startTimeMatching</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Timer.html#Timer.startTimeMatching"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Timer.Timer.startTimeMatching" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tracks MatchSet Time</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Timer.Timer.startTimeSelection">
+<code class="descname">startTimeSelection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Timer.html#Timer.startTimeSelection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Timer.Timer.startTimeSelection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tracks Selection Time</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Timer.Timer.startTimeSubsumption">
+<code class="descname">startTimeSubsumption</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Timer.html#Timer.startTimeSubsumption"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Timer.Timer.startTimeSubsumption" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tracks Subsumption Time</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Timer.Timer.stopTimeDeletion">
+<code class="descname">stopTimeDeletion</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Timer.html#Timer.stopTimeDeletion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Timer.Timer.stopTimeDeletion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tracks Deletion Time</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Timer.Timer.stopTimeEvaluation">
+<code class="descname">stopTimeEvaluation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Timer.html#Timer.stopTimeEvaluation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Timer.Timer.stopTimeEvaluation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tracks Evaluation Time</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Timer.Timer.stopTimeMatching">
+<code class="descname">stopTimeMatching</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Timer.html#Timer.stopTimeMatching"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Timer.Timer.stopTimeMatching" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tracks MatchSet Time</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Timer.Timer.stopTimeSelection">
+<code class="descname">stopTimeSelection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Timer.html#Timer.stopTimeSelection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Timer.Timer.stopTimeSelection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tracks Selection Time</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Timer.Timer.stopTimeSubsumption">
+<code class="descname">stopTimeSubsumption</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Timer.html#Timer.stopTimeSubsumption"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Timer.Timer.stopTimeSubsumption" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tracks Subsumption Time</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-eLCS">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-eLCS" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
