@@ -102,4 +102,6 @@ ENV/
 .idea/
 Local_Output/
 
-docs/build
+docs/build/**
+!docs/source/README.md
+docs/source/_templates/
