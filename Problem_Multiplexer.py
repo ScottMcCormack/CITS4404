@@ -119,5 +119,5 @@ def solve_equation(num_bits):
 
 
 # generate_multiplexer_instance(37)
-generate_mulitplexer_data("Multiplexer_Data.txt", 20, 2000)
+# generate_mulitplexer_data("Multiplexer_Data.txt", 20, 2000)
 # generate_complete_multiplexer_data("Multiplexer_Data.txt",6)  #3,6,11,20, 37
