@@ -24,11 +24,11 @@ Inc., 51 Franklin Street, Fifth F   loor, Boston, MA 02110-1301 USA
 """
 
 # Import Required Modules------------------------------------
-from eLCS_Timer import Timer
-from eLCS_ConfigParser import ConfigParser
-from eLCS_Offline_Environment import Offline_Environment
-from eLCS_Algorithm import eLCS
-from eLCS_Constants import cons
+from eLCS.Timer import Timer
+from eLCS.ConfigParser import ConfigParser
+from eLCS.OfflineEnvironment import OfflineEnvironment
+from eLCS.Algorithm import eLCS
+from eLCS.Constants import cons
 
 # -----------------------------------------------------------
 
@@ -37,7 +37,7 @@ if __name__ == "__main__":
     helpstr = """Failed attempt to run e-LCS.  Please ensure that a configuration file giving all run parameters has been specified."""
 
     # Specify the name and file path for the configuration file.
-    configurationFile = "eLCS_Configuration_File.txt"
+    configurationFile = "config.txt"
 
     # Obtain all run parameters from the configuration file and store them in the 'Constants' module.
     ConfigParser(configurationFile)
@@ -47,9 +47,8 @@ if __name__ == "__main__":
     cons.referenceTimer(timer)
 
     # Initialize the 'Environment' module which manages the data presented to the algorithm.  While e-LCS learns iteratively (one inistance at a time
-    env = Offline_Environment()
-    cons.referenceEnv(
-        env)  # Passes the environment to 'Constants' (cons) so that it can be easily accessed from anywhere within the code.
+    env = OfflineEnvironment()
+    cons.referenceEnv(env)  # Passes the environment to 'Constants' (cons) so that it can be easily accessed from anywhere within the code.
     cons.parseIterations()  # Identify the maximum number of learning iterations as well as evaluation checkpoints.
 
     # Run the e-LCS algorithm.
