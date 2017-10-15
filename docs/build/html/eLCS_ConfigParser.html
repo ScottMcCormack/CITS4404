@@ -1,0 +1,191 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>eLCS_ConfigParser module &#8212; CITS4404-G1 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-eLCS_ConfigParser">
+<span id="elcs-configparser-module"></span><h1>eLCS_ConfigParser module<a class="headerlink" href="#module-eLCS_ConfigParser" title="Permalink to this headline">¶</a></h1>
+<p>Name:        eLCS_ConfigPars.py
+Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA
+Contact:     <a class="reference external" href="mailto:ryan&#46;j&#46;urbanowicz&#37;&#52;&#48;darmouth&#46;edu">ryan<span>&#46;</span>j<span>&#46;</span>urbanowicz<span>&#64;</span>darmouth<span>&#46;</span>edu</a>
+Created:     November 1, 2013
+Description: Manages the configuration file, by loading it, parsing it and passing values to the ‘Constants’ module.</p>
+<p>algorithm published by Stewart Wilson (1995).</p>
+<p>Copyright (C) 2013 Ryan Urbanowicz 
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
+Free Software Foundation; either version 3 of the License, or (at your option) any later version.</p>
+<p>This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY 
+or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</p>
+<p>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 
+Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+———————————————————————————————————————————————————</p>
+<dl class="class">
+<dt id="eLCS_ConfigParser.ConfigParser">
+<em class="property">class </em><code class="descclassname">eLCS_ConfigParser.</code><code class="descname">ConfigParser</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS_ConfigParser.html#ConfigParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS_ConfigParser.ConfigParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This class docstring shows how to use sphinx and rst syntax</p>
+<p>The first line is brief explanation, which may be completed with
+a longer one. For instance to discuss about its methods. The only
+method here is <code class="xref py py-func docutils literal"><span class="pre">function1()</span></code>’s. The main idea is to document
+the class and methods’s arguments with</p>
+<ul>
+<li><p class="first"><strong>parameters</strong>, <strong>types</strong>, <strong>return</strong> and <strong>return types</strong>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="p">:</span><span class="n">param</span> <span class="n">arg1</span><span class="p">:</span> <span class="n">description</span>
+<span class="p">:</span><span class="n">param</span> <span class="n">arg2</span><span class="p">:</span> <span class="n">description</span>
+<span class="p">:</span><span class="nb">type</span> <span class="n">arg1</span><span class="p">:</span> <span class="nb">type</span> <span class="n">description</span>
+<span class="p">:</span><span class="nb">type</span> <span class="n">arg1</span><span class="p">:</span> <span class="nb">type</span> <span class="n">description</span>
+<span class="p">:</span><span class="k">return</span><span class="p">:</span> <span class="k">return</span> <span class="n">description</span>
+<span class="p">:</span><span class="n">rtype</span><span class="p">:</span> <span class="n">the</span> <span class="k">return</span> <span class="nb">type</span> <span class="n">description</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">and to provide sections such as <strong>Example</strong> using the double commas syntax:</p>
+<div class="highlight-default"><div class="highlight"><pre>:Example:
+
+followed by a blank line !
+</pre></div>
+</div>
+<p>which appears as follow:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>followed by a blank line</p>
+</li>
+<li><p class="first">Finally special sections such as <strong>See Also</strong>, <strong>Warnings</strong>, <strong>Notes</strong>
+use the sphinx syntax (<em>paragraph directives</em>):</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">..</span> <span class="n">seealso</span><span class="p">::</span> <span class="n">blabla</span>
+<span class="o">..</span> <span class="n">warnings</span> <span class="n">also</span><span class="p">::</span> <span class="n">blabla</span>
+<span class="o">..</span> <span class="n">note</span><span class="p">::</span> <span class="n">blabla</span>
+<span class="o">..</span> <span class="n">todo</span><span class="p">::</span> <span class="n">blabla</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<dl class="last docutils">
+<dt>There are many other Info fields but they may be redundant:</dt>
+<dd><ul class="first last simple">
+<li>param, parameter, arg, argument, key, keyword: Description of a
+parameter.</li>
+<li>type: Type of a parameter.</li>
+<li>raises, raise, except, exception: That (and when) a specific
+exception is raised.</li>
+<li>var, ivar, cvar: Description of a variable.</li>
+<li>returns, return: Description of the return value.</li>
+<li>rtype: Return type.</li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">There are many other directives such as versionadded, versionchanged,
+rubric, centered, … See the sphinx documentation for more details.</p>
+</div>
+<p>Here below is the results of the <code class="xref py py-func docutils literal"><span class="pre">function1()</span></code> docstring.</p>
+<dl class="method">
+<dt id="eLCS_ConfigParser.ConfigParser.parseConfig">
+<code class="descname">parseConfig</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS_ConfigParser.html#ConfigParser.parseConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS_ConfigParser.ConfigParser.parseConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses the configuration file.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">CITS4404-G1</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Scott McCormack.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/eLCS_ConfigParser.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

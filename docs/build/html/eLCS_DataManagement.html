@@ -1,0 +1,175 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>eLCS_DataManagement module &#8212; CITS4404-G1 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-eLCS_DataManagement">
+<span id="elcs-datamanagement-module"></span><h1>eLCS_DataManagement module<a class="headerlink" href="#module-eLCS_DataManagement" title="Permalink to this headline">¶</a></h1>
+<p>Name:        eLCS_DataManagement.py
+Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA
+Contact:     <a class="reference external" href="mailto:ryan&#46;j&#46;urbanowicz&#37;&#52;&#48;darmouth&#46;edu">ryan<span>&#46;</span>j<span>&#46;</span>urbanowicz<span>&#64;</span>darmouth<span>&#46;</span>edu</a>
+Created:     November 1, 2013
+Description: Able to manage both training and testing data.  This module loads the dataset, detects and characterizes all attributes in the dataset,</p>
+<blockquote>
+<div>handles missing data, and finally formats the data so that it may be conveniently utilized by eLCS.</div></blockquote>
+<p>algorithm published by Stewart Wilson (1995).</p>
+<p>Copyright (C) 2013 Ryan Urbanowicz 
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
+Free Software Foundation; either version 3 of the License, or (at your option) any later version.</p>
+<p>This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY 
+or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</p>
+<p>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 
+Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+———————————————————————————————————————————————————</p>
+<dl class="class">
+<dt id="eLCS_DataManagement.DataManagement">
+<em class="property">class </em><code class="descclassname">eLCS_DataManagement.</code><code class="descname">DataManagement</code><span class="sig-paren">(</span><em>trainFile</em>, <em>testFile</em>, <em>infoList=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS_DataManagement.html#DataManagement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS_DataManagement.DataManagement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="eLCS_DataManagement.DataManagement.characterizeAttributes">
+<code class="descname">characterizeAttributes</code><span class="sig-paren">(</span><em>rawData</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS_DataManagement.html#DataManagement.characterizeAttributes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS_DataManagement.DataManagement.characterizeAttributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine range (if continuous) or states (if discrete) for each attribute and saves this information</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS_DataManagement.DataManagement.characterizeDataset">
+<code class="descname">characterizeDataset</code><span class="sig-paren">(</span><em>rawTrainData</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS_DataManagement.html#DataManagement.characterizeDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS_DataManagement.DataManagement.characterizeDataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detect basic dataset parameters</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS_DataManagement.DataManagement.characterizePhenotype">
+<code class="descname">characterizePhenotype</code><span class="sig-paren">(</span><em>rawData</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS_DataManagement.html#DataManagement.characterizePhenotype"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS_DataManagement.DataManagement.characterizePhenotype" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine range of phenotype values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS_DataManagement.DataManagement.compareDataset">
+<code class="descname">compareDataset</code><span class="sig-paren">(</span><em>rawTestData</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS_DataManagement.html#DataManagement.compareDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS_DataManagement.DataManagement.compareDataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensures that the attributes in the testing data match those in the training data.  Also stores some information about the testing data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS_DataManagement.DataManagement.discriminateAttributes">
+<code class="descname">discriminateAttributes</code><span class="sig-paren">(</span><em>rawData</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS_DataManagement.html#DataManagement.discriminateAttributes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS_DataManagement.DataManagement.discriminateAttributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine whether attributes in dataset are discrete or continuous and saves this information.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS_DataManagement.DataManagement.discriminateClasses">
+<code class="descname">discriminateClasses</code><span class="sig-paren">(</span><em>rawData</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS_DataManagement.html#DataManagement.discriminateClasses"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS_DataManagement.DataManagement.discriminateClasses" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines number of classes and their identifiers. Only used if phenotype is discrete.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS_DataManagement.DataManagement.discriminatePhenotype">
+<code class="descname">discriminatePhenotype</code><span class="sig-paren">(</span><em>rawData</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS_DataManagement.html#DataManagement.discriminatePhenotype"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS_DataManagement.DataManagement.discriminatePhenotype" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine whether the phenotype is Discrete(class-based) or Continuous</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS_DataManagement.DataManagement.formatData">
+<code class="descname">formatData</code><span class="sig-paren">(</span><em>rawData</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS_DataManagement.html#DataManagement.formatData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS_DataManagement.DataManagement.formatData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the data into a format convenient for the algorithm to interact with. Specifically each instance is stored in a list as follows; [Attribute States, Phenotype, InstanceID]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS_DataManagement.DataManagement.loadData">
+<code class="descname">loadData</code><span class="sig-paren">(</span><em>dataFile</em>, <em>doTrain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS_DataManagement.html#DataManagement.loadData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS_DataManagement.DataManagement.loadData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the data file.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">CITS4404-G1</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Scott McCormack.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/eLCS_DataManagement.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

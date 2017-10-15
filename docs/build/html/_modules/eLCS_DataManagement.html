@@ -1,0 +1,422 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>eLCS_DataManagement &#8212; CITS4404-G1 1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for eLCS_DataManagement</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Name:        eLCS_DataManagement.py</span>
+<span class="sd">Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA</span>
+<span class="sd">Contact:     ryan.j.urbanowicz@darmouth.edu</span>
+<span class="sd">Created:     November 1, 2013</span>
+<span class="sd">Description: Able to manage both training and testing data.  This module loads the dataset, detects and characterizes all attributes in the dataset, </span>
+<span class="sd">             handles missing data, and finally formats the data so that it may be conveniently utilized by eLCS.</span>
+<span class="sd">             </span>
+<span class="sd">---------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="sd">eLCS: Educational Learning Classifier System - A basic LCS coded for educational purposes.  This LCS algorithm uses supervised learning, and thus is most </span>
+<span class="sd">similar to &quot;UCS&quot;, an LCS algorithm published by Ester Bernado-Mansilla and Josep Garrell-Guiu (2003) which in turn is based heavily on &quot;XCS&quot;, an LCS </span>
+<span class="sd">algorithm published by Stewart Wilson (1995).  </span>
+
+<span class="sd">Copyright (C) 2013 Ryan Urbanowicz </span>
+<span class="sd">This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the </span>
+<span class="sd">Free Software Foundation; either version 3 of the License, or (at your option) any later version.</span>
+
+<span class="sd">This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY </span>
+<span class="sd">or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</span>
+
+<span class="sd">You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, </span>
+<span class="sd">Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA</span>
+<span class="sd">---------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Import Required Modules---------------</span>
+<span class="kn">from</span> <span class="nn">eLCS_Constants</span> <span class="k">import</span> <span class="n">cons</span>
+<span class="kn">import</span> <span class="nn">random</span>
+
+
+<span class="c1"># --------------------------------------</span>
+
+<div class="viewcode-block" id="DataManagement"><a class="viewcode-back" href="../eLCS_DataManagement.html#eLCS_DataManagement.DataManagement">[docs]</a><span class="k">class</span> <span class="nc">DataManagement</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trainFile</span><span class="p">,</span> <span class="n">testFile</span><span class="p">,</span> <span class="n">infoList</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># Set random seed if specified.-----------------------------------------------</span>
+        <span class="k">if</span> <span class="n">cons</span><span class="o">.</span><span class="n">useSeed</span><span class="p">:</span>
+            <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">cons</span><span class="o">.</span><span class="n">randomSeed</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+
+        <span class="c1"># Initialize global variables-------------------------------------------------</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numAttributes</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># The number of attributes in the input file.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">areInstanceIDs</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Does the dataset contain a column of Instance IDs? (If so, it will not be included as an attribute)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instanceIDRef</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># The column reference for Instance IDs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phenotypeRef</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># The column reference for the Class/Phenotype column</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">discretePhenotype</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># Is the Class/Phenotype Discrete? (False = Continuous)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attributeInfo</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Stores Discrete (0) or Continuous (1) for each attribute</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phenotypeList</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Stores all possible discrete phenotype states/classes or maximum and minimum values for a continuous phenotype</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phenotypeRange</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Stores the difference between the maximum and minimum values for a continuous phenotype</span>
+
+        <span class="c1"># Train/Test Specific-----------------------------------------------------------------------------</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trainHeaderList</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># The dataset column headers for the training data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">testHeaderList</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># The dataset column headers for the testing data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numTrainInstances</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># The number of instances in the training data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numTestInstances</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># The number of instances in the testing data</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----------------------------------------------------------------------------&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;eLCS Code Demo 5: The Complete eLCS Algorithm - Niche GA + Subsumption&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----------------------------------------------------------------------------&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Environment: Formatting Data... &quot;</span><span class="p">)</span>
+
+        <span class="c1"># Detect Features of training data--------------------------------------------------------------------------</span>
+        <span class="n">rawTrainData</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loadData</span><span class="p">(</span><span class="n">trainFile</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>  <span class="c1"># Load the raw data.</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">characterizeDataset</span><span class="p">(</span><span class="n">rawTrainData</span><span class="p">)</span>  <span class="c1"># Detect number of attributes, instances, and reference locations.</span>
+
+        <span class="k">if</span> <span class="n">cons</span><span class="o">.</span><span class="n">testFile</span> <span class="o">==</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>  <span class="c1"># If no testing data is available, formatting relies solely on training data.</span>
+            <span class="n">data4Formating</span> <span class="o">=</span> <span class="n">rawTrainData</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rawTestData</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loadData</span><span class="p">(</span><span class="n">testFile</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>  <span class="c1"># Load the raw data.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">compareDataset</span><span class="p">(</span>
+                <span class="n">rawTestData</span><span class="p">)</span>  <span class="c1"># Ensure that key features are the same between training and testing datasets.</span>
+            <span class="n">data4Formating</span> <span class="o">=</span> <span class="n">rawTrainData</span> <span class="o">+</span> <span class="n">rawTestData</span>  <span class="c1"># Merge Training and Testing datasets</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">discriminatePhenotype</span><span class="p">(</span><span class="n">data4Formating</span><span class="p">)</span>  <span class="c1"># Determine if endpoint/phenotype is discrete or continuous.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">discretePhenotype</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">discriminateClasses</span><span class="p">(</span><span class="n">data4Formating</span><span class="p">)</span>  <span class="c1"># Detect number of unique phenotype identifiers.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">characterizePhenotype</span><span class="p">(</span><span class="n">data4Formating</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">discriminateAttributes</span><span class="p">(</span><span class="n">data4Formating</span><span class="p">)</span>  <span class="c1"># Detect whether attributes are discrete or continuous.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">characterizeAttributes</span><span class="p">(</span><span class="n">data4Formating</span><span class="p">)</span>  <span class="c1"># Determine potential attribute states or ranges.</span>
+
+        <span class="c1"># Format and Shuffle Datasets----------------------------------------------------------------------------------------</span>
+        <span class="k">if</span> <span class="n">cons</span><span class="o">.</span><span class="n">testFile</span> <span class="o">!=</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">testFormatted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">formatData</span><span class="p">(</span>
+                <span class="n">rawTestData</span><span class="p">)</span>  <span class="c1"># Stores the formatted testing data set used throughout the algorithm.</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">trainFormatted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">formatData</span><span class="p">(</span>
+            <span class="n">rawTrainData</span><span class="p">)</span>  <span class="c1"># Stores the formatted training data set used throughout the algorithm.</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----------------------------------------------------------------------------&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DataManagement.loadData"><a class="viewcode-back" href="../eLCS_DataManagement.html#eLCS_DataManagement.DataManagement.loadData">[docs]</a>    <span class="k">def</span> <span class="nf">loadData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataFile</span><span class="p">,</span> <span class="n">doTrain</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Load the data file. &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DataManagement: Loading Data... &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">dataFile</span><span class="p">))</span>
+        <span class="n">datasetList</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">dataFile</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">inst</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">inst</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">inst</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">inst</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;cannot open&#39;</span><span class="p">,</span> <span class="n">dataFile</span><span class="p">)</span>
+            <span class="k">raise</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">doTrain</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">trainHeaderList</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>  <span class="c1"># strip off first row</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">testHeaderList</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>  <span class="c1"># strip off first row</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">lineList</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">datasetList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lineList</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">datasetList</span></div>
+
+<div class="viewcode-block" id="DataManagement.characterizeDataset"><a class="viewcode-back" href="../eLCS_DataManagement.html#eLCS_DataManagement.DataManagement.characterizeDataset">[docs]</a>    <span class="k">def</span> <span class="nf">characterizeDataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rawTrainData</span><span class="p">):</span>
+        <span class="s2">&quot; Detect basic dataset parameters &quot;</span>
+        <span class="c1"># Detect Instance ID&#39;s and save location if they occur.  Then save number of attributes in data.</span>
+        <span class="k">if</span> <span class="n">cons</span><span class="o">.</span><span class="n">labelInstanceID</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">trainHeaderList</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">areInstanceIDs</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">instanceIDRef</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trainHeaderList</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">cons</span><span class="o">.</span><span class="n">labelInstanceID</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DataManagement: Instance ID Column location = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instanceIDRef</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">numAttributes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">trainHeaderList</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span>  <span class="c1"># one column for InstanceID and another for the phenotype.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">numAttributes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trainHeaderList</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+
+        <span class="c1"># Identify location of phenotype column</span>
+        <span class="k">if</span> <span class="n">cons</span><span class="o">.</span><span class="n">labelPhenotype</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">trainHeaderList</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">phenotypeRef</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trainHeaderList</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">cons</span><span class="o">.</span><span class="n">labelPhenotype</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DataManagement: Phenotype Column Location = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phenotypeRef</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;DataManagement: Error - Phenotype column not found!  Check data set to ensure correct phenotype column label, or inclusion in the data.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Adjust training header list to just include attributes labels</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">areInstanceIDs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">phenotypeRef</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">instanceIDRef</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">trainHeaderList</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phenotypeRef</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">trainHeaderList</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instanceIDRef</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">trainHeaderList</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instanceIDRef</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">trainHeaderList</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phenotypeRef</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trainHeaderList</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phenotypeRef</span><span class="p">)</span>
+
+        <span class="c1"># Store number of instances in training data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numTrainInstances</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rawTrainData</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DataManagement: Number of Attributes = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">numAttributes</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DataManagement: Number of Instances = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">numTrainInstances</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="DataManagement.discriminatePhenotype"><a class="viewcode-back" href="../eLCS_DataManagement.html#eLCS_DataManagement.DataManagement.discriminatePhenotype">[docs]</a>    <span class="k">def</span> <span class="nf">discriminatePhenotype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rawData</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Determine whether the phenotype is Discrete(class-based) or Continuous &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DataManagement: Analyzing Phenotype...&quot;</span><span class="p">)</span>
+        <span class="n">inst</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">classDict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">discretePhenotype</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span>
+                <span class="n">classDict</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span> <span class="o">&lt;=</span> <span class="n">cons</span><span class="o">.</span><span class="n">discreteAttributeLimit</span> <span class="ow">and</span> <span class="n">inst</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">numTrainInstances</span><span class="p">:</span>  <span class="c1"># Checks which discriminate between discrete and continuous attribute</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">rawData</span><span class="p">[</span><span class="n">inst</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">phenotypeRef</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">target</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">classDict</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>  <span class="c1"># Check if we&#39;ve seen this attribute state yet.</span>
+                <span class="n">classDict</span><span class="p">[</span><span class="n">target</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">target</span> <span class="o">==</span> <span class="n">cons</span><span class="o">.</span><span class="n">labelMissingData</span><span class="p">:</span>  <span class="c1"># Ignore missing data</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DataManagement: Warning - Individual detected with missing phenotype information!&quot;</span><span class="p">)</span>
+                <span class="k">pass</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># New state observed</span>
+                <span class="n">classDict</span><span class="p">[</span><span class="n">target</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">inst</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">classDict</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span> <span class="o">&gt;</span> <span class="n">cons</span><span class="o">.</span><span class="n">discreteAttributeLimit</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">discretePhenotype</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">phenotypeList</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">target</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">target</span><span class="p">)]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DataManagement: Phenotype Detected as Continuous.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DataManagement: Phenotype Detected as Discrete.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataManagement.discriminateClasses"><a class="viewcode-back" href="../eLCS_DataManagement.html#eLCS_DataManagement.DataManagement.discriminateClasses">[docs]</a>    <span class="k">def</span> <span class="nf">discriminateClasses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rawData</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Determines number of classes and their identifiers. Only used if phenotype is discrete. &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DataManagement: Detecting Classes...&quot;</span><span class="p">)</span>
+        <span class="n">inst</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">classCount</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">while</span> <span class="n">inst</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">numTrainInstances</span><span class="p">:</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">rawData</span><span class="p">[</span><span class="n">inst</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">phenotypeRef</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">target</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">phenotypeList</span><span class="p">:</span>
+                <span class="n">classCount</span><span class="p">[</span><span class="n">target</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">phenotypeList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+                <span class="n">classCount</span><span class="p">[</span><span class="n">target</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">inst</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DataManagement: Following Classes Detected:&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phenotypeList</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">each</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">classCount</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Class: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">each</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; count = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">classCount</span><span class="p">[</span><span class="n">each</span><span class="p">]))</span></div>
+
+<div class="viewcode-block" id="DataManagement.compareDataset"><a class="viewcode-back" href="../eLCS_DataManagement.html#eLCS_DataManagement.DataManagement.compareDataset">[docs]</a>    <span class="k">def</span> <span class="nf">compareDataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rawTestData</span><span class="p">):</span>
+        <span class="s2">&quot; Ensures that the attributes in the testing data match those in the training data.  Also stores some information about the testing data. &quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">areInstanceIDs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">phenotypeRef</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">instanceIDRef</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">testHeaderList</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phenotypeRef</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">testHeaderList</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instanceIDRef</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">testHeaderList</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instanceIDRef</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">testHeaderList</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phenotypeRef</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">testHeaderList</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phenotypeRef</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trainHeaderList</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">testHeaderList</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DataManagement: Error - Training and Testing Dataset Headers are not equivalent&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Stores the number of instances in the testing data.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numTestInstances</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rawTestData</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DataManagement: Number of Attributes = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">numAttributes</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DataManagement: Number of Instances = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">numTestInstances</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="DataManagement.discriminateAttributes"><a class="viewcode-back" href="../eLCS_DataManagement.html#eLCS_DataManagement.DataManagement.discriminateAttributes">[docs]</a>    <span class="k">def</span> <span class="nf">discriminateAttributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rawData</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Determine whether attributes in dataset are discrete or continuous and saves this information. &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DataManagement: Detecting Attributes...&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">discreteCount</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">continuousCount</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">att</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rawData</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+            <span class="k">if</span> <span class="n">att</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instanceIDRef</span> <span class="ow">and</span> <span class="n">att</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phenotypeRef</span><span class="p">:</span>  <span class="c1"># Get just the attribute columns (ignores phenotype and instanceID columns)</span>
+                <span class="n">attIsDiscrete</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">inst</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">stateDict</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="k">while</span> <span class="n">attIsDiscrete</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span>
+                        <span class="n">stateDict</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span> <span class="o">&lt;=</span> <span class="n">cons</span><span class="o">.</span><span class="n">discreteAttributeLimit</span> <span class="ow">and</span> <span class="n">inst</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">numTrainInstances</span><span class="p">:</span>  <span class="c1"># Checks which discriminate between discrete and continuous attribute</span>
+                    <span class="n">target</span> <span class="o">=</span> <span class="n">rawData</span><span class="p">[</span><span class="n">inst</span><span class="p">][</span><span class="n">att</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">target</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">stateDict</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>  <span class="c1"># Check if we&#39;ve seen this attribute state yet.</span>
+                        <span class="n">stateDict</span><span class="p">[</span><span class="n">target</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">elif</span> <span class="n">target</span> <span class="o">==</span> <span class="n">cons</span><span class="o">.</span><span class="n">labelMissingData</span><span class="p">:</span>  <span class="c1"># Ignore missing data</span>
+                        <span class="k">pass</span>
+                    <span class="k">else</span><span class="p">:</span>  <span class="c1"># New state observed</span>
+                        <span class="n">stateDict</span><span class="p">[</span><span class="n">target</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+                    <span class="n">inst</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">stateDict</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span> <span class="o">&gt;</span> <span class="n">cons</span><span class="o">.</span><span class="n">discreteAttributeLimit</span><span class="p">:</span>
+                    <span class="n">attIsDiscrete</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">if</span> <span class="n">attIsDiscrete</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">attributeInfo</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="p">[]])</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">discreteCount</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">attributeInfo</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">target</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">target</span><span class="p">)]])</span>  <span class="c1"># [min,max]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">continuousCount</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DataManagement: Identified &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">discreteCount</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; discrete and &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">continuousCount</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; continuous attributes.&quot;</span><span class="p">)</span>  <span class="c1"># Debug</span></div>
+
+<div class="viewcode-block" id="DataManagement.characterizeAttributes"><a class="viewcode-back" href="../eLCS_DataManagement.html#eLCS_DataManagement.DataManagement.characterizeAttributes">[docs]</a>    <span class="k">def</span> <span class="nf">characterizeAttributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rawData</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Determine range (if continuous) or states (if discrete) for each attribute and saves this information&quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DataManagement: Characterizing Attributes...&quot;</span><span class="p">)</span>
+        <span class="n">attributeID</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">att</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rawData</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+            <span class="k">if</span> <span class="n">att</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instanceIDRef</span> <span class="ow">and</span> <span class="n">att</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phenotypeRef</span><span class="p">:</span>  <span class="c1"># Get just the attribute columns (ignores phenotype and instanceID columns)</span>
+                <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rawData</span><span class="p">)):</span>
+                    <span class="n">target</span> <span class="o">=</span> <span class="n">rawData</span><span class="p">[</span><span class="n">inst</span><span class="p">][</span><span class="n">att</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">attributeInfo</span><span class="p">[</span><span class="n">attributeID</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>  <span class="c1"># If attribute is discrete</span>
+                        <span class="k">if</span> <span class="n">target</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">attributeInfo</span><span class="p">[</span><span class="n">attributeID</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="ow">or</span> <span class="n">target</span> <span class="o">==</span> <span class="n">cons</span><span class="o">.</span><span class="n">labelMissingData</span><span class="p">:</span>
+                            <span class="k">pass</span>  <span class="c1"># NOTE: Could potentially store state frequency information to guide learning.</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">attributeInfo</span><span class="p">[</span><span class="n">attributeID</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>  <span class="c1"># If attribute is continuous</span>
+
+                        <span class="c1"># Find Minimum and Maximum values for the continuous attribute so we know the range.</span>
+                        <span class="k">if</span> <span class="n">target</span> <span class="o">==</span> <span class="n">cons</span><span class="o">.</span><span class="n">labelMissingData</span><span class="p">:</span>
+                            <span class="k">pass</span>
+                        <span class="k">elif</span> <span class="nb">float</span><span class="p">(</span><span class="n">target</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">attributeInfo</span><span class="p">[</span><span class="n">attributeID</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]:</span>  <span class="c1"># error</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">attributeInfo</span><span class="p">[</span><span class="n">attributeID</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+                        <span class="k">elif</span> <span class="nb">float</span><span class="p">(</span><span class="n">target</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">attributeInfo</span><span class="p">[</span><span class="n">attributeID</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">attributeInfo</span><span class="p">[</span><span class="n">attributeID</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="k">pass</span>
+                <span class="n">attributeID</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+<div class="viewcode-block" id="DataManagement.characterizePhenotype"><a class="viewcode-back" href="../eLCS_DataManagement.html#eLCS_DataManagement.DataManagement.characterizePhenotype">[docs]</a>    <span class="k">def</span> <span class="nf">characterizePhenotype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rawData</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Determine range of phenotype values. &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DataManagement: Characterizing Phenotype...&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rawData</span><span class="p">)):</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">rawData</span><span class="p">[</span><span class="n">inst</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">phenotypeRef</span><span class="p">]</span>
+
+            <span class="c1"># Find Minimum and Maximum values for the continuous phenotype so we know the range.</span>
+            <span class="k">if</span> <span class="n">target</span> <span class="o">==</span> <span class="n">cons</span><span class="o">.</span><span class="n">labelMissingData</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="nb">float</span><span class="p">(</span><span class="n">target</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">phenotypeList</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">phenotypeList</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">float</span><span class="p">(</span><span class="n">target</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">phenotypeList</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">phenotypeList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">pass</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phenotypeRange</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phenotypeList</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">phenotypeList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="DataManagement.formatData"><a class="viewcode-back" href="../eLCS_DataManagement.html#eLCS_DataManagement.DataManagement.formatData">[docs]</a>    <span class="k">def</span> <span class="nf">formatData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rawData</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Get the data into a format convenient for the algorithm to interact with. Specifically each instance is stored in a list as follows; [Attribute States, Phenotype, InstanceID] &quot;&quot;&quot;</span>
+        <span class="n">formatted</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Initialize data format---------------------------------------------------------</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rawData</span><span class="p">)):</span>
+            <span class="n">formatted</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span>  <span class="c1"># [Attribute States, Phenotype, InstanceID]</span>
+
+        <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rawData</span><span class="p">)):</span>
+            <span class="n">stateList</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">attributeID</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">att</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rawData</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+                <span class="k">if</span> <span class="n">att</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instanceIDRef</span> <span class="ow">and</span> <span class="n">att</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phenotypeRef</span><span class="p">:</span>  <span class="c1"># Get just the attribute columns (ignores phenotype and instanceID columns)</span>
+                    <span class="n">target</span> <span class="o">=</span> <span class="n">rawData</span><span class="p">[</span><span class="n">inst</span><span class="p">][</span><span class="n">att</span><span class="p">]</span>
+
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">attributeInfo</span><span class="p">[</span><span class="n">attributeID</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>  <span class="c1"># If the attribute is continuous</span>
+                        <span class="k">if</span> <span class="n">target</span> <span class="o">==</span> <span class="n">cons</span><span class="o">.</span><span class="n">labelMissingData</span><span class="p">:</span>
+                            <span class="n">stateList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>  <span class="c1"># Missing data saved as text label</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">stateList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">target</span><span class="p">))</span>  <span class="c1"># Save continuous data as floats.</span>
+                    <span class="k">else</span><span class="p">:</span>  <span class="c1"># If the attribute is discrete - Format the data to correspond to the GABIL (DeJong 1991)</span>
+                        <span class="n">stateList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                            <span class="n">target</span><span class="p">)</span>  <span class="c1"># missing data, and discrete variables, all stored as string objects</span>
+                    <span class="n">attributeID</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="c1"># Final Format-----------------------------------------------</span>
+            <span class="n">formatted</span><span class="p">[</span><span class="n">inst</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">stateList</span>  <span class="c1"># Attribute states stored here</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">discretePhenotype</span><span class="p">:</span>
+                <span class="n">formatted</span><span class="p">[</span><span class="n">inst</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">rawData</span><span class="p">[</span><span class="n">inst</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">phenotypeRef</span><span class="p">]</span>  <span class="c1"># phenotype stored here</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">formatted</span><span class="p">[</span><span class="n">inst</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">rawData</span><span class="p">[</span><span class="n">inst</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">phenotypeRef</span><span class="p">])</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">areInstanceIDs</span><span class="p">:</span>
+                <span class="n">formatted</span><span class="p">[</span><span class="n">inst</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">rawData</span><span class="p">[</span><span class="n">inst</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">instanceIDRef</span><span class="p">]</span>  <span class="c1"># Instance ID stored here</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">pass</span>  <span class="c1"># instance ID neither given nor required.</span>
+                <span class="c1"># -----------------------------------------------------------</span>
+        <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span>
+            <span class="n">formatted</span><span class="p">)</span>  <span class="c1"># One time randomization of the order the of the instances in the data, so that if the data was ordered by phenotype, this potential learning bias (based on instance ordering) is eliminated.</span>
+        <span class="k">return</span> <span class="n">formatted</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">CITS4404-G1</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Scott McCormack.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

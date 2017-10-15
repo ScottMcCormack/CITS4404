@@ -1,0 +1,715 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>eLCS_Classifier &#8212; CITS4404-G1 1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for eLCS_Classifier</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Name:        eLCS_Classifier.py</span>
+<span class="sd">Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA</span>
+<span class="sd">Contact:     ryan.j.urbanowicz@darmouth.edu</span>
+<span class="sd">Created:     November 1, 2013</span>
+<span class="sd">Description: This module defines an individual classifier within the rule population, along with all respective parameters.</span>
+<span class="sd">             Also included are classifier-level methods, including constructors(covering, copy, reboot) matching, subsumption, </span>
+<span class="sd">             crossover, and mutation.  Parameter update methods are also included.</span>
+<span class="sd">             </span>
+<span class="sd">---------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="sd">eLCS: Educational Learning Classifier System - A basic LCS coded for educational purposes.  This LCS algorithm uses supervised learning, and thus is most </span>
+<span class="sd">similar to &quot;UCS&quot;, an LCS algorithm published by Ester Bernado-Mansilla and Josep Garrell-Guiu (2003) which in turn is based heavily on &quot;XCS&quot;, an LCS </span>
+<span class="sd">algorithm published by Stewart Wilson (1995).  </span>
+
+<span class="sd">Copyright (C) 2013 Ryan Urbanowicz </span>
+<span class="sd">This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the </span>
+<span class="sd">Free Software Foundation; either version 3 of the License, or (at your option) any later version.</span>
+
+<span class="sd">This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY </span>
+<span class="sd">or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</span>
+
+<span class="sd">You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, </span>
+<span class="sd">Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA</span>
+<span class="sd">---------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Import Required Modules---------------</span>
+<span class="kn">from</span> <span class="nn">eLCS_Constants</span> <span class="k">import</span> <span class="n">cons</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+
+<span class="c1"># --------------------------------------</span>
+
+<div class="viewcode-block" id="Classifier"><a class="viewcode-back" href="../eLCS_Classifier.html#eLCS_Classifier.Classifier">[docs]</a><span class="k">class</span> <span class="nc">Classifier</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># Major Parameters --------------------------------------------------</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">specifiedAttList</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Attribute Specified in classifier: Similar to Bacardit 2009 - ALKR + GABIL, continuous and discrete rule representation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">condition</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># States of Attributes Specified in classifier: Similar to Bacardit 2009 - ALKR + GABIL, continuous and discrete rule representation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Class if the endpoint is discrete, and a continuous phenotype if the endpoint is continuous</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fitness</span> <span class="o">=</span> <span class="n">cons</span><span class="o">.</span><span class="n">init_fit</span>  <span class="c1"># Classifier fitness - initialized to a constant initial fitness value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Classifier accuracy - Accuracy calculated using only instances in the dataset which this rule matched.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numerosity</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># The number of rule copies stored in the population.  (Indirectly stored as incremented numerosity)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aveMatchSetSize</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># A parameter used in deletion which reflects the size of match sets within this rule has been included.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deletionVote</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># The current deletion weight for this classifier.</span>
+
+        <span class="c1"># Experience Management ---------------------------------------------</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timeStampGA</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Time since rule last in a correct set.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initTimeStamp</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Iteration in which the rule first appeared.</span>
+
+        <span class="c1"># Classifier Accuracy Tracking --------------------------------------</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matchCount</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Known in many LCS implementations as experience i.e. the total number of times this classifier was in a match set</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">correctCount</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># The total number of times this classifier was in a correct set</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">classifierCovering</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Classifier</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">classifierCopy</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="n">b</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rebootClassifier</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Classifier: Error building classifier.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+    <span class="c1"># CLASSIFIER CONSTRUCTION METHODS</span>
+    <span class="c1"># --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="Classifier.classifierCovering"><a class="viewcode-back" href="../eLCS_Classifier.html#eLCS_Classifier.Classifier.classifierCovering">[docs]</a>    <span class="k">def</span> <span class="nf">classifierCovering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">setSize</span><span class="p">,</span> <span class="n">exploreIter</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">phenotype</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Makes a new classifier when the covering mechanism is triggered.  The new classifier will match the current training instance. </span>
+<span class="sd">        Covering will NOT produce a default rule (i.e. a rule with a completely general condition). &quot;&quot;&quot;</span>
+        <span class="c1"># Initialize new classifier parameters----------</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timeStampGA</span> <span class="o">=</span> <span class="n">exploreIter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initTimeStamp</span> <span class="o">=</span> <span class="n">exploreIter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aveMatchSetSize</span> <span class="o">=</span> <span class="n">setSize</span>
+        <span class="n">dataInfo</span> <span class="o">=</span> <span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="c1"># DISCRETE PHENOTYPE</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="k">if</span> <span class="n">dataInfo</span><span class="o">.</span><span class="n">discretePhenotype</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span> <span class="o">=</span> <span class="n">phenotype</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="c1"># CONTINUOUS PHENOTYPE</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">phenotypeRange</span> <span class="o">=</span> <span class="n">dataInfo</span><span class="o">.</span><span class="n">phenotypeList</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">dataInfo</span><span class="o">.</span><span class="n">phenotypeList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">rangeRadius</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span>
+                                         <span class="mi">75</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.01</span> <span class="o">*</span> <span class="n">phenotypeRange</span> <span class="o">/</span> <span class="mf">2.0</span>  <span class="c1"># Continuous initialization domain radius.</span>
+            <span class="n">Low</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">phenotype</span><span class="p">)</span> <span class="o">-</span> <span class="n">rangeRadius</span>
+            <span class="n">High</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">phenotype</span><span class="p">)</span> <span class="o">+</span> <span class="n">rangeRadius</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span> <span class="o">=</span> <span class="p">[</span><span class="n">Low</span><span class="p">,</span>
+                              <span class="n">High</span><span class="p">]</span>  <span class="c1"># ALKR Representation, Initialization centered around training instance  with a range between 25 and 75% of the domain size.</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="c1"># GENERATE MATCHING CONDITION</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">attRef</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">state</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">cons</span><span class="o">.</span><span class="n">p_spec</span> <span class="ow">and</span> <span class="n">state</span><span class="p">[</span><span class="n">attRef</span><span class="p">]</span> <span class="o">!=</span> <span class="n">cons</span><span class="o">.</span><span class="n">labelMissingData</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">attRef</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buildMatch</span><span class="p">(</span><span class="n">attRef</span><span class="p">,</span> <span class="n">state</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Classifier.classifierCopy"><a class="viewcode-back" href="../eLCS_Classifier.html#eLCS_Classifier.Classifier.classifierCopy">[docs]</a>    <span class="k">def</span> <span class="nf">classifierCopy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clOld</span><span class="p">,</span> <span class="n">exploreIter</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;  Constructs an identical Classifier.  However, the experience of the copy is set to 0 and the numerosity </span>
+<span class="sd">        is set to 1 since this is indeed a new individual in a population. Used by the genetic algorithm to generate </span>
+<span class="sd">        offspring based on parent classifiers.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">specifiedAttList</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">clOld</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">condition</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">clOld</span><span class="o">.</span><span class="n">condition</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">clOld</span><span class="o">.</span><span class="n">phenotype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timeStampGA</span> <span class="o">=</span> <span class="n">exploreIter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initTimeStamp</span> <span class="o">=</span> <span class="n">exploreIter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aveMatchSetSize</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">clOld</span><span class="o">.</span><span class="n">aveMatchSetSize</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fitness</span> <span class="o">=</span> <span class="n">clOld</span><span class="o">.</span><span class="n">fitness</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span> <span class="o">=</span> <span class="n">clOld</span><span class="o">.</span><span class="n">accuracy</span></div>
+
+<div class="viewcode-block" id="Classifier.rebootClassifier"><a class="viewcode-back" href="../eLCS_Classifier.html#eLCS_Classifier.Classifier.rebootClassifier">[docs]</a>    <span class="k">def</span> <span class="nf">rebootClassifier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">classifierList</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Rebuilds a saved classifier as part of the population Reboot &quot;&quot;&quot;</span>
+        <span class="n">numAttributes</span> <span class="o">=</span> <span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">numAttributes</span>
+        <span class="n">attInfo</span> <span class="o">=</span> <span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">attributeInfo</span>
+        <span class="k">for</span> <span class="n">attRef</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">numAttributes</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">classifierList</span><span class="p">[</span><span class="n">attRef</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;#&#39;</span><span class="p">:</span>  <span class="c1"># Attribute in rule is not wild</span>
+                <span class="k">if</span> <span class="n">attInfo</span><span class="p">[</span><span class="n">attRef</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>  <span class="c1"># Continuous Attribute</span>
+                    <span class="n">valueRange</span> <span class="o">=</span> <span class="n">classifierList</span><span class="p">[</span><span class="n">attRef</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">valueRange</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">attRef</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">classifierList</span><span class="p">[</span><span class="n">attRef</span><span class="p">])</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">attRef</span><span class="p">)</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="c1"># DISCRETE PHENOTYPE</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="k">if</span> <span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">discretePhenotype</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">classifierList</span><span class="p">[</span><span class="n">numAttributes</span><span class="p">])</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="c1"># CONTINUOUS PHENOTYPE</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span> <span class="o">=</span> <span class="n">classifierList</span><span class="p">[</span><span class="n">numAttributes</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fitness</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">classifierList</span><span class="p">[</span><span class="n">numAttributes</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">classifierList</span><span class="p">[</span><span class="n">numAttributes</span> <span class="o">+</span> <span class="mi">2</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numerosity</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">classifierList</span><span class="p">[</span><span class="n">numAttributes</span> <span class="o">+</span> <span class="mi">3</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aveMatchSetSize</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">classifierList</span><span class="p">[</span><span class="n">numAttributes</span> <span class="o">+</span> <span class="mi">4</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timeStampGA</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">classifierList</span><span class="p">[</span><span class="n">numAttributes</span> <span class="o">+</span> <span class="mi">5</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initTimeStamp</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">classifierList</span><span class="p">[</span><span class="n">numAttributes</span> <span class="o">+</span> <span class="mi">6</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">deletionVote</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">classifierList</span><span class="p">[</span><span class="n">numAttributes</span> <span class="o">+</span> <span class="mi">8</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">correctCount</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">classifierList</span><span class="p">[</span><span class="n">numAttributes</span> <span class="o">+</span> <span class="mi">9</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matchCount</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">classifierList</span><span class="p">[</span><span class="n">numAttributes</span> <span class="o">+</span> <span class="mi">10</span><span class="p">])</span></div>
+
+    <span class="c1"># --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+    <span class="c1"># MATCHING</span>
+    <span class="c1"># --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="Classifier.match"><a class="viewcode-back" href="../eLCS_Classifier.html#eLCS_Classifier.Classifier.match">[docs]</a>    <span class="k">def</span> <span class="nf">match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns if the classifier matches in the current situation. &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">)):</span>
+            <span class="n">attributeInfo</span> <span class="o">=</span> <span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">attributeInfo</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+            <span class="c1"># -------------------------------------------------------</span>
+            <span class="c1"># CONTINUOUS ATTRIBUTE</span>
+            <span class="c1"># -------------------------------------------------------</span>
+            <span class="k">if</span> <span class="n">attributeInfo</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">instanceValue</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">instanceValue</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">[</span><span class="n">i</span><span class="p">][</span>
+                    <span class="mi">1</span><span class="p">]</span> <span class="ow">or</span> <span class="n">instanceValue</span> <span class="o">==</span> <span class="n">cons</span><span class="o">.</span><span class="n">labelMissingData</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+                    <span class="c1"># -------------------------------------------------------</span>
+            <span class="c1"># DISCRETE ATTRIBUTE</span>
+            <span class="c1"># -------------------------------------------------------</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">stateRep</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+                <span class="k">if</span> <span class="n">stateRep</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">or</span> <span class="n">stateRep</span> <span class="o">==</span> <span class="n">cons</span><span class="o">.</span><span class="n">labelMissingData</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+    <span class="c1"># --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+    <span class="c1"># GENETIC ALGORITHM MECHANISMS</span>
+    <span class="c1"># --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="Classifier.uniformCrossover"><a class="viewcode-back" href="../eLCS_Classifier.html#eLCS_Classifier.Classifier.uniformCrossover">[docs]</a>    <span class="k">def</span> <span class="nf">uniformCrossover</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cl</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Applies uniform crossover and returns if the classifiers changed. Handles both discrete and continuous attributes.  </span>
+<span class="sd">        #SWARTZ: self. is where for the better attributes are more likely to be specified</span>
+<span class="sd">        #DEVITO: cl. is where less useful attribute are more likely to be specified</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">discretePhenotype</span> <span class="ow">or</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">:</span>  <span class="c1"># Always crossover condition if the phenotype is discrete (if continuous phenotype, half the time phenotype crossover is performed instead)</span>
+            <span class="n">p_self_specifiedAttList</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="p">)</span>
+            <span class="n">p_cl_specifiedAttList</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">cl</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="p">)</span>
+
+            <span class="c1"># Make list of attribute references appearing in at least one of the parents.-----------------------------</span>
+            <span class="n">comboAttList</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">p_self_specifiedAttList</span><span class="p">:</span>
+                <span class="n">comboAttList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">p_cl_specifiedAttList</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">comboAttList</span><span class="p">:</span>
+                    <span class="n">comboAttList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="ow">not</span> <span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">attributeInfo</span><span class="p">[</span><span class="n">i</span><span class="p">][</span>
+                    <span class="mi">0</span><span class="p">]:</span>  <span class="c1"># Attribute specified in both parents, and the attribute is discrete (then no reason to cross over)</span>
+                    <span class="n">comboAttList</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="n">comboAttList</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+            <span class="c1"># --------------------------------------------------------------------------------------------------------</span>
+            <span class="n">changed</span> <span class="o">=</span> <span class="kc">False</span><span class="p">;</span>
+            <span class="k">for</span> <span class="n">attRef</span> <span class="ow">in</span> <span class="n">comboAttList</span><span class="p">:</span>  <span class="c1"># Each condition specifies different attributes, so we need to go through all attributes in the dataset.</span>
+                <span class="n">attributeInfo</span> <span class="o">=</span> <span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">attributeInfo</span><span class="p">[</span><span class="n">attRef</span><span class="p">]</span>
+                <span class="n">probability</span> <span class="o">=</span> <span class="mf">0.5</span>  <span class="c1"># Equal probability for attribute alleles to be exchanged.</span>
+                <span class="c1"># -----------------------------</span>
+                <span class="n">ref</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="c1"># if attRef in self.specifiedAttList:</span>
+                <span class="k">if</span> <span class="n">attRef</span> <span class="ow">in</span> <span class="n">p_self_specifiedAttList</span><span class="p">:</span>
+                    <span class="n">ref</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="c1"># if attRef in cl.specifiedAttList:</span>
+                <span class="k">if</span> <span class="n">attRef</span> <span class="ow">in</span> <span class="n">p_cl_specifiedAttList</span><span class="p">:</span>
+                    <span class="n">ref</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="c1"># -----------------------------</span>
+
+                <span class="k">if</span> <span class="n">ref</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># Attribute not specified in either condition (Attribute type makes no difference)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error: UniformCrossover!&quot;</span><span class="p">)</span>
+                    <span class="k">pass</span>
+
+                <span class="k">elif</span> <span class="n">ref</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># Attribute specified in only one condition - do probabilistic switch of whole attribute state (Attribute type makes no difference)</span>
+                    <span class="k">if</span> <span class="n">attRef</span> <span class="ow">in</span> <span class="n">p_self_specifiedAttList</span> <span class="ow">and</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">probability</span><span class="p">:</span>
+                        <span class="n">i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="o">.</span><span class="n">index</span><span class="p">(</span>
+                            <span class="n">attRef</span><span class="p">)</span>  <span class="c1"># reference to the position of the attribute in the rule representation</span>
+                        <span class="n">cl</span><span class="o">.</span><span class="n">condition</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>  <span class="c1"># Take attribute from self and add to cl</span>
+                        <span class="n">cl</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">attRef</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">attRef</span><span class="p">)</span>
+                        <span class="n">changed</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># Remove att from self and add to cl</span>
+
+                    <span class="k">if</span> <span class="n">attRef</span> <span class="ow">in</span> <span class="n">p_cl_specifiedAttList</span> <span class="ow">and</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">probability</span><span class="p">:</span>
+                        <span class="n">i</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="o">.</span><span class="n">index</span><span class="p">(</span>
+                            <span class="n">attRef</span><span class="p">)</span>  <span class="c1"># reference to the position of the attribute in the rule representation</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cl</span><span class="o">.</span><span class="n">condition</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>  <span class="c1"># Take attribute from self and add to cl</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">attRef</span><span class="p">)</span>
+                        <span class="n">cl</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">attRef</span><span class="p">)</span>
+                        <span class="n">changed</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># Remove att from cl and add to self.</span>
+
+
+                <span class="k">else</span><span class="p">:</span>  <span class="c1"># Attribute specified in both conditions - do random crossover between state alleles.  The same attribute may be specified at different positions within either classifier</span>
+                    <span class="c1"># -------------------------------------------------------</span>
+                    <span class="c1"># CONTINUOUS ATTRIBUTE</span>
+                    <span class="c1"># -------------------------------------------------------</span>
+                    <span class="k">if</span> <span class="n">attributeInfo</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                        <span class="n">i_cl1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">attRef</span><span class="p">)</span>  <span class="c1"># pairs with self (classifier 1)</span>
+                        <span class="n">i_cl2</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">attRef</span><span class="p">)</span>  <span class="c1"># pairs with cl (classifier 2)</span>
+                        <span class="n">tempKey</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span>
+                                                 <span class="mi">3</span><span class="p">)</span>  <span class="c1"># Make random choice between 4 scenarios, Swap minimums, Swap maximums, Self absorbs cl, or cl absorbs self.</span>
+                        <span class="k">if</span> <span class="n">tempKey</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># Swap minimum</span>
+                            <span class="n">temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">[</span><span class="n">i_cl1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">[</span><span class="n">i_cl1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">condition</span><span class="p">[</span><span class="n">i_cl2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                            <span class="n">cl</span><span class="o">.</span><span class="n">condition</span><span class="p">[</span><span class="n">i_cl2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span>
+                        <span class="k">elif</span> <span class="n">tempKey</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># Swap maximum</span>
+                            <span class="n">temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">[</span><span class="n">i_cl1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">[</span><span class="n">i_cl1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">condition</span><span class="p">[</span><span class="n">i_cl2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+                            <span class="n">cl</span><span class="o">.</span><span class="n">condition</span><span class="p">[</span><span class="n">i_cl2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span>
+                        <span class="k">else</span><span class="p">:</span>  <span class="c1"># absorb range</span>
+                            <span class="n">allList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">[</span><span class="n">i_cl1</span><span class="p">]</span> <span class="o">+</span> <span class="n">cl</span><span class="o">.</span><span class="n">condition</span><span class="p">[</span><span class="n">i_cl2</span><span class="p">]</span>
+                            <span class="n">newMin</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">allList</span><span class="p">)</span>
+                            <span class="n">newMax</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">allList</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">tempKey</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># self absorbs cl</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">[</span><span class="n">i_cl1</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">newMin</span><span class="p">,</span> <span class="n">newMax</span><span class="p">]</span>
+                                <span class="c1"># Remove cl</span>
+                                <span class="n">cl</span><span class="o">.</span><span class="n">condition</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">i_cl2</span><span class="p">)</span>
+                                <span class="n">cl</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">attRef</span><span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>  <span class="c1"># cl absorbs self</span>
+                                <span class="n">cl</span><span class="o">.</span><span class="n">condition</span><span class="p">[</span><span class="n">i_cl2</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">newMin</span><span class="p">,</span> <span class="n">newMax</span><span class="p">]</span>
+                                <span class="c1"># Remove self</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">i_cl1</span><span class="p">)</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">attRef</span><span class="p">)</span>
+                    <span class="c1"># -------------------------------------------------------</span>
+                    <span class="c1"># DISCRETE ATTRIBUTE</span>
+                    <span class="c1"># -------------------------------------------------------</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">pass</span>
+
+            <span class="n">tempList1</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">p_self_specifiedAttList</span><span class="p">)</span>
+            <span class="n">tempList2</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">cl</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="p">)</span>
+            <span class="n">tempList1</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+            <span class="n">tempList2</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">changed</span> <span class="ow">and</span> <span class="p">(</span><span class="n">tempList1</span> <span class="o">==</span> <span class="n">tempList2</span><span class="p">):</span>
+                <span class="n">changed</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="k">return</span> <span class="n">changed</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="c1"># CONTINUOUS PHENOTYPE CROSSOVER</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">phenotypeCrossover</span><span class="p">(</span><span class="n">cl</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Classifier.phenotypeCrossover"><a class="viewcode-back" href="../eLCS_Classifier.html#eLCS_Classifier.Classifier.phenotypeCrossover">[docs]</a>    <span class="k">def</span> <span class="nf">phenotypeCrossover</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cl</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Crossover a continuous phenotype &quot;&quot;&quot;</span>
+        <span class="n">changed</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">cl</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">cl</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">changed</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tempKey</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">0.5</span>  <span class="c1"># Make random choice between 4 scenarios, Swap minimums, Swap maximums, Children preserve parent phenotypes.</span>
+            <span class="k">if</span> <span class="n">tempKey</span><span class="p">:</span>  <span class="c1"># Swap minimum</span>
+                <span class="n">temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">cl</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span>
+                <span class="n">changed</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">elif</span> <span class="n">tempKey</span><span class="p">:</span>  <span class="c1"># Swap maximum</span>
+                <span class="n">temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">cl</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span>
+                <span class="n">changed</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="n">changed</span></div>
+
+<div class="viewcode-block" id="Classifier.Mutation"><a class="viewcode-back" href="../eLCS_Classifier.html#eLCS_Classifier.Classifier.Mutation">[docs]</a>    <span class="k">def</span> <span class="nf">Mutation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">phenotype</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Mutates the condition of the classifier. Also handles phenotype mutation. This is a niche mutation, which means that the resulting classifier will still match the current instance.  &quot;&quot;&quot;</span>
+        <span class="n">changed</span> <span class="o">=</span> <span class="kc">False</span><span class="p">;</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="c1"># MUTATE CONDITION</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="k">for</span> <span class="n">attRef</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span>
+                <span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">numAttributes</span><span class="p">):</span>  <span class="c1"># Each condition specifies different attributes, so we need to go through all attributes in the dataset.</span>
+            <span class="n">attributeInfo</span> <span class="o">=</span> <span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">attributeInfo</span><span class="p">[</span><span class="n">attRef</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">cons</span><span class="o">.</span><span class="n">upsilon</span> <span class="ow">and</span> <span class="n">state</span><span class="p">[</span><span class="n">attRef</span><span class="p">]</span> <span class="o">!=</span> <span class="n">cons</span><span class="o">.</span><span class="n">labelMissingData</span><span class="p">:</span>
+                <span class="c1"># MUTATION--------------------------------------------------------------------------------------------------------------</span>
+                <span class="k">if</span> <span class="n">attRef</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="p">:</span>  <span class="c1"># Attribute not yet specified</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">attRef</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">buildMatch</span><span class="p">(</span><span class="n">attRef</span><span class="p">,</span> <span class="n">state</span><span class="p">))</span>  <span class="c1"># buildMatch handles both discrete and continuous attributes</span>
+                    <span class="n">changed</span> <span class="o">=</span> <span class="kc">True</span>
+
+                <span class="k">elif</span> <span class="n">attRef</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="p">:</span>  <span class="c1"># Attribute already specified</span>
+                    <span class="n">i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="o">.</span><span class="n">index</span><span class="p">(</span>
+                        <span class="n">attRef</span><span class="p">)</span>  <span class="c1"># reference to the position of the attribute in the rule representation</span>
+                    <span class="c1"># -------------------------------------------------------</span>
+                    <span class="c1"># DISCRETE OR CONTINUOUS ATTRIBUTE - remove attribute specification with 50% chance if we have continuous attribute, or 100% if discrete attribute.</span>
+                    <span class="c1"># -------------------------------------------------------</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">attributeInfo</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">attRef</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>  <span class="c1"># buildMatch handles both discrete and continuous attributes</span>
+                        <span class="n">changed</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="c1"># -------------------------------------------------------</span>
+                    <span class="c1"># CONTINUOUS ATTRIBUTE - (mutate range with 50% probability vs. removing specification of this attribute all together)</span>
+                    <span class="c1"># -------------------------------------------------------</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># Mutate continuous range - based on Bacardit 2009 - Select one bound with uniform probability and add or subtract a randomly generated offset to bound, of size between 0 and 50% of att domain.</span>
+                        <span class="n">attRange</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">attributeInfo</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="nb">float</span><span class="p">(</span><span class="n">attributeInfo</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+                        <span class="n">mutateRange</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">attRange</span>
+                        <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>  <span class="c1"># Mutate minimum</span>
+                            <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>  <span class="c1"># Add</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">mutateRange</span>
+                            <span class="k">else</span><span class="p">:</span>  <span class="c1"># Subtract</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-=</span> <span class="n">mutateRange</span>
+                        <span class="k">else</span><span class="p">:</span>  <span class="c1"># Mutate maximum</span>
+                            <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>  <span class="c1"># Add</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">mutateRange</span>
+                            <span class="k">else</span><span class="p">:</span>  <span class="c1"># Subtract</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-=</span> <span class="n">mutateRange</span>
+
+                        <span class="c1"># Repair range - such that min specified first, and max second.</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+                        <span class="n">changed</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="c1"># -------------------------------------------------------</span>
+                <span class="c1"># NO MUTATION OCCURS</span>
+                <span class="c1"># -------------------------------------------------------</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">pass</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="c1"># MUTATE PHENOTYPE</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="k">if</span> <span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">discretePhenotype</span><span class="p">:</span>
+            <span class="n">nowChanged</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">discretePhenotypeMutation</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">nowChanged</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">continuousPhenotypeMutation</span><span class="p">(</span><span class="n">phenotype</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">changed</span> <span class="ow">or</span> <span class="n">nowChanged</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="Classifier.discretePhenotypeMutation"><a class="viewcode-back" href="../eLCS_Classifier.html#eLCS_Classifier.Classifier.discretePhenotypeMutation">[docs]</a>    <span class="k">def</span> <span class="nf">discretePhenotypeMutation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Mutate this rule&#39;s discrete phenotype. &quot;&quot;&quot;</span>
+        <span class="n">changed</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">cons</span><span class="o">.</span><span class="n">upsilon</span><span class="p">:</span>
+            <span class="n">phenotypeList</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">phenotypeList</span><span class="p">)</span>
+            <span class="n">phenotypeList</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">)</span>
+            <span class="n">newPhenotype</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">phenotypeList</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span> <span class="o">=</span> <span class="n">newPhenotype</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">changed</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="n">changed</span></div>
+
+<div class="viewcode-block" id="Classifier.continuousPhenotypeMutation"><a class="viewcode-back" href="../eLCS_Classifier.html#eLCS_Classifier.Classifier.continuousPhenotypeMutation">[docs]</a>    <span class="k">def</span> <span class="nf">continuousPhenotypeMutation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phenotype</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Mutate this rule&#39;s continuous phenotype. &quot;&quot;&quot;</span>
+        <span class="n">changed</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">cons</span><span class="o">.</span><span class="n">upsilon</span><span class="p">:</span>  <span class="c1"># Mutate continuous phenotype</span>
+            <span class="n">phenRange</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">mutateRange</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">phenRange</span>
+            <span class="n">tempKey</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span>
+                                     <span class="mi">2</span><span class="p">)</span>  <span class="c1"># Make random choice between 3 scenarios, mutate minimums, mutate maximums, mutate both</span>
+            <span class="k">if</span> <span class="n">tempKey</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># Mutate minimum</span>
+                <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">0.5</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span>
+                    <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">mutateRange</span> <span class="o">&lt;=</span> <span class="n">phenotype</span><span class="p">:</span>  <span class="c1"># Checks that mutated range still contains current phenotype</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">mutateRange</span>
+                <span class="k">else</span><span class="p">:</span>  <span class="c1"># Subtract</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-=</span> <span class="n">mutateRange</span>
+                <span class="n">changed</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">elif</span> <span class="n">tempKey</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># Mutate maximum</span>
+                <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">0.5</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span>
+                    <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">mutateRange</span> <span class="o">&gt;=</span> <span class="n">phenotype</span><span class="p">:</span>  <span class="c1"># Checks that mutated range still contains current phenotype</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-=</span> <span class="n">mutateRange</span>
+                <span class="k">else</span><span class="p">:</span>  <span class="c1"># Subtract</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">mutateRange</span>
+                <span class="n">changed</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># mutate both</span>
+                <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">0.5</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span>
+                    <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">mutateRange</span> <span class="o">&lt;=</span> <span class="n">phenotype</span><span class="p">:</span>  <span class="c1"># Checks that mutated range still contains current phenotype</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">mutateRange</span>
+                <span class="k">else</span><span class="p">:</span>  <span class="c1"># Subtract</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-=</span> <span class="n">mutateRange</span>
+                <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">0.5</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span>
+                    <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">mutateRange</span> <span class="o">&gt;=</span> <span class="n">phenotype</span><span class="p">:</span>  <span class="c1"># Checks that mutated range still contains current phenotype</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-=</span> <span class="n">mutateRange</span>
+                <span class="k">else</span><span class="p">:</span>  <span class="c1"># Subtract</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">mutateRange</span>
+                <span class="n">changed</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="c1"># Repair range - such that min specified first, and max second.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+        <span class="c1"># ---------------------------------------------------------------------</span>
+        <span class="k">return</span> <span class="n">changed</span></div>
+
+        <span class="c1"># --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+
+    <span class="c1"># SUBSUMPTION METHODS</span>
+    <span class="c1"># --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="Classifier.subsumes"><a class="viewcode-back" href="../eLCS_Classifier.html#eLCS_Classifier.Classifier.subsumes">[docs]</a>    <span class="k">def</span> <span class="nf">subsumes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cl</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns if the classifier (self) subsumes cl &quot;&quot;&quot;</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="c1"># DISCRETE PHENOTYPE</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="k">if</span> <span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">discretePhenotype</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">cl</span><span class="o">.</span><span class="n">phenotype</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isSubsumer</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">isMoreGeneral</span><span class="p">(</span><span class="n">cl</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="c1"># CONTINUOUS PHENOTYPE -  NOTE: for continuous phenotypes, the subsumption intuition is reversed, i.e. While a subsuming rule condition is more general, a subsuming phenotype is more specific.</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">cl</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">cl</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isSubsumer</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">isMoreGeneral</span><span class="p">(</span><span class="n">cl</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="Classifier.isSubsumer"><a class="viewcode-back" href="../eLCS_Classifier.html#eLCS_Classifier.Classifier.isSubsumer">[docs]</a>    <span class="k">def</span> <span class="nf">isSubsumer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns if the classifier (self) is a possible subsumer. A classifier must be as or more accurate than the classifier it is trying to subsume.  &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">matchCount</span> <span class="o">&gt;</span> <span class="n">cons</span><span class="o">.</span><span class="n">theta_sub</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span> <span class="o">&gt;</span> <span class="n">cons</span><span class="o">.</span><span class="n">acc_sub</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="Classifier.isMoreGeneral"><a class="viewcode-back" href="../eLCS_Classifier.html#eLCS_Classifier.Classifier.isMoreGeneral">[docs]</a>    <span class="k">def</span> <span class="nf">isMoreGeneral</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cl</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns if the classifier (self) is more general than cl. Check that all attributes specified in self are also specified in cl. &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cl</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="p">)):</span>  <span class="c1"># Check each attribute specified in self.condition</span>
+            <span class="n">attributeInfo</span> <span class="o">=</span> <span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">attributeInfo</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cl</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="c1"># -------------------------------------------------------</span>
+            <span class="c1"># CONTINUOUS ATTRIBUTE</span>
+            <span class="c1"># -------------------------------------------------------</span>
+            <span class="k">if</span> <span class="n">attributeInfo</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">otherRef</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="c1"># If self has a narrower ranger of values than it is a subsumer</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">cl</span><span class="o">.</span><span class="n">condition</span><span class="p">[</span><span class="n">otherRef</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">cl</span><span class="o">.</span><span class="n">condition</span><span class="p">[</span><span class="n">otherRef</span><span class="p">][</span><span class="mi">1</span><span class="p">]:</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+    <span class="c1"># --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+    <span class="c1"># DELETION METHOD</span>
+    <span class="c1"># --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="Classifier.getDelProp"><a class="viewcode-back" href="../eLCS_Classifier.html#eLCS_Classifier.Classifier.getDelProp">[docs]</a>    <span class="k">def</span> <span class="nf">getDelProp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meanFitness</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;  Returns the vote for deletion of the classifier. &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitness</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">numerosity</span> <span class="o">&gt;=</span> <span class="n">cons</span><span class="o">.</span><span class="n">delta</span> <span class="o">*</span> <span class="n">meanFitness</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">matchCount</span> <span class="o">&lt;</span> <span class="n">cons</span><span class="o">.</span><span class="n">theta_del</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">deletionVote</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aveMatchSetSize</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">numerosity</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitness</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">deletionVote</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aveMatchSetSize</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">numerosity</span> <span class="o">*</span> <span class="n">meanFitness</span> <span class="o">/</span> <span class="p">(</span><span class="n">cons</span><span class="o">.</span><span class="n">init_fit</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">numerosity</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">deletionVote</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aveMatchSetSize</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">numerosity</span> <span class="o">*</span> <span class="n">meanFitness</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fitness</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">numerosity</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">deletionVote</span></div>
+
+    <span class="c1"># --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+    <span class="c1"># OTHER METHODS</span>
+    <span class="c1"># --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="Classifier.buildMatch"><a class="viewcode-back" href="../eLCS_Classifier.html#eLCS_Classifier.Classifier.buildMatch">[docs]</a>    <span class="k">def</span> <span class="nf">buildMatch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attRef</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Builds a matching condition for the classifierCovering method. &quot;&quot;&quot;</span>
+        <span class="n">attributeInfo</span> <span class="o">=</span> <span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">attributeInfo</span><span class="p">[</span><span class="n">attRef</span><span class="p">]</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="c1"># CONTINUOUS ATTRIBUTE</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="k">if</span> <span class="n">attributeInfo</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">attRange</span> <span class="o">=</span> <span class="n">attributeInfo</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">attributeInfo</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">rangeRadius</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">75</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.01</span> <span class="o">*</span> <span class="n">attRange</span> <span class="o">/</span> <span class="mf">2.0</span>  <span class="c1"># Continuous initialization domain radius.</span>
+            <span class="n">Low</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="n">attRef</span><span class="p">]</span> <span class="o">-</span> <span class="n">rangeRadius</span>
+            <span class="n">High</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="n">attRef</span><span class="p">]</span> <span class="o">+</span> <span class="n">rangeRadius</span>
+            <span class="n">condList</span> <span class="o">=</span> <span class="p">[</span><span class="n">Low</span><span class="p">,</span>
+                        <span class="n">High</span><span class="p">]</span>  <span class="c1"># ALKR Representation, Initialization centered around training instance  with a range between 25 and 75% of the domain size.</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="c1"># DISCRETE ATTRIBUTE</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">condList</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="n">attRef</span><span class="p">]</span>  <span class="c1"># State already formatted like GABIL in DataManagement</span>
+
+        <span class="k">return</span> <span class="n">condList</span></div>
+
+<div class="viewcode-block" id="Classifier.equals"><a class="viewcode-back" href="../eLCS_Classifier.html#eLCS_Classifier.Classifier.equals">[docs]</a>    <span class="k">def</span> <span class="nf">equals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cl</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns if the two classifiers are identical in condition and phenotype. This works for discrete or continuous attributes or phenotypes. &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">cl</span><span class="o">.</span><span class="n">phenotype</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">cl</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="p">):</span>  <span class="c1"># Is phenotype the same and are the same number of attributes specified - quick equality check first.</span>
+            <span class="n">clRefs</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">cl</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="p">)</span>
+            <span class="n">selfRefs</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">clRefs</span> <span class="o">==</span> <span class="n">selfRefs</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cl</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="p">)):</span>
+                    <span class="n">tempIndex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">cl</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                    <span class="k">if</span> <span class="n">cl</span><span class="o">.</span><span class="n">condition</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">[</span><span class="n">tempIndex</span><span class="p">]:</span>
+                        <span class="k">pass</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="kc">False</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+    <span class="c1"># --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+    <span class="c1"># PARAMETER UPDATES</span>
+    <span class="c1"># --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="Classifier.updateAccuracy"><a class="viewcode-back" href="../eLCS_Classifier.html#eLCS_Classifier.Classifier.updateAccuracy">[docs]</a>    <span class="k">def</span> <span class="nf">updateAccuracy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Update the accuracy tracker &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">correctCount</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matchCount</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Classifier.updateFitness"><a class="viewcode-back" href="../eLCS_Classifier.html#eLCS_Classifier.Classifier.updateFitness">[docs]</a>    <span class="k">def</span> <span class="nf">updateFitness</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Update the fitness parameter. &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">discretePhenotype</span> <span class="ow">or</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">phenotypeRange</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fitness</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span><span class="p">,</span> <span class="n">cons</span><span class="o">.</span><span class="n">nu</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">phenotypeRange</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fitness</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fitness</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="nb">pow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span><span class="p">,</span> <span class="n">cons</span><span class="o">.</span><span class="n">nu</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">phenotypeRange</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Classifier.updateMatchSetSize"><a class="viewcode-back" href="../eLCS_Classifier.html#eLCS_Classifier.Classifier.updateMatchSetSize">[docs]</a>    <span class="k">def</span> <span class="nf">updateMatchSetSize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matchSetSize</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;  Updates the average match set size. &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">matchCount</span> <span class="o">&lt;</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">cons</span><span class="o">.</span><span class="n">beta</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">aveMatchSetSize</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">aveMatchSetSize</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matchCount</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">matchSetSize</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">matchCount</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">aveMatchSetSize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aveMatchSetSize</span> <span class="o">+</span> <span class="n">cons</span><span class="o">.</span><span class="n">beta</span> <span class="o">*</span> <span class="p">(</span><span class="n">matchSetSize</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">aveMatchSetSize</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Classifier.updateExperience"><a class="viewcode-back" href="../eLCS_Classifier.html#eLCS_Classifier.Classifier.updateExperience">[docs]</a>    <span class="k">def</span> <span class="nf">updateExperience</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Increases the experience of the classifier by one. Once an epoch has completed, rule accuracy can&#39;t change.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matchCount</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+<div class="viewcode-block" id="Classifier.updateCorrect"><a class="viewcode-back" href="../eLCS_Classifier.html#eLCS_Classifier.Classifier.updateCorrect">[docs]</a>    <span class="k">def</span> <span class="nf">updateCorrect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Increases the correct phenotype tracking by one. Once an epoch has completed, rule accuracy can&#39;t change.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">correctCount</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+<div class="viewcode-block" id="Classifier.updateNumerosity"><a class="viewcode-back" href="../eLCS_Classifier.html#eLCS_Classifier.Classifier.updateNumerosity">[docs]</a>    <span class="k">def</span> <span class="nf">updateNumerosity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Updates the numberosity of the classifier.  Notice that &#39;num&#39; can be negative! &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numerosity</span> <span class="o">+=</span> <span class="n">num</span></div>
+
+<div class="viewcode-block" id="Classifier.updateTimeStamp"><a class="viewcode-back" href="../eLCS_Classifier.html#eLCS_Classifier.Classifier.updateTimeStamp">[docs]</a>    <span class="k">def</span> <span class="nf">updateTimeStamp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ts</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Sets the time stamp of the classifier. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timeStampGA</span> <span class="o">=</span> <span class="n">ts</span></div>
+
+<div class="viewcode-block" id="Classifier.setAccuracy"><a class="viewcode-back" href="../eLCS_Classifier.html#eLCS_Classifier.Classifier.setAccuracy">[docs]</a>    <span class="k">def</span> <span class="nf">setAccuracy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">acc</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Sets the accuracy of the classifier &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span> <span class="o">=</span> <span class="n">acc</span></div>
+
+<div class="viewcode-block" id="Classifier.setFitness"><a class="viewcode-back" href="../eLCS_Classifier.html#eLCS_Classifier.Classifier.setFitness">[docs]</a>    <span class="k">def</span> <span class="nf">setFitness</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fit</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;  Sets the fitness of the classifier. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fitness</span> <span class="o">=</span> <span class="n">fit</span></div>
+
+    <span class="c1"># --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+    <span class="c1"># PRINT CLASSIFIER FOR POPULATION OUTPUT FILE</span>
+    <span class="c1"># --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="Classifier.printClassifier"><a class="viewcode-back" href="../eLCS_Classifier.html#eLCS_Classifier.Classifier.printClassifier">[docs]</a>    <span class="k">def</span> <span class="nf">printClassifier</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Formats and returns an output string describing this classifier. &quot;&quot;&quot;</span>
+        <span class="n">classifierString</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">attRef</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">numAttributes</span><span class="p">):</span>
+            <span class="n">attributeInfo</span> <span class="o">=</span> <span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">attributeInfo</span><span class="p">[</span><span class="n">attRef</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">attRef</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="p">:</span>  <span class="c1"># If the attribute was specified in the rule</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">attRef</span><span class="p">)</span>
+                <span class="c1"># -------------------------------------------------------</span>
+                <span class="c1"># CONTINUOUS ATTRIBUTE </span>
+                <span class="c1"># -------------------------------------------------------</span>
+                <span class="k">if</span> <span class="n">attributeInfo</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                    <span class="n">classifierString</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;;&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span>
+                <span class="c1"># -------------------------------------------------------</span>
+                <span class="c1"># DISCRETE ATTRIBUTE </span>
+                <span class="c1"># -------------------------------------------------------</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">classifierString</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># Attribute is wild.</span>
+                <span class="n">classifierString</span> <span class="o">+=</span> <span class="s1">&#39;#&#39;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span>
+        <span class="c1"># -------------------------------------------------------------------------------</span>
+        <span class="n">specificity</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">numAttributes</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">discretePhenotype</span><span class="p">:</span>
+            <span class="n">classifierString</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">classifierString</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;;&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span>
+        <span class="c1"># ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+        <span class="n">classifierString</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fitness</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">numerosity</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">aveMatchSetSize</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">timeStampGA</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">initTimeStamp</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+            <span class="n">specificity</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span>
+        <span class="n">classifierString</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">deletionVote</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">correctCount</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matchCount</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+        <span class="c1"># ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+        <span class="k">return</span> <span class="n">classifierString</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">CITS4404-G1</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Scott McCormack.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

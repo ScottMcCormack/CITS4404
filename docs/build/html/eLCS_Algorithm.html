@@ -1,0 +1,152 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>eLCS_Algorithm module &#8212; CITS4404-G1 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-eLCS_Algorithm">
+<span id="elcs-algorithm-module"></span><h1>eLCS_Algorithm module<a class="headerlink" href="#module-eLCS_Algorithm" title="Permalink to this headline">¶</a></h1>
+<p>Name:        eLCS_Algorithm.py
+Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA
+Contact:     <a class="reference external" href="mailto:ryan&#46;j&#46;urbanowicz&#37;&#52;&#48;darmouth&#46;edu">ryan<span>&#46;</span>j<span>&#46;</span>urbanowicz<span>&#64;</span>darmouth<span>&#46;</span>edu</a>
+Created:     November 1, 2013
+Description: The major controlling module of eLCS.  Includes the major run loop which controls learning over a specified number of iterations.  Also includes</p>
+<blockquote>
+<div>periodic tracking of estimated performance, and checkpoints where complete evaluations of the eLCS rule population is performed.</div></blockquote>
+<p>algorithm published by Stewart Wilson (1995).</p>
+<p>Copyright (C) 2013 Ryan Urbanowicz 
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
+Free Software Foundation; either version 3 of the License, or (at your option) any later version.</p>
+<p>This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY 
+or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</p>
+<p>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 
+Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+———————————————————————————————————————————————————</p>
+<dl class="class">
+<dt id="eLCS_Algorithm.eLCS">
+<em class="property">class </em><code class="descclassname">eLCS_Algorithm.</code><code class="descname">eLCS</code><a class="reference internal" href="_modules/eLCS_Algorithm.html#eLCS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS_Algorithm.eLCS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="eLCS_Algorithm.eLCS.doContPopEvaluation">
+<code class="descname">doContPopEvaluation</code><span class="sig-paren">(</span><em>isTrain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS_Algorithm.html#eLCS.doContPopEvaluation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS_Algorithm.eLCS.doContPopEvaluation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs evaluation of population via the copied environment. Specifically developed for continuous phenotype evaulation.  
+The population is maintained unchanging throughout the evaluation.  Works on both training and testing data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS_Algorithm.eLCS.doPopEvaluation">
+<code class="descname">doPopEvaluation</code><span class="sig-paren">(</span><em>isTrain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS_Algorithm.html#eLCS.doPopEvaluation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS_Algorithm.eLCS.doPopEvaluation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs a complete evaluation of the current rule population.  The population is unchanged throughout this evaluation. Works on both training and testing data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS_Algorithm.eLCS.populationReboot">
+<code class="descname">populationReboot</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS_Algorithm.html#eLCS.populationReboot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS_Algorithm.eLCS.populationReboot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Manages the reformation of a previously saved eLCS classifier population.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS_Algorithm.eLCS.runIteration">
+<code class="descname">runIteration</code><span class="sig-paren">(</span><em>state_phenotype</em>, <em>exploreIter</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS_Algorithm.html#eLCS.runIteration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS_Algorithm.eLCS.runIteration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run a single eLCS learning iteration.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS_Algorithm.eLCS.run_eLCS">
+<code class="descname">run_eLCS</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS_Algorithm.html#eLCS.run_eLCS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS_Algorithm.eLCS.run_eLCS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs the initialized eLCS algorithm.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">CITS4404-G1</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Scott McCormack.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/eLCS_Algorithm.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
