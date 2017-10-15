@@ -102,4 +102,4 @@ ENV/
 .idea/
 Local_Output/
 
-doc/build
+docs/build
