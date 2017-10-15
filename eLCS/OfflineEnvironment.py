@@ -24,13 +24,13 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 """
 
 # Import Required Modules--------------------------------------
-from eLCS_DataManagement import DataManagement
-from eLCS_Constants import cons
+from eLCS.DataManagement import DataManagement
+from eLCS.Constants import cons
 
 
 # -------------------------------------------------------------
 
-class Offline_Environment:
+class OfflineEnvironment:
     def __init__(self):
         # Initialize global variables-------------------------------------------------
         self.dataRef = 0

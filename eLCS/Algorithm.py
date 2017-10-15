@@ -24,11 +24,11 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 """
 
 # Import Required Modules-------------------------------
-from eLCS_Constants import cons
-from eLCS_ClassifierSet import ClassifierSet
-from eLCS_Prediction import Prediction
-from eLCS_ClassAccuracy import ClassAccuracy
-from eLCS_OutputFileManager import OutputFileManager
+from eLCS.Constants import cons
+from eLCS.ClassifierSet import ClassifierSet
+from eLCS.Prediction import Prediction
+from eLCS.ClassAccuracy import ClassAccuracy
+from eLCS.OutputFileManager import OutputFileManager
 
 import random
 import math

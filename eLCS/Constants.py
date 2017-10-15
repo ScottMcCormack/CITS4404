@@ -28,8 +28,8 @@ class Constants:
     def setConstants(self, par):
         """ Takes the parameters parsed as a dictionary from eLCS_ConfigParser and saves them as global constants. """
         # Static Run Parameters
-        self.datasetPath = 'Demo_Datasets'
-        self.outputPath = 'Local_Output'
+        self.datasetPath = 'datasets'
+        self.outputPath = 'output'
 
         # Major Run Parameters -----------------------------------------------------------------------------------------
         self.trainFile = os.path.join(self.datasetPath, par['trainFile'])  # Saved as text

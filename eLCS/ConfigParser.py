@@ -23,7 +23,7 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 """
 
 # Import Required Modules----------
-from eLCS_Constants import cons
+from eLCS.Constants import cons
 
 
 # ---------------------------------
