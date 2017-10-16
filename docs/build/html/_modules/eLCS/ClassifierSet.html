@@ -1,0 +1,662 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>eLCS.ClassifierSet &#8212; CITS4404-G1 1.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for eLCS.ClassifierSet</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Name:        eLCS_ClassifierSet.py</span>
+<span class="sd">Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA</span>
+<span class="sd">Contact:     ryan.j.urbanowicz@darmouth.edu</span>
+<span class="sd">Created:     November 1, 2013</span>
+<span class="sd">Description: This module handles all classifier sets (population, match set, correct set) along with mechanisms and heuristics that act on these sets.  </span>
+<span class="sd">             </span>
+<span class="sd">---------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="sd">eLCS: Educational Learning Classifier System - A basic LCS coded for educational purposes.  This LCS algorithm uses supervised learning, and thus is most </span>
+<span class="sd">similar to &quot;UCS&quot;, an LCS algorithm published by Ester Bernado-Mansilla and Josep Garrell-Guiu (2003) which in turn is based heavily on &quot;XCS&quot;, an LCS </span>
+<span class="sd">algorithm published by Stewart Wilson (1995).  </span>
+
+<span class="sd">Copyright (C) 2013 Ryan Urbanowicz </span>
+<span class="sd">This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the </span>
+<span class="sd">Free Software Foundation; either version 3 of the License, or (at your option) any later version.</span>
+
+<span class="sd">This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY </span>
+<span class="sd">or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</span>
+
+<span class="sd">You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, </span>
+<span class="sd">Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA</span>
+<span class="sd">---------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Import Required Modules---------------------</span>
+<span class="kn">from</span> <span class="nn">eLCS.Constants</span> <span class="k">import</span> <span class="n">cons</span>
+<span class="kn">from</span> <span class="nn">eLCS.Classifier</span> <span class="k">import</span> <span class="n">Classifier</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+
+
+<span class="c1"># --------------------------------------------</span>
+
+<div class="viewcode-block" id="ClassifierSet"><a class="viewcode-back" href="../../eLCS.html#eLCS.ClassifierSet.ClassifierSet">[docs]</a><span class="k">class</span> <span class="nc">ClassifierSet</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Overloaded initialization: Handles creation of a new population or a rebooted population (i.e. a previously saved population). &quot;&quot;&quot;</span>
+        <span class="c1"># Major Parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># List of classifiers/rules</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matchSet</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># List of references to rules in population that match</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">correctSet</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># List of references to rules in population that both match and specify correct phenotype</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">microPopSize</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Tracks the current micro population size, i.e. the population size which takes rule numerosity into account.</span>
+
+        <span class="c1"># Evaluation Parameters-------------------------------</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aveGenerality</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">expRules</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attributeSpecList</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attributeAccList</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">avePhenotypeRange</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+        <span class="c1"># Set Constructors-------------------------------------</span>
+        <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">makePop</span><span class="p">()</span>  <span class="c1"># Initialize a new population</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rebootPop</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>  <span class="c1"># Initialize a population based on an existing saved rule population</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ClassifierSet: Error building population.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+    <span class="c1"># POPULATION CONSTRUCTOR METHODS</span>
+    <span class="c1"># --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="ClassifierSet.makePop"><a class="viewcode-back" href="../../eLCS.html#eLCS.ClassifierSet.ClassifierSet.makePop">[docs]</a>    <span class="k">def</span> <span class="nf">makePop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Initializes the rule population &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+<div class="viewcode-block" id="ClassifierSet.rebootPop"><a class="viewcode-back" href="../../eLCS.html#eLCS.ClassifierSet.ClassifierSet.rebootPop">[docs]</a>    <span class="k">def</span> <span class="nf">rebootPop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remakeFile</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Remakes a previously evolved population from a saved text file. &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Rebooting the following population: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">remakeFile</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_RulePop.txt&quot;</span><span class="p">)</span>
+        <span class="c1"># *******************Initial file handling**********************************************************</span>
+        <span class="n">datasetList</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">remakeFile</span> <span class="o">+</span> <span class="s2">&quot;_RulePop.txt&quot;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">inst</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">inst</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">inst</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">inst</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;cannot open&#39;</span><span class="p">,</span> <span class="n">remakeFile</span> <span class="o">+</span> <span class="s2">&quot;_RulePop.txt&quot;</span><span class="p">)</span>
+            <span class="k">raise</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">headerList</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>  <span class="c1"># strip off first row</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">lineList</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">datasetList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lineList</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="c1"># **************************************************************************************************</span>
+        <span class="k">for</span> <span class="n">each</span> <span class="ow">in</span> <span class="n">datasetList</span><span class="p">:</span>
+            <span class="n">cl</span> <span class="o">=</span> <span class="n">Classifier</span><span class="p">(</span><span class="n">each</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cl</span><span class="p">)</span>
+            <span class="n">numerosityRef</span> <span class="o">=</span> <span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">numAttributes</span> <span class="o">+</span> <span class="mi">3</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">microPopSize</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">each</span><span class="p">[</span><span class="n">numerosityRef</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Rebooted Rule Population has &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot; Macro Pop Size.&quot;</span><span class="p">)</span></div>
+
+    <span class="c1"># --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+    <span class="c1"># CLASSIFIER SET CONSTRUCTOR METHODS</span>
+    <span class="c1"># --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="ClassifierSet.makeMatchSet"><a class="viewcode-back" href="../../eLCS.html#eLCS.ClassifierSet.ClassifierSet.makeMatchSet">[docs]</a>    <span class="k">def</span> <span class="nf">makeMatchSet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_phenotype</span><span class="p">,</span> <span class="n">exploreIter</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Constructs a match set from the population. Covering is initiated if the match set is empty or a rule with the current correct phenotype is absent. &quot;&quot;&quot;</span>
+        <span class="c1"># Initial values</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">state_phenotype</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">phenotype</span> <span class="o">=</span> <span class="n">state_phenotype</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">doCovering</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># Covering check: Twofold (1)checks that a match is present, and (2) that at least one match dictates the correct phenotype.</span>
+        <span class="n">setNumerositySum</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="c1"># MATCHING</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="n">cons</span><span class="o">.</span><span class="n">timer</span><span class="o">.</span><span class="n">startTimeMatching</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">)):</span>  <span class="c1"># Go through the population</span>
+            <span class="n">cl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>  <span class="c1"># One classifier at a time</span>
+            <span class="k">if</span> <span class="n">cl</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>  <span class="c1"># Check for match</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">matchSet</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>  <span class="c1"># If match - add classifier to match set</span>
+                <span class="n">setNumerositySum</span> <span class="o">+=</span> <span class="n">cl</span><span class="o">.</span><span class="n">numerosity</span>  <span class="c1"># Increment the set numerosity sum</span>
+
+                <span class="c1"># Covering Check--------------------------------------------------------</span>
+                <span class="k">if</span> <span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">discretePhenotype</span><span class="p">:</span>  <span class="c1"># Discrete phenotype</span>
+                    <span class="k">if</span> <span class="n">cl</span><span class="o">.</span><span class="n">phenotype</span> <span class="o">==</span> <span class="n">phenotype</span><span class="p">:</span>  <span class="c1"># Check for phenotype coverage</span>
+                        <span class="n">doCovering</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">else</span><span class="p">:</span>  <span class="c1"># Continuous phenotype</span>
+                    <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">cl</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="nb">float</span><span class="p">(</span><span class="n">phenotype</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="nb">float</span><span class="p">(</span>
+                            <span class="n">cl</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>  <span class="c1"># Check for phenotype coverage</span>
+                        <span class="n">doCovering</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">cons</span><span class="o">.</span><span class="n">timer</span><span class="o">.</span><span class="n">stopTimeMatching</span><span class="p">()</span>
+
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="c1"># COVERING</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="k">while</span> <span class="n">doCovering</span><span class="p">:</span>
+            <span class="n">newCl</span> <span class="o">=</span> <span class="n">Classifier</span><span class="p">(</span><span class="n">setNumerositySum</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">exploreIter</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">phenotype</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">addClassifierToPopulation</span><span class="p">(</span><span class="n">newCl</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">matchSet</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># Add covered classifier to matchset</span>
+            <span class="n">doCovering</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="ClassifierSet.makeCorrectSet"><a class="viewcode-back" href="../../eLCS.html#eLCS.ClassifierSet.ClassifierSet.makeCorrectSet">[docs]</a>    <span class="k">def</span> <span class="nf">makeCorrectSet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phenotype</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Constructs a correct set out of the given match set. &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matchSet</span><span class="p">)):</span>
+            <span class="n">ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">matchSet</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="c1"># -------------------------------------------------------</span>
+            <span class="c1"># DISCRETE PHENOTYPE</span>
+            <span class="c1"># -------------------------------------------------------</span>
+            <span class="k">if</span> <span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">discretePhenotype</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">[</span><span class="n">ref</span><span class="p">]</span><span class="o">.</span><span class="n">phenotype</span> <span class="o">==</span> <span class="n">phenotype</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">correctSet</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
+                    <span class="c1"># -------------------------------------------------------</span>
+            <span class="c1"># CONTINUOUS PHENOTYPE</span>
+            <span class="c1"># -------------------------------------------------------</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">phenotype</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">[</span><span class="n">ref</span><span class="p">]</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="ow">and</span> <span class="nb">float</span><span class="p">(</span><span class="n">phenotype</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="nb">float</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">[</span><span class="n">ref</span><span class="p">]</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">correctSet</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ClassifierSet.makeEvalMatchSet"><a class="viewcode-back" href="../../eLCS.html#eLCS.ClassifierSet.ClassifierSet.makeEvalMatchSet">[docs]</a>    <span class="k">def</span> <span class="nf">makeEvalMatchSet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Constructs a match set for evaluation purposes which does not activate either covering or deletion. &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">)):</span>  <span class="c1"># Go through the population</span>
+            <span class="n">cl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>  <span class="c1"># A single classifier</span>
+            <span class="k">if</span> <span class="n">cl</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>  <span class="c1"># Check for match</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">matchSet</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>  <span class="c1"># Add classifier to match set</span></div>
+
+    <span class="c1"># --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+    <span class="c1"># CLASSIFIER DELETION METHODS</span>
+    <span class="c1"># --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="ClassifierSet.deletion"><a class="viewcode-back" href="../../eLCS.html#eLCS.ClassifierSet.ClassifierSet.deletion">[docs]</a>    <span class="k">def</span> <span class="nf">deletion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exploreIter</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the population size back to the maximum set by the user by deleting rules. &quot;&quot;&quot;</span>
+        <span class="n">cons</span><span class="o">.</span><span class="n">timer</span><span class="o">.</span><span class="n">startTimeDeletion</span><span class="p">()</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">microPopSize</span> <span class="o">&gt;</span> <span class="n">cons</span><span class="o">.</span><span class="n">N</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">deleteFromPopulation</span><span class="p">()</span>
+        <span class="n">cons</span><span class="o">.</span><span class="n">timer</span><span class="o">.</span><span class="n">stopTimeDeletion</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ClassifierSet.deleteFromPopulation"><a class="viewcode-back" href="../../eLCS.html#eLCS.ClassifierSet.ClassifierSet.deleteFromPopulation">[docs]</a>    <span class="k">def</span> <span class="nf">deleteFromPopulation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Deletes one classifier in the population.  The classifier that will be deleted is chosen by roulette wheel selection</span>
+<span class="sd">        considering the deletion vote. Returns the macro-classifier which got decreased by one micro-classifier. &quot;&quot;&quot;</span>
+        <span class="n">meanFitness</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getPopFitnessSum</span><span class="p">()</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">microPopSize</span><span class="p">)</span>
+
+        <span class="c1"># Calculate total wheel size------------------------------</span>
+        <span class="n">sumCl</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">voteList</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">cl</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">:</span>
+            <span class="n">vote</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">getDelProp</span><span class="p">(</span><span class="n">meanFitness</span><span class="p">)</span>
+            <span class="n">sumCl</span> <span class="o">+=</span> <span class="n">vote</span>
+            <span class="n">voteList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vote</span><span class="p">)</span>
+        <span class="c1"># --------------------------------------------------------</span>
+        <span class="n">choicePoint</span> <span class="o">=</span> <span class="n">sumCl</span> <span class="o">*</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>  <span class="c1"># Determine the choice point</span>
+
+        <span class="n">newSum</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">voteList</span><span class="p">)):</span>
+            <span class="n">cl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">newSum</span> <span class="o">=</span> <span class="n">newSum</span> <span class="o">+</span> <span class="n">voteList</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">newSum</span> <span class="o">&gt;</span> <span class="n">choicePoint</span><span class="p">:</span>  <span class="c1"># Select classifier for deletion</span>
+                <span class="c1"># Delete classifier----------------------------------</span>
+                <span class="n">cl</span><span class="o">.</span><span class="n">updateNumerosity</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">microPopSize</span> <span class="o">-=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">cl</span><span class="o">.</span><span class="n">numerosity</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># When all micro-classifiers for a given classifier have been depleted.</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">removeMacroClassifier</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">deleteFromMatchSet</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">deleteFromCorrectSet</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="k">return</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ClassifierSet: No eligible rules found for deletion in deleteFromPopulation.&quot;</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="ClassifierSet.removeMacroClassifier"><a class="viewcode-back" href="../../eLCS.html#eLCS.ClassifierSet.ClassifierSet.removeMacroClassifier">[docs]</a>    <span class="k">def</span> <span class="nf">removeMacroClassifier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Removes the specified (macro-) classifier from the population. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ClassifierSet.deleteFromMatchSet"><a class="viewcode-back" href="../../eLCS.html#eLCS.ClassifierSet.ClassifierSet.deleteFromMatchSet">[docs]</a>    <span class="k">def</span> <span class="nf">deleteFromMatchSet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deleteRef</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Delete reference to classifier in population, contained in self.matchSet.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">deleteRef</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">matchSet</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">matchSet</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">deleteRef</span><span class="p">)</span>
+
+        <span class="c1"># Update match set reference list--------</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matchSet</span><span class="p">)):</span>
+            <span class="n">ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">matchSet</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">ref</span> <span class="o">&gt;</span> <span class="n">deleteRef</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">matchSet</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span></div>
+
+<div class="viewcode-block" id="ClassifierSet.deleteFromCorrectSet"><a class="viewcode-back" href="../../eLCS.html#eLCS.ClassifierSet.ClassifierSet.deleteFromCorrectSet">[docs]</a>    <span class="k">def</span> <span class="nf">deleteFromCorrectSet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deleteRef</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Delete reference to classifier in population, contained in self.corectSet.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">deleteRef</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">correctSet</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">correctSet</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">deleteRef</span><span class="p">)</span>
+
+        <span class="c1"># Update match set reference list--------</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">correctSet</span><span class="p">)):</span>
+            <span class="n">ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">correctSet</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">ref</span> <span class="o">&gt;</span> <span class="n">deleteRef</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">correctSet</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span></div>
+
+    <span class="c1"># --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+    <span class="c1"># GENETIC ALGORITHM</span>
+    <span class="c1"># --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="ClassifierSet.runGA"><a class="viewcode-back" href="../../eLCS.html#eLCS.ClassifierSet.ClassifierSet.runGA">[docs]</a>    <span class="k">def</span> <span class="nf">runGA</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exploreIter</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">phenotype</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; The genetic discovery mechanism in eLCS is controlled here. &quot;&quot;&quot;</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="c1"># GA RUN REQUIREMENT</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">exploreIter</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">getIterStampAverage</span><span class="p">())</span> <span class="o">&lt;</span> <span class="n">cons</span><span class="o">.</span><span class="n">theta_GA</span><span class="p">:</span>  <span class="c1"># Does the correct set meet the requirements for activating the GA?</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">setIterStamps</span><span class="p">(</span>
+            <span class="n">exploreIter</span><span class="p">)</span>  <span class="c1"># Updates the iteration time stamp for all rules in the correct set (which the GA opperates in).</span>
+        <span class="n">changed</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="c1"># SELECT PARENTS - Niche GA - selects parents from the correct class</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="n">cons</span><span class="o">.</span><span class="n">timer</span><span class="o">.</span><span class="n">startTimeSelection</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">cons</span><span class="o">.</span><span class="n">selectionMethod</span> <span class="o">==</span> <span class="s2">&quot;roulette&quot;</span><span class="p">:</span>
+            <span class="n">selectList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">selectClassifierRW</span><span class="p">()</span>
+            <span class="n">clP1</span> <span class="o">=</span> <span class="n">selectList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">clP2</span> <span class="o">=</span> <span class="n">selectList</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">cons</span><span class="o">.</span><span class="n">selectionMethod</span> <span class="o">==</span> <span class="s2">&quot;tournament&quot;</span><span class="p">:</span>
+            <span class="n">selectList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">selectClassifierT</span><span class="p">()</span>
+            <span class="n">clP1</span> <span class="o">=</span> <span class="n">selectList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">clP2</span> <span class="o">=</span> <span class="n">selectList</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ClassifierSet: Error - requested GA selection method not available.&quot;</span><span class="p">)</span>
+        <span class="n">cons</span><span class="o">.</span><span class="n">timer</span><span class="o">.</span><span class="n">stopTimeSelection</span><span class="p">()</span>
+
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="c1"># INITIALIZE OFFSPRING </span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="n">cl1</span> <span class="o">=</span> <span class="n">Classifier</span><span class="p">(</span><span class="n">clP1</span><span class="p">,</span> <span class="n">exploreIter</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">clP2</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cl2</span> <span class="o">=</span> <span class="n">Classifier</span><span class="p">(</span><span class="n">clP1</span><span class="p">,</span> <span class="n">exploreIter</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cl2</span> <span class="o">=</span> <span class="n">Classifier</span><span class="p">(</span><span class="n">clP2</span><span class="p">,</span> <span class="n">exploreIter</span><span class="p">)</span>
+
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="c1"># CROSSOVER OPERATOR - Uniform Crossover Implemented (i.e. all attributes have equal probability of crossing over between two parents)</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">cl1</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="n">cl2</span><span class="p">)</span> <span class="ow">and</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">cons</span><span class="o">.</span><span class="n">chi</span><span class="p">:</span>
+            <span class="n">changed</span> <span class="o">=</span> <span class="n">cl1</span><span class="o">.</span><span class="n">uniformCrossover</span><span class="p">(</span><span class="n">cl2</span><span class="p">)</span>
+
+            <span class="c1"># -------------------------------------------------------</span>
+        <span class="c1"># INITIALIZE KEY OFFSPRING PARAMETERS</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="k">if</span> <span class="n">changed</span><span class="p">:</span>
+            <span class="n">cl1</span><span class="o">.</span><span class="n">setAccuracy</span><span class="p">((</span><span class="n">cl1</span><span class="o">.</span><span class="n">accuracy</span> <span class="o">+</span> <span class="n">cl2</span><span class="o">.</span><span class="n">accuracy</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
+            <span class="n">cl1</span><span class="o">.</span><span class="n">setFitness</span><span class="p">(</span><span class="n">cons</span><span class="o">.</span><span class="n">fitnessReduction</span> <span class="o">*</span> <span class="p">(</span><span class="n">cl1</span><span class="o">.</span><span class="n">fitness</span> <span class="o">+</span> <span class="n">cl2</span><span class="o">.</span><span class="n">fitness</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
+            <span class="n">cl2</span><span class="o">.</span><span class="n">setAccuracy</span><span class="p">(</span><span class="n">cl1</span><span class="o">.</span><span class="n">accuracy</span><span class="p">)</span>
+            <span class="n">cl2</span><span class="o">.</span><span class="n">setFitness</span><span class="p">(</span><span class="n">cl1</span><span class="o">.</span><span class="n">fitness</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cl1</span><span class="o">.</span><span class="n">setFitness</span><span class="p">(</span><span class="n">cons</span><span class="o">.</span><span class="n">fitnessReduction</span> <span class="o">*</span> <span class="n">cl1</span><span class="o">.</span><span class="n">fitness</span><span class="p">)</span>
+            <span class="n">cl2</span><span class="o">.</span><span class="n">setFitness</span><span class="p">(</span><span class="n">cons</span><span class="o">.</span><span class="n">fitnessReduction</span> <span class="o">*</span> <span class="n">cl2</span><span class="o">.</span><span class="n">fitness</span><span class="p">)</span>
+
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="c1"># MUTATION OPERATOR </span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="n">nowchanged</span> <span class="o">=</span> <span class="n">cl1</span><span class="o">.</span><span class="n">Mutation</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">phenotype</span><span class="p">)</span>
+        <span class="n">howaboutnow</span> <span class="o">=</span> <span class="n">cl2</span><span class="o">.</span><span class="n">Mutation</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">phenotype</span><span class="p">)</span>
+
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="c1"># ADD OFFSPRING TO POPULATION</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="k">if</span> <span class="n">changed</span> <span class="ow">or</span> <span class="n">nowchanged</span> <span class="ow">or</span> <span class="n">howaboutnow</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">insertDiscoveredClassifiers</span><span class="p">(</span><span class="n">cl1</span><span class="p">,</span> <span class="n">cl2</span><span class="p">,</span> <span class="n">clP1</span><span class="p">,</span> <span class="n">clP2</span><span class="p">,</span> <span class="n">exploreIter</span><span class="p">)</span>  <span class="c1"># Subsumption</span></div>
+
+    <span class="c1"># --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+    <span class="c1"># SELECTION METHODS</span>
+    <span class="c1"># --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="ClassifierSet.selectClassifierRW"><a class="viewcode-back" href="../../eLCS.html#eLCS.ClassifierSet.ClassifierSet.selectClassifierRW">[docs]</a>    <span class="k">def</span> <span class="nf">selectClassifierRW</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Selects parents using roulette wheel selection according to the fitness of the classifiers. &quot;&quot;&quot;</span>
+        <span class="c1"># Prepare for correct set or &#39;niche&#39; selection.</span>
+        <span class="n">setList</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">correctSet</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">setList</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">selectList</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+            <span class="n">currentCount</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Pick two parents</span>
+            <span class="c1"># -----------------------------------------------</span>
+            <span class="k">while</span> <span class="n">currentCount</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">fitSum</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getFitnessSum</span><span class="p">(</span><span class="n">setList</span><span class="p">)</span>
+
+                <span class="n">choiceP</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="n">fitSum</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">sumCl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">[</span><span class="n">setList</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="o">.</span><span class="n">fitness</span>
+                <span class="k">while</span> <span class="n">choiceP</span> <span class="o">&gt;</span> <span class="n">sumCl</span><span class="p">:</span>
+                    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+                    <span class="n">sumCl</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">[</span><span class="n">setList</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="o">.</span><span class="n">fitness</span>
+
+                <span class="n">selectList</span><span class="p">[</span><span class="n">currentCount</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">[</span><span class="n">setList</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+                <span class="n">setList</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">setList</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="n">currentCount</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="c1"># -----------------------------------------------</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">setList</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">selectList</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">[</span><span class="n">setList</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">[</span><span class="n">setList</span><span class="p">[</span><span class="mi">1</span><span class="p">]]]</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">setList</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">selectList</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">[</span><span class="n">setList</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">[</span><span class="n">setList</span><span class="p">[</span><span class="mi">0</span><span class="p">]]]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ClassifierSet: Error in parent selection.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">selectList</span></div>
+
+<div class="viewcode-block" id="ClassifierSet.selectClassifierT"><a class="viewcode-back" href="../../eLCS.html#eLCS.ClassifierSet.ClassifierSet.selectClassifierT">[docs]</a>    <span class="k">def</span> <span class="nf">selectClassifierT</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;  Selects parents using tournament selection according to the fitness of the classifiers. &quot;&quot;&quot;</span>
+        <span class="n">selectList</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="n">currentCount</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">setList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">correctSet</span>  <span class="c1"># correct set is a list of reference IDs</span>
+
+        <span class="k">while</span> <span class="n">currentCount</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">tSize</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">setList</span><span class="p">)</span> <span class="o">*</span> <span class="n">cons</span><span class="o">.</span><span class="n">theta_sel</span><span class="p">)</span>
+            <span class="n">posList</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">setList</span><span class="p">,</span> <span class="n">tSize</span><span class="p">)</span>
+
+            <span class="n">bestF</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">bestC</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">correctSet</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">posList</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">fitness</span> <span class="o">&gt;</span> <span class="n">bestF</span><span class="p">:</span>
+                    <span class="n">bestF</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">fitness</span>
+                    <span class="n">bestC</span> <span class="o">=</span> <span class="n">j</span>
+
+            <span class="n">selectList</span><span class="p">[</span><span class="n">currentCount</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">[</span><span class="n">bestC</span><span class="p">]</span>
+            <span class="n">currentCount</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="n">selectList</span></div>
+
+
+        <span class="c1"># --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+
+    <span class="c1"># SUBSUMPTION METHODS</span>
+    <span class="c1"># --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="ClassifierSet.subsumeClassifier"><a class="viewcode-back" href="../../eLCS.html#eLCS.ClassifierSet.ClassifierSet.subsumeClassifier">[docs]</a>    <span class="k">def</span> <span class="nf">subsumeClassifier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cl</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cl1P</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cl2P</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Tries to subsume a classifier in the parents. If no subsumption is possible it tries to subsume it in the current set. &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">cl1P</span> <span class="o">!=</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">cl1P</span><span class="o">.</span><span class="n">subsumes</span><span class="p">(</span><span class="n">cl</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">microPopSize</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">cl1P</span><span class="o">.</span><span class="n">updateNumerosity</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">cl2P</span> <span class="o">!=</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">cl2P</span><span class="o">.</span><span class="n">subsumes</span><span class="p">(</span><span class="n">cl</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">microPopSize</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">cl2P</span><span class="o">.</span><span class="n">updateNumerosity</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">subsumeClassifier2</span><span class="p">(</span><span class="n">cl</span><span class="p">);</span>  <span class="c1"># Try to subsume in the correct set.</span></div>
+
+<div class="viewcode-block" id="ClassifierSet.subsumeClassifier2"><a class="viewcode-back" href="../../eLCS.html#eLCS.ClassifierSet.ClassifierSet.subsumeClassifier2">[docs]</a>    <span class="k">def</span> <span class="nf">subsumeClassifier2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cl</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Tries to subsume a classifier in the correct set. If no subsumption is possible the classifier is simply added to the population considering</span>
+<span class="sd">        the possibility that there exists an identical classifier. &quot;&quot;&quot;</span>
+        <span class="n">choices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">ref</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">correctSet</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">[</span><span class="n">ref</span><span class="p">]</span><span class="o">.</span><span class="n">subsumes</span><span class="p">(</span><span class="n">cl</span><span class="p">):</span>
+                <span class="n">choices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># Randomly pick one classifier to be subsumer</span>
+            <span class="n">choice</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">choices</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">[</span><span class="n">choices</span><span class="p">[</span><span class="n">choice</span><span class="p">]]</span><span class="o">.</span><span class="n">updateNumerosity</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">microPopSize</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">addClassifierToPopulation</span><span class="p">(</span><span class="n">cl</span><span class="p">,</span>
+                                       <span class="kc">False</span><span class="p">)</span>  <span class="c1"># If no subsumer was found, check for identical classifier, if not then add the classifier to the population</span></div>
+
+<div class="viewcode-block" id="ClassifierSet.doCorrectSetSubsumption"><a class="viewcode-back" href="../../eLCS.html#eLCS.ClassifierSet.ClassifierSet.doCorrectSetSubsumption">[docs]</a>    <span class="k">def</span> <span class="nf">doCorrectSetSubsumption</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Executes correct set subsumption.  The correct set subsumption looks for the most general subsumer classifier in the correct set</span>
+<span class="sd">        and subsumes all classifiers that are more specific than the selected one. &quot;&quot;&quot;</span>
+        <span class="n">subsumer</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">ref</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">correctSet</span><span class="p">:</span>
+            <span class="n">cl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">[</span><span class="n">ref</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">cl</span><span class="o">.</span><span class="n">isSubsumer</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">subsumer</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">cl</span><span class="o">.</span><span class="n">isMoreGeneral</span><span class="p">(</span><span class="n">subsumer</span><span class="p">):</span>
+                    <span class="n">subsumer</span> <span class="o">=</span> <span class="n">cl</span>
+
+        <span class="k">if</span> <span class="n">subsumer</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># If a subsumer was found, subsume all more specific classifiers in the correct set</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">correctSet</span><span class="p">):</span>
+                <span class="n">ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">correctSet</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">subsumer</span><span class="o">.</span><span class="n">isMoreGeneral</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">[</span><span class="n">ref</span><span class="p">]):</span>
+                    <span class="n">subsumer</span><span class="o">.</span><span class="n">updateNumerosity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">[</span><span class="n">ref</span><span class="p">]</span><span class="o">.</span><span class="n">numerosity</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">removeMacroClassifier</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">deleteFromMatchSet</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">deleteFromCorrectSet</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
+                    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span></div>
+
+    <span class="c1"># --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+    <span class="c1"># OTHER KEY METHODS</span>
+    <span class="c1"># --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="ClassifierSet.addClassifierToPopulation"><a class="viewcode-back" href="../../eLCS.html#eLCS.ClassifierSet.ClassifierSet.addClassifierToPopulation">[docs]</a>    <span class="k">def</span> <span class="nf">addClassifierToPopulation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cl</span><span class="p">,</span> <span class="n">covering</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Adds a classifier to the set and increases the microPopSize value accordingly.&quot;&quot;&quot;</span>
+        <span class="n">oldCl</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">covering</span><span class="p">:</span>
+            <span class="n">oldCl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getIdenticalClassifier</span><span class="p">(</span><span class="n">cl</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">oldCl</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># found identical classifier</span>
+            <span class="n">oldCl</span><span class="o">.</span><span class="n">updateNumerosity</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">microPopSize</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cl</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">microPopSize</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+<div class="viewcode-block" id="ClassifierSet.insertDiscoveredClassifiers"><a class="viewcode-back" href="../../eLCS.html#eLCS.ClassifierSet.ClassifierSet.insertDiscoveredClassifiers">[docs]</a>    <span class="k">def</span> <span class="nf">insertDiscoveredClassifiers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cl1</span><span class="p">,</span> <span class="n">cl2</span><span class="p">,</span> <span class="n">clP1</span><span class="p">,</span> <span class="n">clP2</span><span class="p">,</span> <span class="n">exploreIter</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Inserts both discovered classifiers and activates GA subsumption if turned on. Also checks for default rule (i.e. rule with completely general condition) and </span>
+<span class="sd">        prevents such rules from being added to the population, as it offers no predictive value within eLCS. &quot;&quot;&quot;</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="c1"># SUBSUMPTION</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="k">if</span> <span class="n">cons</span><span class="o">.</span><span class="n">doSubsumption</span><span class="p">:</span>
+            <span class="n">cons</span><span class="o">.</span><span class="n">timer</span><span class="o">.</span><span class="n">startTimeSubsumption</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cl1</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">subsumeClassifier</span><span class="p">(</span><span class="n">cl1</span><span class="p">,</span> <span class="n">clP1</span><span class="p">,</span> <span class="n">clP2</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cl2</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">subsumeClassifier</span><span class="p">(</span><span class="n">cl2</span><span class="p">,</span> <span class="n">clP1</span><span class="p">,</span> <span class="n">clP2</span><span class="p">)</span>
+
+            <span class="n">cons</span><span class="o">.</span><span class="n">timer</span><span class="o">.</span><span class="n">stopTimeSubsumption</span><span class="p">()</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="c1"># ADD OFFSPRING TO POPULATION</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># Just add the new classifiers to the population.</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cl1</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">addClassifierToPopulation</span><span class="p">(</span><span class="n">cl1</span><span class="p">,</span>
+                                               <span class="kc">False</span><span class="p">)</span>  <span class="c1"># False passed because this is not called for a covered rule.</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cl2</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">addClassifierToPopulation</span><span class="p">(</span><span class="n">cl2</span><span class="p">,</span>
+                                               <span class="kc">False</span><span class="p">)</span>  <span class="c1"># False passed because this is not called for a covered rule.</span></div>
+
+<div class="viewcode-block" id="ClassifierSet.updateSets"><a class="viewcode-back" href="../../eLCS.html#eLCS.ClassifierSet.ClassifierSet.updateSets">[docs]</a>    <span class="k">def</span> <span class="nf">updateSets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exploreIter</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Updates all relevant parameters in the current match and correct sets. &quot;&quot;&quot;</span>
+        <span class="n">matchSetNumerosity</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">ref</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">matchSet</span><span class="p">:</span>
+            <span class="n">matchSetNumerosity</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">[</span><span class="n">ref</span><span class="p">]</span><span class="o">.</span><span class="n">numerosity</span>
+
+        <span class="k">for</span> <span class="n">ref</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">matchSet</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">[</span><span class="n">ref</span><span class="p">]</span><span class="o">.</span><span class="n">updateExperience</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">[</span><span class="n">ref</span><span class="p">]</span><span class="o">.</span><span class="n">updateMatchSetSize</span><span class="p">(</span><span class="n">matchSetNumerosity</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ref</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">correctSet</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">[</span><span class="n">ref</span><span class="p">]</span><span class="o">.</span><span class="n">updateCorrect</span><span class="p">()</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">[</span><span class="n">ref</span><span class="p">]</span><span class="o">.</span><span class="n">updateAccuracy</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">[</span><span class="n">ref</span><span class="p">]</span><span class="o">.</span><span class="n">updateFitness</span><span class="p">()</span></div>
+
+    <span class="c1"># --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+    <span class="c1"># OTHER METHODS</span>
+    <span class="c1"># --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="ClassifierSet.getIterStampAverage"><a class="viewcode-back" href="../../eLCS.html#eLCS.ClassifierSet.ClassifierSet.getIterStampAverage">[docs]</a>    <span class="k">def</span> <span class="nf">getIterStampAverage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the average of the time stamps in the correct set. &quot;&quot;&quot;</span>
+        <span class="n">sumCl</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">numSum</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">correctSet</span><span class="p">)):</span>
+            <span class="n">ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">correctSet</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">sumCl</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">[</span><span class="n">ref</span><span class="p">]</span><span class="o">.</span><span class="n">timeStampGA</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">[</span><span class="n">ref</span><span class="p">]</span><span class="o">.</span><span class="n">numerosity</span>
+            <span class="n">numSum</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">[</span><span class="n">ref</span><span class="p">]</span><span class="o">.</span><span class="n">numerosity</span>  <span class="c1"># numerosity sum of correct set</span>
+        <span class="k">return</span> <span class="n">sumCl</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">numSum</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ClassifierSet.setIterStamps"><a class="viewcode-back" href="../../eLCS.html#eLCS.ClassifierSet.ClassifierSet.setIterStamps">[docs]</a>    <span class="k">def</span> <span class="nf">setIterStamps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exploreIter</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Sets the time stamp of all classifiers in the set to the current time. The current time</span>
+<span class="sd">        is the number of exploration steps executed so far.  &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">correctSet</span><span class="p">)):</span>
+            <span class="n">ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">correctSet</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">[</span><span class="n">ref</span><span class="p">]</span><span class="o">.</span><span class="n">updateTimeStamp</span><span class="p">(</span><span class="n">exploreIter</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ClassifierSet.getFitnessSum"><a class="viewcode-back" href="../../eLCS.html#eLCS.ClassifierSet.ClassifierSet.getFitnessSum">[docs]</a>    <span class="k">def</span> <span class="nf">getFitnessSum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">setList</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the sum of the fitnesses of all classifiers in the set. &quot;&quot;&quot;</span>
+        <span class="n">sumCl</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">setList</span><span class="p">)):</span>
+            <span class="n">ref</span> <span class="o">=</span> <span class="n">setList</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">sumCl</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">[</span><span class="n">ref</span><span class="p">]</span><span class="o">.</span><span class="n">fitness</span>
+        <span class="k">return</span> <span class="n">sumCl</span></div>
+
+<div class="viewcode-block" id="ClassifierSet.getPopFitnessSum"><a class="viewcode-back" href="../../eLCS.html#eLCS.ClassifierSet.ClassifierSet.getPopFitnessSum">[docs]</a>    <span class="k">def</span> <span class="nf">getPopFitnessSum</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the sum of the fitnesses of all classifiers in the set. &quot;&quot;&quot;</span>
+        <span class="n">sumCl</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">cl</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">:</span>
+            <span class="n">sumCl</span> <span class="o">+=</span> <span class="n">cl</span><span class="o">.</span><span class="n">fitness</span> <span class="o">*</span> <span class="n">cl</span><span class="o">.</span><span class="n">numerosity</span>
+        <span class="k">return</span> <span class="n">sumCl</span></div>
+
+<div class="viewcode-block" id="ClassifierSet.getIdenticalClassifier"><a class="viewcode-back" href="../../eLCS.html#eLCS.ClassifierSet.ClassifierSet.getIdenticalClassifier">[docs]</a>    <span class="k">def</span> <span class="nf">getIdenticalClassifier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">newCl</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Looks for an identical classifier in the population. &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">cl</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">newCl</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="n">cl</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">cl</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="ClassifierSet.clearSets"><a class="viewcode-back" href="../../eLCS.html#eLCS.ClassifierSet.ClassifierSet.clearSets">[docs]</a>    <span class="k">def</span> <span class="nf">clearSets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Clears out references in the match and correct sets for the next learning iteration. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matchSet</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">correctSet</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+    <span class="c1"># --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+    <span class="c1"># EVALUTATION METHODS</span>
+    <span class="c1"># --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="ClassifierSet.runPopAveEval"><a class="viewcode-back" href="../../eLCS.html#eLCS.ClassifierSet.ClassifierSet.runPopAveEval">[docs]</a>    <span class="k">def</span> <span class="nf">runPopAveEval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exploreIter</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Calculates some summary evaluations across the rule population including average generality. &quot;&quot;&quot;</span>
+        <span class="n">genSum</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">agedCount</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">cl</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">:</span>
+            <span class="n">genSum</span> <span class="o">+=</span> <span class="p">((</span><span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">numAttributes</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">cl</span><span class="o">.</span><span class="n">condition</span><span class="p">))</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span>
+                <span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">numAttributes</span><span class="p">))</span> <span class="o">*</span> <span class="n">cl</span><span class="o">.</span><span class="n">numerosity</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">microPopSize</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">aveGenerality</span> <span class="o">=</span> <span class="s1">&#39;NA&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">aveGenerality</span> <span class="o">=</span> <span class="n">genSum</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">microPopSize</span><span class="p">)</span>
+
+            <span class="c1"># -------------------------------------------------------</span>
+        <span class="c1"># CONTINUOUS PHENOTYPE</span>
+        <span class="c1"># -------------------------------------------------------</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">discretePhenotype</span><span class="p">:</span>
+            <span class="n">sumRuleRange</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">cl</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">:</span>
+                <span class="n">sumRuleRange</span> <span class="o">+=</span> <span class="p">(</span><span class="n">cl</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">cl</span><span class="o">.</span><span class="n">phenotype</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">cl</span><span class="o">.</span><span class="n">numerosity</span>
+            <span class="n">phenotypeRange</span> <span class="o">=</span> <span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">phenotypeList</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">phenotypeList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">avePhenotypeRange</span> <span class="o">=</span> <span class="p">(</span><span class="n">sumRuleRange</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">microPopSize</span><span class="p">))</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">phenotypeRange</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ClassifierSet.runAttGeneralitySum"><a class="viewcode-back" href="../../eLCS.html#eLCS.ClassifierSet.ClassifierSet.runAttGeneralitySum">[docs]</a>    <span class="k">def</span> <span class="nf">runAttGeneralitySum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">isEvaluationSummary</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Determine the population-wide frequency of attribute specification, and accuracy weighted specification.  Used in complete rule population evaluations. &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">isEvaluationSummary</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">attributeSpecList</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">attributeAccList</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">numAttributes</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">attributeSpecList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">attributeAccList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">cl</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">ref</span> <span class="ow">in</span> <span class="n">cl</span><span class="o">.</span><span class="n">specifiedAttList</span><span class="p">:</span>  <span class="c1"># for each attRef</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">attributeSpecList</span><span class="p">[</span><span class="n">ref</span><span class="p">]</span> <span class="o">+=</span> <span class="n">cl</span><span class="o">.</span><span class="n">numerosity</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">attributeAccList</span><span class="p">[</span><span class="n">ref</span><span class="p">]</span> <span class="o">+=</span> <span class="n">cl</span><span class="o">.</span><span class="n">numerosity</span> <span class="o">*</span> <span class="n">cl</span><span class="o">.</span><span class="n">accuracy</span></div>
+
+<div class="viewcode-block" id="ClassifierSet.getPopTrack"><a class="viewcode-back" href="../../eLCS.html#eLCS.ClassifierSet.ClassifierSet.getPopTrack">[docs]</a>    <span class="k">def</span> <span class="nf">getPopTrack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">accuracy</span><span class="p">,</span> <span class="n">exploreIter</span><span class="p">,</span> <span class="n">trackingFrequency</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns a formated output string to be printed to the Learn Track output file. &quot;&quot;&quot;</span>
+        <span class="n">trackString</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">exploreIter</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">microPopSize</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+            <span class="n">accuracy</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">aveGenerality</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">cons</span><span class="o">.</span><span class="n">timer</span><span class="o">.</span><span class="n">returnGlobalTimer</span><span class="p">())</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">discretePhenotype</span><span class="p">:</span>  <span class="c1"># discrete phenotype</span>
+            <span class="nb">print</span><span class="p">((</span><span class="s2">&quot;Epoch: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">exploreIter</span> <span class="o">/</span> <span class="n">trackingFrequency</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2"> Iteration: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+                <span class="n">exploreIter</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2"> MacroPop: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2"> MicroPop: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">microPopSize</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2"> AccEstimate: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">accuracy</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2"> AveGen: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">aveGenerality</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2"> Time: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">cons</span><span class="o">.</span><span class="n">timer</span><span class="o">.</span><span class="n">returnGlobalTimer</span><span class="p">())))</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># continuous phenotype</span>
+            <span class="nb">print</span><span class="p">((</span><span class="s2">&quot;Epoch: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">exploreIter</span> <span class="o">/</span> <span class="n">trackingFrequency</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2"> Iteration: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+                <span class="n">exploreIter</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2"> MacroPop: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">popSet</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2"> MicroPop: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">microPopSize</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2"> AccEstimate: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">accuracy</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2"> AveGen: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">aveGenerality</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2"> PhenRange: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">avePhenotypeRange</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2"> Time: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+                <span class="n">cons</span><span class="o">.</span><span class="n">timer</span><span class="o">.</span><span class="n">returnGlobalTimer</span><span class="p">())))</span>
+
+        <span class="k">return</span> <span class="n">trackString</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">CITS4404-G1</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Scott McCormack.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
