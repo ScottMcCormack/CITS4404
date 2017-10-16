@@ -25,7 +25,6 @@ Inc., 51 Franklin Street, Fifth F   loor, Boston, MA 02110-1301 USA
 
 # Import Required Modules------------------------------------
 from eLCS.Timer import Timer
-from eLCS.ConfigParser import ConfigParser
 from eLCS.OfflineEnvironment import OfflineEnvironment
 from eLCS.Algorithm import eLCS
 from eLCS.Constants import cons
@@ -37,10 +36,10 @@ if __name__ == "__main__":
     helpstr = """Failed attempt to run e-LCS.  Please ensure that a configuration file giving all run parameters has been specified."""
 
     # Specify the name and file path for the configuration file.
-    configurationFile = "config.txt"
+    config_txt = "config.yaml"
 
     # Obtain all run parameters from the configuration file and store them in the 'Constants' module.
-    ConfigParser(configurationFile)
+    cons.setConstants(config_txt)
 
     # Initialize the 'Timer' module which tracks the run time of algorithm and it's different components.
     timer = Timer()
