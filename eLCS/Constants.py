@@ -1,33 +1,21 @@
-"""
-Name:        eLCS_Constants.py
-Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA
-Contact:     ryan.j.urbanowicz@darmouth.edu
-Created:     November 1, 2013
-Description: Stores and manages all algorithm run parameters, making them accessible anywhere in the rest of the algorithm code by (cons.) .
-             
----------------------------------------------------------------------------------------------------------------------------------------------------------
-eLCS: Educational Learning Classifier System - A basic LCS coded for educational purposes.  This LCS algorithm uses supervised learning, and thus is most 
-similar to "UCS", an LCS algorithm published by Ester Bernado-Mansilla and Josep Garrell-Guiu (2003) which in turn is based heavily on "XCS", an LCS 
-algorithm published by Stewart Wilson (1995).  
-
-Copyright (C) 2013 Ryan Urbanowicz 
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
-Free Software Foundation; either version 3 of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY 
-or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 
-Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
----------------------------------------------------------------------------------------------------------------------------------------------------------
-"""
 import os
+import yaml
 
 
-class Constants:
-    def setConstants(self, par):
-        """ Takes the parameters parsed as a dictionary from eLCS_ConfigParser and saves them as global constants. """
+class Constants(object):
+    """Stores and manages all algorithm run parameters
+
+    Parameters are accessible anywhere in the rest of the algorithm code by importing `cons`
+        """
+
+    def setConstants(self, config_file):
+        """Parse the configuration file and save them as global constants
+
+        :param config_file: :param str config_file: Path to the configuration yaml file
+        """
+
         # Static Run Parameters
+        par = self.loadParameters(config_file)  # Load in the parameters from the yaml file
         self.datasetPath = 'datasets'
         self.outputPath = 'output'
 
@@ -75,21 +63,48 @@ class Constants:
         self.doPopulationReboot = bool(int(par['doPopulationReboot']))  # Saved as Boolean
         self.popRebootPath = par['popRebootPath']  # Saved as text
 
+    def loadParameters(self, config_file):
+        """Load the environment parameters from yaml configuration file
+
+        :param str config_file: Path to the configuration yaml file
+        :return: Parameters read from yaml file
+        :rtype: dict
+        """
+
+        parameters = {}
+
+        with open(config_file, 'r') as stream:
+            try:
+                # Read parameters from yaml file
+                parameters = yaml.load(stream)
+            except yaml.YAMLError as exc:
+                print(exc)
+
+        stream.close()
+
+        return parameters
+
     def referenceTimer(self, timer):
-        """ Store reference to the timer object. """
+        """Store reference to the `Timer` object
+
+        :param Timer timer: A `Timer` object
+        """
         self.timer = timer
 
-    def referenceEnv(self, e):
-        """ Store reference to environment object. """
-        self.env = e
+    def referenceEnv(self, env):
+        """ Store reference to `OfflineEnvironment` object
+
+        :param Environment env: An `OfflineEnvironment` file
+        """
+        self.env = env
 
     def parseIterations(self):
-        """ Parse the 'learningIterations' string to identify the maximum number of learning iterations as well as evaluation checkpoints. """
-        checkpoints = self.learningIterations.split('.')
-        for i in range(len(checkpoints)):
-            checkpoints[i] = int(checkpoints[i])
+        """ Parse the 'learningIterations' string
 
-        self.learningCheckpoints = checkpoints
+        Identify the maximum number of learning iterations as well as evaluation checkpoints
+        """
+
+        self.learningCheckpoints = self.learningIterations
         self.maxLearningIterations = self.learningCheckpoints[(len(self.learningCheckpoints) - 1)]
 
         if self.trackingFrequency == 0:
