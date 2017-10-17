@@ -46,4 +46,4 @@ theta_sel: 0.5                                  # The fraction of the correct se
 ###### PopulationReboot - An option to begin e-LCS learning from an existing, saved rule population. Note that the training data is re-shuffled during a reboot.
 ######--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 doPopulationReboot: 0                           # Start eLCS from an existing rule population? (1 is True, 0 is False).
-popRebootPath: ExampleRun_eLCS_50000            # Path/FileName of previously evolved rule population output file. Include file/pathname up to until 'RulePop.txt', as this is automatically included.
+popRebootPath: ExampleRun_eLCS_5000             # Path/FileName of previously evolved rule population output file. Include file/pathname up to until 'RulePop.txt', as this is automatically included.
