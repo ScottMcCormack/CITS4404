@@ -1,29 +1,3 @@
-"""
-Name:        eLCS_Algorithm.py
-Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA
-Contact:     ryan.j.urbanowicz@darmouth.edu
-Created:     November 1, 2013
-Description: The major controlling module of eLCS.  Includes the major run loop which controls learning over a specified number of iterations.  Also includes
-             periodic tracking of estimated performance, and checkpoints where complete evaluations of the eLCS rule population is performed.
-             
----------------------------------------------------------------------------------------------------------------------------------------------------------
-eLCS: Educational Learning Classifier System - A basic LCS coded for educational purposes.  This LCS algorithm uses supervised learning, and thus is most 
-similar to "UCS", an LCS algorithm published by Ester Bernado-Mansilla and Josep Garrell-Guiu (2003) which in turn is based heavily on "XCS", an LCS 
-algorithm published by Stewart Wilson (1995).  
-
-Copyright (C) 2013 Ryan Urbanowicz 
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
-Free Software Foundation; either version 3 of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY 
-or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 
-Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
----------------------------------------------------------------------------------------------------------------------------------------------------------
-"""
-
-# Import Required Modules-------------------------------
 from eLCS.Constants import cons
 from eLCS.ClassifierSet import ClassifierSet
 from eLCS.Prediction import Prediction
@@ -34,74 +8,74 @@ import random
 import math
 
 
-# ------------------------------------------------------
+class eLCS(object):
+    """The major controlling module of eLCS.
 
-class eLCS:
+    Includes the major run loop which controls learning over a specified number of iterations.
+    Also includes periodic tracking of estimated performance, and checkpoints where complete
+    evaluations of the eLCS rule population is performed.
+
+    Two options are available for the initialisation of the algorithm
+    1.  Do a Population reboot using an existing saved rule population, or
+    2.  Build the Population from scratch from given data
+    """
+
     def __init__(self):
-        """ Initializes the eLCS algorithm """
+        """Initializes the eLCS algorithm"""
         print("eLCS: Initializing Algorithm...")
-        # Global Parameters-------------------------------------------------------------------------------------
+
+        # Global Parameters
         self.population = None  # The rule population (the 'solution/model' evolved by eLCS)
         self.learnTrackOut = None  # Output file that will store tracking information during learning
+        self.cons = cons  # Store a reference to the `cons` module
 
-        # -------------------------------------------------------
         # POPULATION REBOOT - Begin eLCS learning from an existing saved rule population
-        # -------------------------------------------------------
-        if cons.doPopulationReboot:
+        if self.cons.doPopulationReboot:
             self.populationReboot()
 
-        # -------------------------------------------------------
         # NORMAL eLCS - Run eLCS from scratch on given data
-        # -------------------------------------------------------
         else:
             try:
-                self.learnTrackOut = open(cons.outFileName + '_LearnTrack.txt', 'w')
+                self.learnTrackOut = open(self.cons.outFileName + '_LearnTrack.txt', 'w')
             except Exception as inst:
                 print(type(inst))
                 print(inst.args)
                 print(inst)
-                print('cannot open', cons.outFileName + '_LearnTrack.txt')
+                print('cannot open', self.cons.outFileName + '_LearnTrack.txt')
                 raise
             else:
+                # Write the header for the output file
                 self.learnTrackOut.write(
-                    "Explore_Iteration\tMacroPopSize\tMicroPopSize\tAccuracy_Estimate\tAveGenerality\tExpRules\tTime(min)\n")
+                    "Explore_Iteration\tMacroPopSize\tMicroPopSize\t"
+                    "Accuracy_Estimate\tAveGenerality\tExpRules\tTime(min)\n")
 
-            # Instantiate Population---------
+            # Instantiate Population
             self.population = ClassifierSet()
             self.exploreIter = 0
             self.correct = [0.0 for i in range(cons.trackingFrequency)]
 
-        # Run the eLCS algorithm-------------------------------------------------------------------------------
+        # Run the eLCS algorithm
         self.run_eLCS()
 
     def run_eLCS(self):
-        """ Runs the initialized eLCS algorithm. """
-        # --------------------------------------------------------------
+        """Runs eLCS algorithm, runs by default after the class has been initialised"""
         print("Learning Checkpoints: " + str(cons.learningCheckpoints))
         print("Maximum Iterations: " + str(cons.maxLearningIterations))
         print("Beginning eLCS learning iterations.")
         print(
             "------------------------------------------------------------------------------------------------------------------------------------------------------")
 
-        # -------------------------------------------------------
-        # MAJOR LEARNING LOOP
-        # -------------------------------------------------------
+        # Major learning iteration loop, represents the entire learning cycle
         while self.exploreIter < cons.maxLearningIterations:
 
-            # -------------------------------------------------------
             # GET NEW INSTANCE AND RUN A LEARNING ITERATION
-            # -------------------------------------------------------
             state_phenotype = cons.env.getTrainInstance()
             self.runIteration(state_phenotype, self.exploreIter)
 
-            # -------------------------------------------------------------------------------------------------------------------------------
             # EVALUATIONS OF ALGORITHM
-            # -------------------------------------------------------------------------------------------------------------------------------
             cons.timer.startTimeEvaluation()
 
-            # -------------------------------------------------------
             # TRACK LEARNING ESTIMATES
-            # -------------------------------------------------------
             if (self.exploreIter % cons.trackingFrequency) == (cons.trackingFrequency - 1) and self.exploreIter > 0:
                 self.population.runPopAveEval(self.exploreIter)
                 trackedAccuracy = sum(self.correct) / float(
@@ -110,9 +84,7 @@ class eLCS:
                                                                      cons.trackingFrequency))  # Report learning progress to standard out and tracking file.
             cons.timer.stopTimeEvaluation()
 
-            # -------------------------------------------------------
             # CHECKPOINT - COMPLETE EVALUTATION OF POPULATION - strategy different for discrete vs continuous phenotypes
-            # -------------------------------------------------------
             if (self.exploreIter + 1) in cons.learningCheckpoints:
                 cons.timer.startTimeEvaluation()
                 print(
@@ -182,8 +154,8 @@ class eLCS:
             else:
                 phenotypePrediction = random.randrange(cons.env.formatData.phenotypeList[0],
                                                        cons.env.formatData.phenotypeList[1], (
-                                                       cons.env.formatData.phenotypeList[1] -
-                                                       cons.env.formatData.phenotypeList[0]) / float(1000))
+                                                           cons.env.formatData.phenotypeList[1] -
+                                                           cons.env.formatData.phenotypeList[0]) / float(1000))
         else:  # Prediction Successful
             # -------------------------------------------------------
             # DISCRETE PHENOTYPE PREDICTION
@@ -295,7 +267,7 @@ class eLCS:
             F_mySum += classAccDict[each].F_myClass
             F_otherSum += classAccDict[each].F_otherClass
         balancedAccuracy = ((0.5 * T_mySum / (float(T_mySum + F_otherSum)) + 0.5 * T_otherSum / (
-        float(T_otherSum + F_mySum))))  # BalancedAccuracy = (Specificity + Sensitivity)/2
+            float(T_otherSum + F_mySum))))  # BalancedAccuracy = (Specificity + Sensitivity)/2
 
         # Adjustment for uncovered instances - to avoid positive or negative bias we incorporate the probability of guessing a phenotype by chance (e.g. 50% if two phenotypes)
         predictionFail = float(noMatch) / float(instances)
@@ -304,9 +276,9 @@ class eLCS:
         predictionMade = 1.0 - (predictionFail + predictionTies)
 
         adjustedStandardAccuracy = (standardAccuracy * predictionMade) + (
-        (1.0 - predictionMade) * (1.0 / float(len(phenotypeList))))
+            (1.0 - predictionMade) * (1.0 / float(len(phenotypeList))))
         adjustedBalancedAccuracy = (balancedAccuracy * predictionMade) + (
-        (1.0 - predictionMade) * (1.0 / float(len(phenotypeList))))
+            (1.0 - predictionMade) * (1.0 / float(len(phenotypeList))))
 
         # Adjusted Balanced Accuracy is calculated such that instances that did not match have a consistent probability of being correctly classified in the reported accuracy.
         print("-----------------------------------------------")
@@ -378,7 +350,8 @@ class eLCS:
         return resultList
 
     def populationReboot(self):
-        """ Manages the reformation of a previously saved eLCS classifier population. """
+        """Manages the reformation of a previously saved eLCS classifier population"""
+
         cons.timer.setTimerRestart(cons.popRebootPath)  # Rebuild timer objects
         # --------------------------------------------------------------------
         try:  # Re-open track learning file for continued tracking of progress.
@@ -400,7 +373,7 @@ class eLCS:
             cons.learningCheckpoints[i] += completedIterations
         cons.maxLearningIterations += completedIterations
 
-        # Rebuild existing population from text file.--------
+        # Rebuild existing population from text file
         self.population = ClassifierSet(cons.popRebootPath)
         # ---------------------------------------------------
         try:  # Obtain correct track
