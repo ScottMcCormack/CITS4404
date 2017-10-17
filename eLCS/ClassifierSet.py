@@ -1,57 +1,49 @@
-"""
-Name:        eLCS_ClassifierSet.py
-Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA
-Contact:     ryan.j.urbanowicz@darmouth.edu
-Created:     November 1, 2013
-Description: This module handles all classifier sets (population, match set, correct set) along with mechanisms and heuristics that act on these sets.  
-             
----------------------------------------------------------------------------------------------------------------------------------------------------------
-eLCS: Educational Learning Classifier System - A basic LCS coded for educational purposes.  This LCS algorithm uses supervised learning, and thus is most 
-similar to "UCS", an LCS algorithm published by Ester Bernado-Mansilla and Josep Garrell-Guiu (2003) which in turn is based heavily on "XCS", an LCS 
-algorithm published by Stewart Wilson (1995).  
-
-Copyright (C) 2013 Ryan Urbanowicz 
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
-Free Software Foundation; either version 3 of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY 
-or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 
-Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
----------------------------------------------------------------------------------------------------------------------------------------------------------
-"""
-
-# Import Required Modules---------------------
 from eLCS.Constants import cons
 from eLCS.Classifier import Classifier
+
 import random
 import copy
 
 
-# --------------------------------------------
+class ClassifierSet(object):
+    """This module handles all the classifier sets
 
-class ClassifierSet:
-    def __init__(self, a=None):
-        """ Overloaded initialization: Handles creation of a new population or a rebooted population (i.e. a previously saved population). """
+    This includes the population, match set and correct sets along with mechanisms and
+    heuristics that act on these sets.
+
+    This class can be initialized with the:
+    1.  Creation of a new population, or
+    2.  Reboots the population (i.e. read in from a previously saved population)
+    """
+
+    def __init__(self, pop_reboot_path=None):
+        """Initializes the Classifier Set
+
+        :param str pop_reboot_path: Path to the population, defaults to None
+        """
+
         # Major Parameters
         self.popSet = []  # List of classifiers/rules
         self.matchSet = []  # List of references to rules in population that match
         self.correctSet = []  # List of references to rules in population that both match and specify correct phenotype
         self.microPopSize = 0  # Tracks the current micro population size, i.e. the population size which takes rule numerosity into account.
 
-        # Evaluation Parameters-------------------------------
+        # Evaluation Parameters
         self.aveGenerality = 0.0
         self.expRules = 0.0
         self.attributeSpecList = []
         self.attributeAccList = []
         self.avePhenotypeRange = 0.0
 
-        # Set Constructors-------------------------------------
-        if a == None:
-            self.makePop()  # Initialize a new population
-        elif isinstance(a, str):
-            self.rebootPop(a)  # Initialize a population based on an existing saved rule population
+        # Set Constructors
+        if pop_reboot_path == None:
+            # Initialize a new population
+            self.makePop()
+
+        elif isinstance(pop_reboot_path, str):
+            # Initialize a population based on an existing saved rule population
+            self.rebootPop(pop_reboot_path)
+
         else:
             print("ClassifierSet: Error building population.")
 
@@ -59,21 +51,21 @@ class ClassifierSet:
     # POPULATION CONSTRUCTOR METHODS
     # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     def makePop(self):
-        """ Initializes the rule population """
+        """ Initializes the rule population, as an empty list"""
         self.popSet = []
 
-    def rebootPop(self, remakeFile):
+    def rebootPop(self, pop_reboot_path):
         """ Remakes a previously evolved population from a saved text file. """
-        print("Rebooting the following population: " + str(remakeFile) + "_RulePop.txt")
+        print("Rebooting the following population: " + str(pop_reboot_path) + "_RulePop.txt")
         # *******************Initial file handling**********************************************************
         datasetList = []
         try:
-            f = open(remakeFile + "_RulePop.txt", 'r')
+            f = open(pop_reboot_path + "_RulePop.txt", 'r')
         except Exception as inst:
             print(type(inst))
             print(inst.args)
             print(inst)
-            print('cannot open', remakeFile + "_RulePop.txt")
+            print('cannot open', pop_reboot_path + "_RulePop.txt")
             raise
         else:
             self.headerList = f.readline().rstrip('\n').split('\t')  # strip off first row
@@ -231,8 +223,9 @@ class ClassifierSet:
         # -------------------------------------------------------
         # GA RUN REQUIREMENT
         # -------------------------------------------------------
-        if (
-            exploreIter - self.getIterStampAverage()) < cons.theta_GA:  # Does the correct set meet the requirements for activating the GA?
+
+        # Does the correct set meet the requirements for activating the GA?
+        if (exploreIter - self.getIterStampAverage()) < cons.theta_GA:
             return
 
         self.setIterStamps(
@@ -305,7 +298,7 @@ class ClassifierSet:
         if len(setList) > 2:
             selectList = [None, None]
             currentCount = 0  # Pick two parents
-            # -----------------------------------------------
+
             while currentCount < 2:
                 fitSum = self.getFitnessSum(setList)
 
@@ -319,7 +312,7 @@ class ClassifierSet:
                 selectList[currentCount] = self.popSet[setList[i]]
                 setList.remove(setList[i])
                 currentCount += 1
-                # -----------------------------------------------
+
         elif len(setList) == 2:
             selectList = [self.popSet[setList[0]], self.popSet[setList[1]]]
         elif len(setList) == 1:
