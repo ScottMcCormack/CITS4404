@@ -61,7 +61,7 @@ class Constants(object):
 
         # PopulationReboot -------------------------------------------------------------------------------
         self.doPopulationReboot = bool(int(par['doPopulationReboot']))  # Saved as Boolean
-        self.popRebootPath = par['popRebootPath']  # Saved as text
+        self.popRebootPath = os.path.join(self.outputPath, par['popRebootPath'])  # Saved as text
 
     def loadParameters(self, config_file):
         """Load the environment parameters from yaml configuration file
