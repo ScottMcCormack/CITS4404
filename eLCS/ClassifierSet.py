@@ -23,7 +23,7 @@ class ClassifierSet(object):
         """
 
         # Major Parameters
-        self.popSet = []  # List of classifiers/rules
+        self.popSet = []  # List of classifiers/rules (list of ClassiferSet objects)
         self.matchSet = []  # List of references to rules in population that match
         self.correctSet = []  # List of references to rules in population that both match and specify correct phenotype
         self.microPopSize = 0  # Tracks the current micro population size, i.e. the population size which takes rule numerosity into account.
@@ -47,9 +47,7 @@ class ClassifierSet(object):
         else:
             print("ClassifierSet: Error building population.")
 
-    # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    # POPULATION CONSTRUCTOR METHODS
-    # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Population Constructor Methods
     def makePop(self):
         """ Initializes the rule population, as an empty list"""
         self.popSet = []
@@ -82,21 +80,29 @@ class ClassifierSet(object):
             self.microPopSize += int(each[numerosityRef])
         print("Rebooted Rule Population has " + str(len(self.popSet)) + " Macro Pop Size.")
 
-    # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    # CLASSIFIER SET CONSTRUCTOR METHODS
-    # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Classifier set constructor methods
     def makeMatchSet(self, state_phenotype, exploreIter):
-        """ Constructs a match set from the population. Covering is initiated if the match set is empty or a rule with the current correct phenotype is absent. """
+        """Constructs a match set from the population
+
+        Covering is initiated if the match set is empty or a rule with the current correct phenotype is absent.
+
+        :param list state_phenotype: Listing consisting of the training state and training phenotype
+        :param int exploreIter: The current iteration
+        """
+
         # Initial values
         state = state_phenotype[0]
         phenotype = state_phenotype[1]
-        doCovering = True  # Covering check: Twofold (1)checks that a match is present, and (2) that at least one match dictates the correct phenotype.
+
+        # Covering check:
+        # 1.  Checks that a match is present, and
+        # 2.  That at least one match dictates the correct phenotype.
+        doCovering = True
         setNumerositySum = 0
 
-        # -------------------------------------------------------
-        # MATCHING
-        # -------------------------------------------------------
+        # Carry out matching
         cons.timer.startTimeMatching()
+
         for i in range(len(self.popSet)):  # Go through the population
             cl = self.popSet[i]  # One classifier at a time
             if cl.match(state):  # Check for match

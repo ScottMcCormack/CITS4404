@@ -1,41 +1,25 @@
-"""
-Name:        eLCS_Classifier.py
-Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA
-Contact:     ryan.j.urbanowicz@darmouth.edu
-Created:     November 1, 2013
-Description: This module defines an individual classifier within the rule population, along with all respective parameters.
-             Also included are classifier-level methods, including constructors(covering, copy, reboot) matching, subsumption, 
-             crossover, and mutation.  Parameter update methods are also included.
-             
----------------------------------------------------------------------------------------------------------------------------------------------------------
-eLCS: Educational Learning Classifier System - A basic LCS coded for educational purposes.  This LCS algorithm uses supervised learning, and thus is most 
-similar to "UCS", an LCS algorithm published by Ester Bernado-Mansilla and Josep Garrell-Guiu (2003) which in turn is based heavily on "XCS", an LCS 
-algorithm published by Stewart Wilson (1995).  
-
-Copyright (C) 2013 Ryan Urbanowicz 
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
-Free Software Foundation; either version 3 of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY 
-or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 
-Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
----------------------------------------------------------------------------------------------------------------------------------------------------------
-"""
-
-# Import Required Modules---------------
 from eLCS.Constants import cons
 import random
 import copy
 import math
 
 
-# --------------------------------------
+class Classifier(object):
+    """This module defines an individual classifier within the rule population, along with all respective parameters.
 
-class Classifier:
+    Also included are classifier-level methods, including constructors(covering, copy, reboot)
+    matching, subsumption, crossover, and mutation.  Parameter update methods are also included
+    """
+
     def __init__(self, a=None, b=None, c=None, d=None):
-        # Major Parameters --------------------------------------------------
+        """Initiate the classifier module
+
+        :param int a: The set numerosity sum
+        :param int b: The current iteration
+        :param list c: The state
+        :param str d: The state's phenotype
+        """
+
         self.specifiedAttList = []  # Attribute Specified in classifier: Similar to Bacardit 2009 - ALKR + GABIL, continuous and discrete rule representation
         self.condition = []  # States of Attributes Specified in classifier: Similar to Bacardit 2009 - ALKR + GABIL, continuous and discrete rule representation
         self.phenotype = None  # Class if the endpoint is discrete, and a continuous phenotype if the endpoint is continuous
@@ -46,11 +30,11 @@ class Classifier:
         self.aveMatchSetSize = None  # A parameter used in deletion which reflects the size of match sets within this rule has been included.
         self.deletionVote = None  # The current deletion weight for this classifier.
 
-        # Experience Management ---------------------------------------------
+        # Experience Management
         self.timeStampGA = None  # Time since rule last in a correct set.
         self.initTimeStamp = None  # Iteration in which the rule first appeared.
 
-        # Classifier Accuracy Tracking --------------------------------------
+        # Classifier Accuracy Tracking
         self.matchCount = 0  # Known in many LCS implementations as experience i.e. the total number of times this classifier was in a match set
         self.correctCount = 0  # The total number of times this classifier was in a correct set
 
@@ -63,20 +47,30 @@ class Classifier:
         else:
             print("Classifier: Error building classifier.")
 
-    # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     # CLASSIFIER CONSTRUCTION METHODS
-    # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     def classifierCovering(self, setSize, exploreIter, state, phenotype):
-        """ Makes a new classifier when the covering mechanism is triggered.  The new classifier will match the current training instance. 
-        Covering will NOT produce a default rule (i.e. a rule with a completely general condition). """
-        # Initialize new classifier parameters----------
+        """Makes a new classifier when the covering mechanism is triggered.
+
+        The new classifier will match the current training instance.
+        Covering will NOT produce a default rule (i.e. a rule with a completely general condition).
+
+        The classifier constructs phenotypes for:
+        1.  Discrete Phenotypes
+        2.  Continous Phenotypes
+
+        :param int setSize: The set numerosity sum
+        :param int exploreIter: The current iteration
+        :param list state: The state
+        :param int phenotype: The state's phenotype
+        """
+
+        # Initialize new classifier parameters
         self.timeStampGA = exploreIter
         self.initTimeStamp = exploreIter
         self.aveMatchSetSize = setSize
         dataInfo = cons.env.formatData
-        # -------------------------------------------------------
+
         # DISCRETE PHENOTYPE
-        # -------------------------------------------------------
         if dataInfo.discretePhenotype:
             self.phenotype = phenotype
         # -------------------------------------------------------
@@ -539,14 +533,14 @@ class Classifier:
     def updateFitness(self):
         """ Update the fitness parameter. """
         if cons.env.formatData.discretePhenotype or (
-            self.phenotype[1] - self.phenotype[0]) / cons.env.formatData.phenotypeRange < 0.5:
+                    self.phenotype[1] - self.phenotype[0]) / cons.env.formatData.phenotypeRange < 0.5:
             self.fitness = pow(self.accuracy, cons.nu)
         else:
             if (self.phenotype[1] - self.phenotype[0]) >= cons.env.formatData.phenotypeRange:
                 self.fitness = 0.0
             else:
                 self.fitness = math.fabs(pow(self.accuracy, cons.nu) - (
-                self.phenotype[1] - self.phenotype[0]) / cons.env.formatData.phenotypeRange)
+                    self.phenotype[1] - self.phenotype[0]) / cons.env.formatData.phenotypeRange)
 
     def updateMatchSetSize(self, matchSetSize):
         """  Updates the average match set size. """

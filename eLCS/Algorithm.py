@@ -51,7 +51,7 @@ class eLCS(object):
 
             # Instantiate Population
             self.population = ClassifierSet()
-            self.exploreIter = 0
+            self.exploreIter = 0  # Start the iterations at
             self.correct = [0.0 for i in range(cons.trackingFrequency)]
 
         # Run the eLCS algorithm
@@ -68,7 +68,7 @@ class eLCS(object):
         # Major learning iteration loop, represents the entire learning cycle
         while self.exploreIter < cons.maxLearningIterations:
 
-            # GET NEW INSTANCE AND RUN A LEARNING ITERATION
+            # Get new instance and run a learning iteration
             state_phenotype = cons.env.getTrainInstance()
             self.runIteration(state_phenotype, self.exploreIter)
 
@@ -134,14 +134,18 @@ class eLCS(object):
         print("eLCS Run Complete")
 
     def runIteration(self, state_phenotype, exploreIter):
-        """ Run a single eLCS learning iteration. """
-        # -----------------------------------------------------------------------------------------------------------------------------------------
-        # FORM A MATCH SET - includes covering
-        # -----------------------------------------------------------------------------------------------------------------------------------------
+        """Run a single eLCS learning iteration.
+
+        :param list state_phenotype: Listing consisting of the training state and training phenotype
+        :param int exploreIter: The current iteration
+        :return:
+        """
+
+        # Form a Match Set (includes covering)
         self.population.makeMatchSet(state_phenotype, exploreIter)
-        # -----------------------------------------------------------------------------------------------------------------------------------------
-        # MAKE A PREDICTION - utilized here for tracking estimated learning progress.  Typically used in the explore phase of many LCS algorithms.
-        # -----------------------------------------------------------------------------------------------------------------------------------------
+
+        # MAKE A PREDICTION - utilized here for tracking estimated learning progress.
+        # Typically used in the explore phase of many LCS algorithms.
         cons.timer.startTimeEvaluation()
         prediction = Prediction(self.population)
         phenotypePrediction = prediction.getDecision()

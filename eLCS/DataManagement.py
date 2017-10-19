@@ -1,38 +1,23 @@
-"""
-Name:        eLCS_DataManagement.py
-Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA
-Contact:     ryan.j.urbanowicz@darmouth.edu
-Created:     November 1, 2013
-Description: Able to manage both training and testing data.  This module loads the dataset, detects and characterizes all attributes in the dataset, 
-             handles missing data, and finally formats the data so that it may be conveniently utilized by eLCS.
-             
----------------------------------------------------------------------------------------------------------------------------------------------------------
-eLCS: Educational Learning Classifier System - A basic LCS coded for educational purposes.  This LCS algorithm uses supervised learning, and thus is most 
-similar to "UCS", an LCS algorithm published by Ester Bernado-Mansilla and Josep Garrell-Guiu (2003) which in turn is based heavily on "XCS", an LCS 
-algorithm published by Stewart Wilson (1995).  
-
-Copyright (C) 2013 Ryan Urbanowicz 
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
-Free Software Foundation; either version 3 of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY 
-or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 
-Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
----------------------------------------------------------------------------------------------------------------------------------------------------------
-"""
-
-# Import Required Modules---------------
 from eLCS.Constants import cons
 import random
 
 
-# --------------------------------------
+class DataManagement(object):
+    """Able to manage both training and testing data.
 
-class DataManagement:
+    This module loads the dataset, detects and characterizes all attributes in the dataset,
+    handles missing data, and finally formats the data so that it may be conveniently utilized by eLCS.
+    """
+
     def __init__(self, trainFile, testFile, infoList=None):
-        # Set random seed if specified.-----------------------------------------------
+        """Initialize the DataManagement object
+
+        :param str trainFile: Path to the training data
+        :param str testFile: Path to the testing data
+        :param str infoList:
+        """
+
+        # Set random seed if specified
         if cons.useSeed:
             random.seed(cons.randomSeed)
         else:
@@ -151,7 +136,10 @@ class DataManagement:
         print("DataManagement: Number of Instances = " + str(self.numTrainInstances))
 
     def discriminatePhenotype(self, rawData):
-        """ Determine whether the phenotype is Discrete(class-based) or Continuous """
+        """Determine whether the phenotype is Discrete(class-based) or Continuous
+
+        :param list rawData:
+        """
         print("DataManagement: Analyzing Phenotype...")
         inst = 0
         classDict = {}
