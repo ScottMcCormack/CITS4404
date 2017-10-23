@@ -1,38 +1,19 @@
-"""
-Name:        eLCS_Prediction.py
-Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA
-Contact:     ryan.j.urbanowicz@darmouth.edu
-Created:     November 1, 2013
-Description: Given a match set, this module uses a voting scheme to select the phenotype prediction.  Set up to handle both discrete and continuous phenotypes.
-             Also set up to try and handle prediction ties if possible.
-             
----------------------------------------------------------------------------------------------------------------------------------------------------------
-eLCS: Educational Learning Classifier System - A basic LCS coded for educational purposes.  This LCS algorithm uses supervised learning, and thus is most 
-similar to "UCS", an LCS algorithm published by Ester Bernado-Mansilla and Josep Garrell-Guiu (2003) which in turn is based heavily on "XCS", an LCS 
-algorithm published by Stewart Wilson (1995).  
-
-Copyright (C) 2013 Ryan Urbanowicz 
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
-Free Software Foundation; either version 3 of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY 
-or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 
-Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
----------------------------------------------------------------------------------------------------------------------------------------------------------
-"""
-
-# Import Required Modules--------------
 from eLCS.Constants import cons
 import random
 
 
-# -------------------------------------
+class Prediction(object):
+    """Given a match set, this module uses a voting scheme to select the phenotype prediction.
 
-class Prediction:
+    Set up to handle both discrete and continuous phenotypes.
+    Also set up to try and handle prediction ties if possible.
+    """
+
     def __init__(self, population):
-        """ Constructs the voting array and determines the prediction decision. """
+        """Constructs the voting array and determines the prediction decision.
+
+        :param population:
+        """
         self.decision = None
         # -------------------------------------------------------
         # DISCRETE PHENOTYPES (CLASSES)
@@ -124,7 +105,13 @@ class Prediction:
                     self.decision = predictionValue / float(valueWeightSum)
 
     def getFitnessSum(self, population, low, high):
-        """ Get the fitness sum of rules in the rule-set. For continuous phenotype prediction. """
+        """Get the fitness sum of rules in the rule-set. For continuous phenotype prediction.
+
+        :param population:
+        :param low:
+        :param high:
+        :return:
+        """
         fitSum = 0
         for ref in population.matchSet:
             cl = population.popSet[ref]
@@ -133,5 +120,8 @@ class Prediction:
         return fitSum
 
     def getDecision(self):
-        """ Returns prediction decision. """
+        """Returns prediction decision.
+
+        :return:
+        """
         return self.decision

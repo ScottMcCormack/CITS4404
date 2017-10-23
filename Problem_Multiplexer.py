@@ -1,23 +1,14 @@
-'''
-Name: Problem_Multiplexer.py
-Author: Gediminas Bertasius and Ryan Urbanowicz
-Created: June 13, 2013
-Description:  
-Additional Notes: 
-        Address Bits = 1 (3-Multiplexer)
-        Address Bits = 2 (6-Multiplexer)
-        Address Bits = 3 (11-Multiplexer)   
-        Address Bits = 4 (20-Multiplexer)  
-        Address Bits = 5 (37-Multiplexer)                      
-        Address Bits = 6 (70-Multiplexer)   
-        Address Bits = 7 (135-Multiplexer)   
-        Address Bits = 8 (264-Multiplexer)   
-'''
 import random
 
 
 def generate_mulitplexer_data(myfile, num_bits, instances):
-    """ """
+    """
+
+    :param myfile:
+    :param num_bits:
+    :param instances:
+    :return:
+    """
     print("Problem_Multiplexer: Generate multiplexer dataset with " + str(instances) + " instances.")
     first = solve_equation(num_bits)
     if first == None:
@@ -41,7 +32,11 @@ def generate_mulitplexer_data(myfile, num_bits, instances):
 
 
 def generate_multiplexer_instance(num_bits):
-    """ """
+    """
+
+    :param num_bits:
+    :return:
+    """
     first = solve_equation(num_bits)
     if first == None:
         print("Problem_Multiplexer: ERROR - The multiplexer takes # of bits as 3,6,11,20,37,70,135,264")
@@ -64,8 +59,15 @@ def generate_multiplexer_instance(num_bits):
 
 
 def generate_complete_multiplexer_data(myfile, num_bits):
-    """ Attempts to generate a complete non-redundant multiplexer dataset.  Ability to generate the entire dataset is computationally limited. 
-     We had success generating up to the complete 20-multiplexer dataset"""
+    """Attempts to generate a complete non-redundant multiplexer dataset.
+
+    Ability to generate the entire dataset is computationally limited.
+    We had success generating up to the complete 20-multiplexer dataset
+
+    :param myfile:
+    :param num_bits:
+    :return:
+    """
 
     print("Problem_Multiplexer: Attempting to generate multiplexer dataset")
     first = solve_equation(num_bits)
@@ -112,11 +114,15 @@ def generate_complete_multiplexer_data(myfile, num_bits):
 
 
 def solve_equation(num_bits):
+    """
+
+    :param num_bits:
+    :return:
+    """
     for i in range(1000):
         if i + 2 ** i == num_bits:
             return i
     return None
-
 
 # generate_multiplexer_instance(37)
 # generate_mulitplexer_data("Multiplexer_Data.txt", 20, 2000)

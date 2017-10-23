@@ -204,7 +204,14 @@ class eLCS(object):
         self.population.clearSets()  # Clears the match and correct sets for the next learning iteration
 
     def doPopEvaluation(self, isTrain):
-        """ Performs a complete evaluation of the current rule population.  The population is unchanged throughout this evaluation. Works on both training and testing data. """
+        """Performs a complete evaluation of the current rule population.
+
+        The population is unchanged throughout this evaluation. Works on both training and testing data.
+
+        :param isTrain:
+        :return:
+        """
+
         if isTrain:
             myType = "TRAINING"
         else:
@@ -298,8 +305,14 @@ class eLCS(object):
         return resultList
 
     def doContPopEvaluation(self, isTrain):
-        """ Performs evaluation of population via the copied environment. Specifically developed for continuous phenotype evaulation.  
-        The population is maintained unchanging throughout the evaluation.  Works on both training and testing data. """
+        """Performs evaluation of population via the copied environment.
+
+        Specifically developed for continuous phenotype evaulation. The population is maintained unchanging
+        throughout the evaluation.  Works on both training and testing data.
+
+        :param isTrain:
+        :return:
+        """
         if isTrain:
             myType = "TRAINING"
         else:

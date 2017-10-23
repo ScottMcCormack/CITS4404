@@ -53,7 +53,12 @@ class ClassifierSet(object):
         self.popSet = []
 
     def rebootPop(self, pop_reboot_path):
-        """ Remakes a previously evolved population from a saved text file. """
+        """Remakes a previously evolved population from a saved text file
+
+        :param pop_reboot_path:
+        :return:
+        """
+
         print("Rebooting the following population: " + str(pop_reboot_path) + "_RulePop.txt")
         # *******************Initial file handling**********************************************************
         datasetList = []
@@ -129,7 +134,11 @@ class ClassifierSet(object):
             doCovering = False
 
     def makeCorrectSet(self, phenotype):
-        """ Constructs a correct set out of the given match set. """
+        """Constructs a correct set out of the given match set
+
+        :param phenotype:
+        :return:
+        """
         for i in range(len(self.matchSet)):
             ref = self.matchSet[i]
             # -------------------------------------------------------
@@ -147,7 +156,11 @@ class ClassifierSet(object):
                     self.correctSet.append(ref)
 
     def makeEvalMatchSet(self, state):
-        """ Constructs a match set for evaluation purposes which does not activate either covering or deletion. """
+        """Constructs a match set for evaluation purposes which does not activate either covering or deletion.
+
+        :param state:
+        :return:
+        """
         for i in range(len(self.popSet)):  # Go through the population
             cl = self.popSet[i]  # A single classifier
             if cl.match(state):  # Check for match
@@ -157,15 +170,22 @@ class ClassifierSet(object):
     # CLASSIFIER DELETION METHODS
     # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     def deletion(self, exploreIter):
-        """ Returns the population size back to the maximum set by the user by deleting rules. """
+        """Returns the population size back to the maximum set by the user by deleting rules.
+
+        :param exploreIter:
+        :return:
+        """
         cons.timer.startTimeDeletion()
         while self.microPopSize > cons.N:
             self.deleteFromPopulation()
         cons.timer.stopTimeDeletion()
 
     def deleteFromPopulation(self):
-        """ Deletes one classifier in the population.  The classifier that will be deleted is chosen by roulette wheel selection
-        considering the deletion vote. Returns the macro-classifier which got decreased by one micro-classifier. """
+        """ Deletes one classifier in the population.
+
+        The classifier that will be deleted is chosen by roulette wheel selection considering the deletion vote.
+        Returns the macro-classifier which got decreased by one micro-classifier.
+        """
         meanFitness = self.getPopFitnessSum() / float(self.microPopSize)
 
         # Calculate total wheel size------------------------------
@@ -196,11 +216,19 @@ class ClassifierSet(object):
         return
 
     def removeMacroClassifier(self, ref):
-        """ Removes the specified (macro-) classifier from the population. """
+        """Removes the specified (macro-) classifier from the population.
+
+        :param ref:
+        :return:
+        """
         self.popSet.pop(ref)
 
     def deleteFromMatchSet(self, deleteRef):
-        """ Delete reference to classifier in population, contained in self.matchSet."""
+        """Delete reference to classifier in population, contained in self.matchSet.
+
+        :param deleteRef:
+        :return:
+        """
         if deleteRef in self.matchSet:
             self.matchSet.remove(deleteRef)
 
@@ -211,7 +239,11 @@ class ClassifierSet(object):
                 self.matchSet[j] -= 1
 
     def deleteFromCorrectSet(self, deleteRef):
-        """ Delete reference to classifier in population, contained in self.corectSet."""
+        """Delete reference to classifier in population, contained in self.corectSet.
+
+        :param deleteRef:
+        :return:
+        """
         if deleteRef in self.correctSet:
             self.correctSet.remove(deleteRef)
 
@@ -225,7 +257,13 @@ class ClassifierSet(object):
     # GENETIC ALGORITHM
     # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     def runGA(self, exploreIter, state, phenotype):
-        """ The genetic discovery mechanism in eLCS is controlled here. """
+        """The genetic discovery mechanism in eLCS is controlled here.
+
+        :param exploreIter:
+        :param state:
+        :param phenotype:
+        :return:
+        """
         # -------------------------------------------------------
         # GA RUN REQUIREMENT
         # -------------------------------------------------------
@@ -297,7 +335,10 @@ class ClassifierSet(object):
     # SELECTION METHODS
     # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     def selectClassifierRW(self):
-        """ Selects parents using roulette wheel selection according to the fitness of the classifiers. """
+        """Selects parents using roulette wheel selection according to the fitness of the classifiers.
+
+        :return:
+        """
         # Prepare for correct set or 'niche' selection.
         setList = copy.deepcopy(self.correctSet)
 
@@ -329,7 +370,7 @@ class ClassifierSet(object):
         return selectList
 
     def selectClassifierT(self):
-        """  Selects parents using tournament selection according to the fitness of the classifiers. """
+        """Selects parents using tournament selection according to the fitness of the classifiers."""
         selectList = [None, None]
         currentCount = 0
         setList = self.correctSet  # correct set is a list of reference IDs
@@ -356,7 +397,15 @@ class ClassifierSet(object):
     # SUBSUMPTION METHODS
     # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     def subsumeClassifier(self, cl=None, cl1P=None, cl2P=None):
-        """ Tries to subsume a classifier in the parents. If no subsumption is possible it tries to subsume it in the current set. """
+        """Tries to subsume a classifier in the parents.
+
+        If no subsumption is possible it tries to subsume it in the current set.
+
+        :param cl:
+        :param cl1P:
+        :param cl2P:
+        :return:
+        """
         if cl1P != None and cl1P.subsumes(cl):
             self.microPopSize += 1
             cl1P.updateNumerosity(1)
@@ -367,8 +416,14 @@ class ClassifierSet(object):
             self.subsumeClassifier2(cl);  # Try to subsume in the correct set.
 
     def subsumeClassifier2(self, cl):
-        """ Tries to subsume a classifier in the correct set. If no subsumption is possible the classifier is simply added to the population considering
-        the possibility that there exists an identical classifier. """
+        """Tries to subsume a classifier in the correct set.
+
+        If no subsumption is possible the classifier is simply added to the population considering the
+        possibility that there exists an identical classifier.
+
+        :param cl:
+        :return:
+        """
         choices = []
         for ref in self.correctSet:
             if self.popSet[ref].subsumes(cl):
@@ -384,8 +439,11 @@ class ClassifierSet(object):
                                        False)  # If no subsumer was found, check for identical classifier, if not then add the classifier to the population
 
     def doCorrectSetSubsumption(self):
-        """ Executes correct set subsumption.  The correct set subsumption looks for the most general subsumer classifier in the correct set
-        and subsumes all classifiers that are more specific than the selected one. """
+        """ Executes correct set subsumption.
+
+        The correct set subsumption looks for the most general subsumer classifier in the correct set
+        and subsumes all classifiers that are more specific than the selected one.
+        """
         subsumer = None
         for ref in self.correctSet:
             cl = self.popSet[ref]
@@ -409,7 +467,12 @@ class ClassifierSet(object):
     # OTHER KEY METHODS
     # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     def addClassifierToPopulation(self, cl, covering):
-        """ Adds a classifier to the set and increases the microPopSize value accordingly."""
+        """Adds a classifier to the set and increases the microPopSize value accordingly.
+
+        :param cl:
+        :param covering:
+        :return:
+        """
         oldCl = None
         if not covering:
             oldCl = self.getIdenticalClassifier(cl)
@@ -421,8 +484,18 @@ class ClassifierSet(object):
             self.microPopSize += 1
 
     def insertDiscoveredClassifiers(self, cl1, cl2, clP1, clP2, exploreIter):
-        """ Inserts both discovered classifiers and activates GA subsumption if turned on. Also checks for default rule (i.e. rule with completely general condition) and 
-        prevents such rules from being added to the population, as it offers no predictive value within eLCS. """
+        """Inserts both discovered classifiers and activates GA subsumption if turned on.
+
+        Also checks for default rule (i.e. rule with completely general condition)
+        and prevents such rules from being added to the population, as it offers no predictive value within eLCS.
+
+        :param cl1:
+        :param cl2:
+        :param clP1:
+        :param clP2:
+        :param exploreIter:
+        :return:
+        """
         # -------------------------------------------------------
         # SUBSUMPTION
         # -------------------------------------------------------
@@ -447,7 +520,11 @@ class ClassifierSet(object):
                                                False)  # False passed because this is not called for a covered rule.
 
     def updateSets(self, exploreIter):
-        """ Updates all relevant parameters in the current match and correct sets. """
+        """Updates all relevant parameters in the current match and correct sets.
+
+        :param exploreIter:
+        :return:
+        """
         matchSetNumerosity = 0
         for ref in self.matchSet:
             matchSetNumerosity += self.popSet[ref].numerosity
@@ -465,7 +542,7 @@ class ClassifierSet(object):
     # OTHER METHODS
     # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     def getIterStampAverage(self):
-        """ Returns the average of the time stamps in the correct set. """
+        """Returns the average of the time stamps in the correct set."""
         sumCl = 0.0
         numSum = 0.0
         for i in range(len(self.correctSet)):
@@ -475,14 +552,23 @@ class ClassifierSet(object):
         return sumCl / float(numSum)
 
     def setIterStamps(self, exploreIter):
-        """ Sets the time stamp of all classifiers in the set to the current time. The current time
-        is the number of exploration steps executed so far.  """
+        """ Sets the time stamp of all classifiers in the set to the current time.
+
+        The current time is the number of exploration steps executed so far.
+
+        :param exploreIter:
+        :return:
+        """
         for i in range(len(self.correctSet)):
             ref = self.correctSet[i]
             self.popSet[ref].updateTimeStamp(exploreIter)
 
     def getFitnessSum(self, setList):
-        """ Returns the sum of the fitnesses of all classifiers in the set. """
+        """Returns the sum of the fitnesses of all classifiers in the set.
+
+        :param setList:
+        :return:
+        """
         sumCl = 0.0
         for i in range(len(setList)):
             ref = setList[i]
@@ -497,14 +583,18 @@ class ClassifierSet(object):
         return sumCl
 
     def getIdenticalClassifier(self, newCl):
-        """ Looks for an identical classifier in the population. """
+        """Looks for an identical classifier in the population.
+
+        :param newCl:
+        :return:
+        """
         for cl in self.popSet:
             if newCl.equals(cl):
                 return cl
         return None
 
     def clearSets(self):
-        """ Clears out references in the match and correct sets for the next learning iteration. """
+        """Clears out references in the match and correct sets for the next learning iteration."""
         self.matchSet = []
         self.correctSet = []
 
@@ -512,7 +602,11 @@ class ClassifierSet(object):
     # EVALUTATION METHODS
     # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     def runPopAveEval(self, exploreIter):
-        """ Calculates some summary evaluations across the rule population including average generality. """
+        """Calculates some summary evaluations across the rule population including average generality.
+
+        :param exploreIter:
+        :return:
+        """
         genSum = 0
         agedCount = 0
         for cl in self.popSet:
@@ -534,7 +628,13 @@ class ClassifierSet(object):
             self.avePhenotypeRange = (sumRuleRange / float(self.microPopSize)) / float(phenotypeRange)
 
     def runAttGeneralitySum(self, isEvaluationSummary):
-        """ Determine the population-wide frequency of attribute specification, and accuracy weighted specification.  Used in complete rule population evaluations. """
+        """Determine the population-wide frequency of attribute specification, and accuracy weighted specification.
+
+        Used in complete rule population evaluations.
+
+        :param isEvaluationSummary:
+        :return:
+        """
         if isEvaluationSummary:
             self.attributeSpecList = []
             self.attributeAccList = []
@@ -547,7 +647,13 @@ class ClassifierSet(object):
                     self.attributeAccList[ref] += cl.numerosity * cl.accuracy
 
     def getPopTrack(self, accuracy, exploreIter, trackingFrequency):
-        """ Returns a formated output string to be printed to the Learn Track output file. """
+        """Returns a formated output string to be printed to the Learn Track output file.
+
+        :param accuracy:
+        :param exploreIter:
+        :param trackingFrequency:
+        :return:
+        """
         trackString = str(exploreIter) + "\t" + str(len(self.popSet)) + "\t" + str(self.microPopSize) + "\t" + str(
             accuracy) + "\t" + str(self.aveGenerality) + "\t" + str(cons.timer.returnGlobalTimer()) + "\n"
         if cons.env.formatData.discretePhenotype:  # discrete phenotype

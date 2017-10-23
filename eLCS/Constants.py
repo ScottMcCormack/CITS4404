@@ -6,12 +6,12 @@ class Constants(object):
     """Stores and manages all algorithm run parameters
 
     Parameters are accessible anywhere in the rest of the algorithm code by importing `cons`
-        """
+    """
 
     def setConstants(self, config_file):
         """Parse the configuration file and save them as global constants
 
-        :param config_file: :param str config_file: Path to the configuration yaml file
+        :param str config_file: Path to the configuration yaml file
         """
 
         # Static Run Parameters
@@ -85,9 +85,9 @@ class Constants(object):
         return parameters
 
     def referenceTimer(self, timer):
-        """Store reference to the `Timer` object
+        """Store reference to the Timer object
 
-        :param Timer timer: A `Timer` object
+        :param timer: A timer object
         """
         self.timer = timer
 

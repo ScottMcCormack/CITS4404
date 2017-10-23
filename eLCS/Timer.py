@@ -1,9 +1,8 @@
 import time
 
 
-class Timer:
-    """Tracks and stores the run time of algorithm and some of it's major components
-    """
+class Timer(object):
+    """Tracks and stores the run time of algorithm and some of it's major components"""
 
     def __init__(self):
         # Global Time objects

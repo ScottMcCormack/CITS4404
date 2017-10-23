@@ -2,7 +2,7 @@ from eLCS.DataManagement import DataManagement
 from eLCS.Constants import cons
 
 
-class OfflineEnvironment:
+class OfflineEnvironment(object):
     """
     In the context of data mining and classification tasks,
     the environment is a data set with a limited number of instances with X attributes
@@ -36,7 +36,11 @@ class OfflineEnvironment:
         return [self.currentTestState, self.currentTestPhenotype]
 
     def newInstance(self, isTraining):
-        """  Shifts the environment to the next instance in the data. """
+        """Shifts the environment to the next instance in the data.
+
+        :param isTraining:
+        :return:
+        """
         # -------------------------------------------------------
         # Training Data
         # -------------------------------------------------------
@@ -58,7 +62,11 @@ class OfflineEnvironment:
                 self.currentTestPhenotype = self.formatData.testFormatted[self.dataRef][1]
 
     def resetDataRef(self, isTraining):
-        """ Resets the environment back to the first instance in the current data set. """
+        """Resets the environment back to the first instance in the current data set.
+
+        :param isTraining:
+        :return:
+        """
         self.dataRef = 0
         if isTraining:
             self.currentTrainState = self.formatData.trainFormatted[self.dataRef][0]
@@ -68,9 +76,9 @@ class OfflineEnvironment:
             self.currentTestPhenotype = self.formatData.testFormatted[self.dataRef][1]
 
     def startEvaluationMode(self):
-        """ Turns on evaluation mode.  Saves the instance we left off in the training data. """
+        """Turns on evaluation mode.  Saves the instance we left off in the training data."""
         self.storeDataRef = self.dataRef
 
     def stopEvaluationMode(self):
-        """ Turns off evaluation mode.  Re-establishes place in dataset."""
+        """Turns off evaluation mode.  Re-establishes place in dataset."""
         self.dataRef = self.storeDataRef
