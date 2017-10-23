@@ -36,14 +36,6 @@ eLCS\.ClassifierSet module
     :undoc-members:
     :show-inheritance:
 
-eLCS\.ConfigParser module
--------------------------
-
-.. automodule:: eLCS.ConfigParser
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 eLCS\.Constants module
 ----------------------
 
@@ -88,15 +80,6 @@ eLCS\.Timer module
 ------------------
 
 .. automodule:: eLCS.Timer
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-Module contents
----------------
-
-.. automodule:: eLCS
     :members:
     :undoc-members:
     :show-inheritance:

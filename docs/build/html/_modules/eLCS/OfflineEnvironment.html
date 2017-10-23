@@ -39,41 +39,22 @@
           <div class="body" role="main">
             
   <h1>Source code for eLCS.OfflineEnvironment</h1><div class="highlight"><pre>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Name:        eLCS_Offline_Environment.py</span>
-<span class="sd">Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA</span>
-<span class="sd">Contact:     ryan.j.urbanowicz@darmouth.edu</span>
-<span class="sd">Created:     November 1, 2013</span>
-<span class="sd">Description: In the context of data mining and classification tasks, the environment is a data set with a limited number of instances with X attributes </span>
-<span class="sd">             and some endpoint (typically a discrete phenotype or class) of interest.  This module loads the data set, automatically detects features of the data.</span>
-<span class="sd">             </span>
-<span class="sd">---------------------------------------------------------------------------------------------------------------------------------------------------------</span>
-<span class="sd">eLCS: Educational Learning Classifier System - A basic LCS coded for educational purposes.  This LCS algorithm uses supervised learning, and thus is most </span>
-<span class="sd">similar to &quot;UCS&quot;, an LCS algorithm published by Ester Bernado-Mansilla and Josep Garrell-Guiu (2003) which in turn is based heavily on &quot;XCS&quot;, an LCS </span>
-<span class="sd">algorithm published by Stewart Wilson (1995).  </span>
-
-<span class="sd">Copyright (C) 2013 Ryan Urbanowicz </span>
-<span class="sd">This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the </span>
-<span class="sd">Free Software Foundation; either version 3 of the License, or (at your option) any later version.</span>
-
-<span class="sd">This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY </span>
-<span class="sd">or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</span>
-
-<span class="sd">You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, </span>
-<span class="sd">Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA</span>
-<span class="sd">---------------------------------------------------------------------------------------------------------------------------------------------------------</span>
-<span class="sd">&quot;&quot;&quot;</span>
-
-<span class="c1"># Import Required Modules--------------------------------------</span>
 <span class="kn">from</span> <span class="nn">eLCS.DataManagement</span> <span class="k">import</span> <span class="n">DataManagement</span>
 <span class="kn">from</span> <span class="nn">eLCS.Constants</span> <span class="k">import</span> <span class="n">cons</span>
 
 
-<span class="c1"># -------------------------------------------------------------</span>
+<div class="viewcode-block" id="OfflineEnvironment"><a class="viewcode-back" href="../../eLCS.html#eLCS.OfflineEnvironment.OfflineEnvironment">[docs]</a><span class="k">class</span> <span class="nc">OfflineEnvironment</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    In the context of data mining and classification tasks,</span>
+<span class="sd">    the environment is a data set with a limited number of instances with X attributes</span>
+<span class="sd">    and some endpoint (typically a discrete phenotype or class) of interest.</span>
 
-<div class="viewcode-block" id="OfflineEnvironment"><a class="viewcode-back" href="../../eLCS.html#eLCS.OfflineEnvironment.OfflineEnvironment">[docs]</a><span class="k">class</span> <span class="nc">OfflineEnvironment</span><span class="p">:</span>
+<span class="sd">    This module loads the data set, automatically detects features of the data by executing</span>
+<span class="sd">    the DataManagement module</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># Initialize global variables-------------------------------------------------</span>
+        <span class="sd">&quot;&quot;&quot;Initialize global variables&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dataRef</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">storeDataRef</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">formatData</span> <span class="o">=</span> <span class="n">DataManagement</span><span class="p">(</span><span class="n">cons</span><span class="o">.</span><span class="n">trainFile</span><span class="p">,</span> <span class="n">cons</span><span class="o">.</span><span class="n">testFile</span><span class="p">)</span>
@@ -88,7 +69,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">currentTestPhenotype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">testFormatted</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dataRef</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
 
 <div class="viewcode-block" id="OfflineEnvironment.getTrainInstance"><a class="viewcode-back" href="../../eLCS.html#eLCS.OfflineEnvironment.OfflineEnvironment.getTrainInstance">[docs]</a>    <span class="k">def</span> <span class="nf">getTrainInstance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Returns the current training instance. &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Returns the current training instance&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">currentTrainState</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentTrainPhenotype</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="OfflineEnvironment.getTestInstance"><a class="viewcode-back" href="../../eLCS.html#eLCS.OfflineEnvironment.OfflineEnvironment.getTestInstance">[docs]</a>    <span class="k">def</span> <span class="nf">getTestInstance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -96,7 +77,11 @@
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">currentTestState</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentTestPhenotype</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="OfflineEnvironment.newInstance"><a class="viewcode-back" href="../../eLCS.html#eLCS.OfflineEnvironment.OfflineEnvironment.newInstance">[docs]</a>    <span class="k">def</span> <span class="nf">newInstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">isTraining</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;  Shifts the environment to the next instance in the data. &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Shifts the environment to the next instance in the data.</span>
+
+<span class="sd">        :param isTraining:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># -------------------------------------------------------</span>
         <span class="c1"># Training Data</span>
         <span class="c1"># -------------------------------------------------------</span>
@@ -118,7 +103,11 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">currentTestPhenotype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">testFormatted</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dataRef</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="OfflineEnvironment.resetDataRef"><a class="viewcode-back" href="../../eLCS.html#eLCS.OfflineEnvironment.OfflineEnvironment.resetDataRef">[docs]</a>    <span class="k">def</span> <span class="nf">resetDataRef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">isTraining</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Resets the environment back to the first instance in the current data set. &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Resets the environment back to the first instance in the current data set.</span>
+
+<span class="sd">        :param isTraining:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dataRef</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="n">isTraining</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">currentTrainState</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">trainFormatted</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dataRef</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
@@ -128,11 +117,11 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">currentTestPhenotype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">testFormatted</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dataRef</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="OfflineEnvironment.startEvaluationMode"><a class="viewcode-back" href="../../eLCS.html#eLCS.OfflineEnvironment.OfflineEnvironment.startEvaluationMode">[docs]</a>    <span class="k">def</span> <span class="nf">startEvaluationMode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Turns on evaluation mode.  Saves the instance we left off in the training data. &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Turns on evaluation mode.  Saves the instance we left off in the training data.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">storeDataRef</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataRef</span></div>
 
 <div class="viewcode-block" id="OfflineEnvironment.stopEvaluationMode"><a class="viewcode-back" href="../../eLCS.html#eLCS.OfflineEnvironment.OfflineEnvironment.stopEvaluationMode">[docs]</a>    <span class="k">def</span> <span class="nf">stopEvaluationMode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Turns off evaluation mode.  Re-establishes place in dataset.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Turns off evaluation mode.  Re-establishes place in dataset.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dataRef</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">storeDataRef</span></div></div>
 </pre></div>
 
@@ -151,6 +140,10 @@
 
 
 <h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../eLCS.html">eLCS package</a></li>
+</ul>
 
 <div class="relations">
 <h3>Related Topics</h3>

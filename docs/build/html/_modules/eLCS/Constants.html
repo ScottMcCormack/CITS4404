@@ -39,36 +39,24 @@
           <div class="body" role="main">
             
   <h1>Source code for eLCS.Constants</h1><div class="highlight"><pre>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Name:        eLCS_Constants.py</span>
-<span class="sd">Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA</span>
-<span class="sd">Contact:     ryan.j.urbanowicz@darmouth.edu</span>
-<span class="sd">Created:     November 1, 2013</span>
-<span class="sd">Description: Stores and manages all algorithm run parameters, making them accessible anywhere in the rest of the algorithm code by (cons.) .</span>
-<span class="sd">             </span>
-<span class="sd">---------------------------------------------------------------------------------------------------------------------------------------------------------</span>
-<span class="sd">eLCS: Educational Learning Classifier System - A basic LCS coded for educational purposes.  This LCS algorithm uses supervised learning, and thus is most </span>
-<span class="sd">similar to &quot;UCS&quot;, an LCS algorithm published by Ester Bernado-Mansilla and Josep Garrell-Guiu (2003) which in turn is based heavily on &quot;XCS&quot;, an LCS </span>
-<span class="sd">algorithm published by Stewart Wilson (1995).  </span>
-
-<span class="sd">Copyright (C) 2013 Ryan Urbanowicz </span>
-<span class="sd">This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the </span>
-<span class="sd">Free Software Foundation; either version 3 of the License, or (at your option) any later version.</span>
-
-<span class="sd">This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY </span>
-<span class="sd">or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</span>
-
-<span class="sd">You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, </span>
-<span class="sd">Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA</span>
-<span class="sd">---------------------------------------------------------------------------------------------------------------------------------------------------------</span>
-<span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
 
 
-<div class="viewcode-block" id="Constants"><a class="viewcode-back" href="../../eLCS.html#eLCS.Constants.Constants">[docs]</a><span class="k">class</span> <span class="nc">Constants</span><span class="p">:</span>
-<div class="viewcode-block" id="Constants.setConstants"><a class="viewcode-back" href="../../eLCS.html#eLCS.Constants.Constants.setConstants">[docs]</a>    <span class="k">def</span> <span class="nf">setConstants</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">par</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Takes the parameters parsed as a dictionary from eLCS_ConfigParser and saves them as global constants. &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Constants"><a class="viewcode-back" href="../../eLCS.html#eLCS.Constants.Constants">[docs]</a><span class="k">class</span> <span class="nc">Constants</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Stores and manages all algorithm run parameters</span>
+
+<span class="sd">    Parameters are accessible anywhere in the rest of the algorithm code by importing `cons`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Constants.setConstants"><a class="viewcode-back" href="../../eLCS.html#eLCS.Constants.Constants.setConstants">[docs]</a>    <span class="k">def</span> <span class="nf">setConstants</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_file</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Parse the configuration file and save them as global constants</span>
+
+<span class="sd">        :param str config_file: Path to the configuration yaml file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="c1"># Static Run Parameters</span>
+        <span class="n">par</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loadParameters</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>  <span class="c1"># Load in the parameters from the yaml file</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">datasetPath</span> <span class="o">=</span> <span class="s1">&#39;datasets&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">outputPath</span> <span class="o">=</span> <span class="s1">&#39;output&#39;</span>
 
@@ -114,23 +102,50 @@
 
         <span class="c1"># PopulationReboot -------------------------------------------------------------------------------</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">doPopulationReboot</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">par</span><span class="p">[</span><span class="s1">&#39;doPopulationReboot&#39;</span><span class="p">]))</span>  <span class="c1"># Saved as Boolean</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">popRebootPath</span> <span class="o">=</span> <span class="n">par</span><span class="p">[</span><span class="s1">&#39;popRebootPath&#39;</span><span class="p">]</span>  <span class="c1"># Saved as text</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">popRebootPath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputPath</span><span class="p">,</span> <span class="n">par</span><span class="p">[</span><span class="s1">&#39;popRebootPath&#39;</span><span class="p">])</span>  <span class="c1"># Saved as text</span></div>
+
+<div class="viewcode-block" id="Constants.loadParameters"><a class="viewcode-back" href="../../eLCS.html#eLCS.Constants.Constants.loadParameters">[docs]</a>    <span class="k">def</span> <span class="nf">loadParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_file</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load the environment parameters from yaml configuration file</span>
+
+<span class="sd">        :param str config_file: Path to the configuration yaml file</span>
+<span class="sd">        :return: Parameters read from yaml file</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">parameters</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Read parameters from yaml file</span>
+                <span class="n">parameters</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">yaml</span><span class="o">.</span><span class="n">YAMLError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span>
+
+        <span class="n">stream</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">parameters</span></div>
 
 <div class="viewcode-block" id="Constants.referenceTimer"><a class="viewcode-back" href="../../eLCS.html#eLCS.Constants.Constants.referenceTimer">[docs]</a>    <span class="k">def</span> <span class="nf">referenceTimer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timer</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Store reference to the timer object. &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Store reference to the Timer object</span>
+
+<span class="sd">        :param timer: A timer object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">timer</span> <span class="o">=</span> <span class="n">timer</span></div>
 
-<div class="viewcode-block" id="Constants.referenceEnv"><a class="viewcode-back" href="../../eLCS.html#eLCS.Constants.Constants.referenceEnv">[docs]</a>    <span class="k">def</span> <span class="nf">referenceEnv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Store reference to environment object. &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">e</span></div>
+<div class="viewcode-block" id="Constants.referenceEnv"><a class="viewcode-back" href="../../eLCS.html#eLCS.Constants.Constants.referenceEnv">[docs]</a>    <span class="k">def</span> <span class="nf">referenceEnv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Store reference to `OfflineEnvironment` object</span>
+
+<span class="sd">        :param Environment env: An `OfflineEnvironment` file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">env</span></div>
 
 <div class="viewcode-block" id="Constants.parseIterations"><a class="viewcode-back" href="../../eLCS.html#eLCS.Constants.Constants.parseIterations">[docs]</a>    <span class="k">def</span> <span class="nf">parseIterations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Parse the &#39;learningIterations&#39; string to identify the maximum number of learning iterations as well as evaluation checkpoints. &quot;&quot;&quot;</span>
-        <span class="n">checkpoints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">learningIterations</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">checkpoints</span><span class="p">)):</span>
-            <span class="n">checkpoints</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">checkpoints</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="sd">&quot;&quot;&quot; Parse the &#39;learningIterations&#39; string</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">learningCheckpoints</span> <span class="o">=</span> <span class="n">checkpoints</span>
+<span class="sd">        Identify the maximum number of learning iterations as well as evaluation checkpoints</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">learningCheckpoints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">learningIterations</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">maxLearningIterations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">learningCheckpoints</span><span class="p">[(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">learningCheckpoints</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trackingFrequency</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -156,6 +171,10 @@
 
 
 <h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../eLCS.html">eLCS package</a></li>
+</ul>
 
 <div class="relations">
 <h3>Related Topics</h3>

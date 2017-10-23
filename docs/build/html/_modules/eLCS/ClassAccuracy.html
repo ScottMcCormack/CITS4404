@@ -39,32 +39,12 @@
           <div class="body" role="main">
             
   <h1>Source code for eLCS.ClassAccuracy</h1><div class="highlight"><pre>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Name:        eLCS_ClassAccuracy.py</span>
-<span class="sd">Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA</span>
-<span class="sd">Contact:     ryan.j.urbanowicz@darmouth.edu</span>
-<span class="sd">Created:     November 1, 2013</span>
-<span class="sd">Description: Manages the logistical aspects of balance accuracy calculations which can handle unbalanced datasets, and/or datasets with multiple discrete classes.</span>
-<span class="sd">             </span>
-<span class="sd">---------------------------------------------------------------------------------------------------------------------------------------------------------</span>
-<span class="sd">eLCS: Educational Learning Classifier System - A basic LCS coded for educational purposes.  This LCS algorithm uses supervised learning, and thus is most </span>
-<span class="sd">similar to &quot;UCS&quot;, an LCS algorithm published by Ester Bernado-Mansilla and Josep Garrell-Guiu (2003) which in turn is based heavily on &quot;XCS&quot;, an LCS </span>
-<span class="sd">algorithm published by Stewart Wilson (1995).  </span>
+<div class="viewcode-block" id="ClassAccuracy"><a class="viewcode-back" href="../../eLCS.html#eLCS.ClassAccuracy.ClassAccuracy">[docs]</a><span class="k">class</span> <span class="nc">ClassAccuracy</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Manages the logistical aspects of balance accuracy calculations.</span>
 
-<span class="sd">Copyright (C) 2013 Ryan Urbanowicz </span>
-<span class="sd">This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the </span>
-<span class="sd">Free Software Foundation; either version 3 of the License, or (at your option) any later version.</span>
+<span class="sd">    These can handle unbalanced datasets, and/or datasets with multiple discrete classes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-<span class="sd">This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY </span>
-<span class="sd">or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</span>
-
-<span class="sd">You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, </span>
-<span class="sd">Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA</span>
-<span class="sd">---------------------------------------------------------------------------------------------------------------------------------------------------------</span>
-<span class="sd">&quot;&quot;&quot;</span>
-
-
-<div class="viewcode-block" id="ClassAccuracy"><a class="viewcode-back" href="../../eLCS.html#eLCS.ClassAccuracy.ClassAccuracy">[docs]</a><span class="k">class</span> <span class="nc">ClassAccuracy</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Initialize the accuracy calculation for a single class &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">T_myClass</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># For binary class problems this would include true positives</span>
@@ -73,7 +53,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">F_otherClass</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># For binary class problems this would include false negatives</span>
 
 <div class="viewcode-block" id="ClassAccuracy.updateAccuracy"><a class="viewcode-back" href="../../eLCS.html#eLCS.ClassAccuracy.ClassAccuracy.updateAccuracy">[docs]</a>    <span class="k">def</span> <span class="nf">updateAccuracy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thisIsMe</span><span class="p">,</span> <span class="n">accurateClass</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Increment the appropriate cell of the confusion matrix &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Increment the appropriate cell of the confusion matrix</span>
+
+<span class="sd">        :param thisIsMe:</span>
+<span class="sd">        :param accurateClass:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">thisIsMe</span> <span class="ow">and</span> <span class="n">accurateClass</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">T_myClass</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">elif</span> <span class="n">accurateClass</span><span class="p">:</span>
@@ -84,7 +68,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">F_otherClass</span> <span class="o">+=</span> <span class="mi">1</span></div>
 
 <div class="viewcode-block" id="ClassAccuracy.reportClassAccuracy"><a class="viewcode-back" href="../../eLCS.html#eLCS.ClassAccuracy.ClassAccuracy.reportClassAccuracy">[docs]</a>    <span class="k">def</span> <span class="nf">reportClassAccuracy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Print to standard out, summary on the class accuracy. &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Print to standard out, summary on the class accuracy&quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-----------------------------------------------&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;TP = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">T_myClass</span><span class="p">))</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;TN = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">T_otherClass</span><span class="p">))</span>
@@ -108,6 +92,10 @@
 
 
 <h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../eLCS.html">eLCS package</a></li>
+</ul>
 
 <div class="relations">
 <h3>Related Topics</h3>

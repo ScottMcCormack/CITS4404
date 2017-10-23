@@ -39,37 +39,12 @@
           <div class="body" role="main">
             
   <h1>Source code for eLCS.Timer</h1><div class="highlight"><pre>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Name:        eLCS_Timer.py</span>
-<span class="sd">Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA</span>
-<span class="sd">Contact:     ryan.j.urbanowicz@darmouth.edu</span>
-<span class="sd">Created:     November 1, 2013</span>
-<span class="sd">Description: Tracks and stores the run time of algorithm and some of it&#39;s major components</span>
-<span class="sd">             </span>
-<span class="sd">---------------------------------------------------------------------------------------------------------------------------------------------------------</span>
-<span class="sd">eLCS: Educational Learning Classifier System - A basic LCS coded for educational purposes.  This LCS algorithm uses supervised learning, and thus is most </span>
-<span class="sd">similar to &quot;UCS&quot;, an LCS algorithm published by Ester Bernado-Mansilla and Josep Garrell-Guiu (2003) which in turn is based heavily on &quot;XCS&quot;, an LCS </span>
-<span class="sd">algorithm published by Stewart Wilson (1995).  </span>
-
-<span class="sd">Copyright (C) 2013 Ryan Urbanowicz </span>
-<span class="sd">This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the </span>
-<span class="sd">Free Software Foundation; either version 3 of the License, or (at your option) any later version.</span>
-
-<span class="sd">This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY </span>
-<span class="sd">or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</span>
-
-<span class="sd">You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, </span>
-<span class="sd">Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA</span>
-<span class="sd">---------------------------------------------------------------------------------------------------------------------------------------------------------</span>
-<span class="sd">&quot;&quot;&quot;</span>
-
-<span class="c1"># Import Required Modules---------------</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
 
-<span class="c1"># --------------------------------------</span>
+<div class="viewcode-block" id="Timer"><a class="viewcode-back" href="../../eLCS.html#eLCS.Timer.Timer">[docs]</a><span class="k">class</span> <span class="nc">Timer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Tracks and stores the run time of algorithm and some of it&#39;s major components&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Timer"><a class="viewcode-back" href="../../eLCS.html#eLCS.Timer.Timer">[docs]</a><span class="k">class</span> <span class="nc">Timer</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Global Time objects</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">globalStartRef</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
@@ -96,70 +71,68 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">startRefEvaluation</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">globalEvaluation</span> <span class="o">=</span> <span class="mf">0.0</span>
 
-
-        <span class="c1"># ************************************************************</span>
-
 <div class="viewcode-block" id="Timer.startTimeMatching"><a class="viewcode-back" href="../../eLCS.html#eLCS.Timer.Timer.startTimeMatching">[docs]</a>    <span class="k">def</span> <span class="nf">startTimeMatching</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Tracks MatchSet Time &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Tracks MatchSet Time&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">startRefMatching</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Timer.stopTimeMatching"><a class="viewcode-back" href="../../eLCS.html#eLCS.Timer.Timer.stopTimeMatching">[docs]</a>    <span class="k">def</span> <span class="nf">stopTimeMatching</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Tracks MatchSet Time &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Tracks MatchSet Time&quot;&quot;&quot;</span>
         <span class="n">diff</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">startRefMatching</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">globalMatching</span> <span class="o">+=</span> <span class="n">diff</span></div>
 
-        <span class="c1"># ************************************************************</span>
-
 <div class="viewcode-block" id="Timer.startTimeDeletion"><a class="viewcode-back" href="../../eLCS.html#eLCS.Timer.Timer.startTimeDeletion">[docs]</a>    <span class="k">def</span> <span class="nf">startTimeDeletion</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Tracks Deletion Time &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Tracks Deletion Time&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">startRefDeletion</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Timer.stopTimeDeletion"><a class="viewcode-back" href="../../eLCS.html#eLCS.Timer.Timer.stopTimeDeletion">[docs]</a>    <span class="k">def</span> <span class="nf">stopTimeDeletion</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Tracks Deletion Time &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Tracks Deletion Time&quot;&quot;&quot;</span>
         <span class="n">diff</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">startRefDeletion</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">globalDeletion</span> <span class="o">+=</span> <span class="n">diff</span></div>
 
-    <span class="c1"># ************************************************************</span>
 <div class="viewcode-block" id="Timer.startTimeSubsumption"><a class="viewcode-back" href="../../eLCS.html#eLCS.Timer.Timer.startTimeSubsumption">[docs]</a>    <span class="k">def</span> <span class="nf">startTimeSubsumption</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Tracks Subsumption Time &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Tracks Subsumption Time&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">startRefSubsumption</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Timer.stopTimeSubsumption"><a class="viewcode-back" href="../../eLCS.html#eLCS.Timer.Timer.stopTimeSubsumption">[docs]</a>    <span class="k">def</span> <span class="nf">stopTimeSubsumption</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Tracks Subsumption Time &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Tracks Subsumption Time&quot;&quot;&quot;</span>
         <span class="n">diff</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">startRefSubsumption</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">globalSubsumption</span> <span class="o">+=</span> <span class="n">diff</span></div>
 
-        <span class="c1"># ************************************************************</span>
-
 <div class="viewcode-block" id="Timer.startTimeSelection"><a class="viewcode-back" href="../../eLCS.html#eLCS.Timer.Timer.startTimeSelection">[docs]</a>    <span class="k">def</span> <span class="nf">startTimeSelection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Tracks Selection Time &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Tracks Selection Time&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">startRefSelection</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Timer.stopTimeSelection"><a class="viewcode-back" href="../../eLCS.html#eLCS.Timer.Timer.stopTimeSelection">[docs]</a>    <span class="k">def</span> <span class="nf">stopTimeSelection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Tracks Selection Time &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Tracks Selection Time&quot;&quot;&quot;</span>
         <span class="n">diff</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">startRefSelection</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">globalSelection</span> <span class="o">+=</span> <span class="n">diff</span></div>
 
-    <span class="c1"># ************************************************************</span>
 <div class="viewcode-block" id="Timer.startTimeEvaluation"><a class="viewcode-back" href="../../eLCS.html#eLCS.Timer.Timer.startTimeEvaluation">[docs]</a>    <span class="k">def</span> <span class="nf">startTimeEvaluation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Tracks Evaluation Time &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Tracks Evaluation Time&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">startRefEvaluation</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Timer.stopTimeEvaluation"><a class="viewcode-back" href="../../eLCS.html#eLCS.Timer.Timer.stopTimeEvaluation">[docs]</a>    <span class="k">def</span> <span class="nf">stopTimeEvaluation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Tracks Evaluation Time &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Tracks Evaluation Time&quot;&quot;&quot;</span>
         <span class="n">diff</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">startRefEvaluation</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">globalEvaluation</span> <span class="o">+=</span> <span class="n">diff</span></div>
 
-        <span class="c1"># ************************************************************</span>
-
 <div class="viewcode-block" id="Timer.returnGlobalTimer"><a class="viewcode-back" href="../../eLCS.html#eLCS.Timer.Timer.returnGlobalTimer">[docs]</a>    <span class="k">def</span> <span class="nf">returnGlobalTimer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Set the global end timer, call at very end of algorithm. &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">globalTime</span> <span class="o">=</span> <span class="p">(</span>
-                          <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">globalStartRef</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">addedTime</span>  <span class="c1"># Reports time in minutes, addedTime is for population reboot.</span>
+        <span class="sd">&quot;&quot;&quot;Set the global end timer, call at very end of algorithm</span>
+
+<span class="sd">        :return: The global time returned in minutes</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Reports time in minutes, addedTime is for population reboot.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">globalTime</span> <span class="o">=</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">globalStartRef</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">addedTime</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">globalTime</span> <span class="o">/</span> <span class="mf">60.0</span></div>
 
 <div class="viewcode-block" id="Timer.setTimerRestart"><a class="viewcode-back" href="../../eLCS.html#eLCS.Timer.Timer.setTimerRestart">[docs]</a>    <span class="k">def</span> <span class="nf">setTimerRestart</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remakeFile</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Sets all time values to the those previously evolved in the loaded popFile.  &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Sets all time values to the those previously evolved in the loaded popFile</span>
+
+<span class="sd">        :param str remakeFile: File path to the remakeFile</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">try</span><span class="p">:</span>
             <span class="n">fileObject</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">remakeFile</span> <span class="o">+</span> <span class="s2">&quot;_PopStats.txt&quot;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>  <span class="c1"># opens each datafile to read.</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">inst</span><span class="p">:</span>
@@ -199,10 +172,14 @@
 
         <span class="n">fileObject</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
-    <span class="c1">##############################################################################################</span>
-
 <div class="viewcode-block" id="Timer.reportTimes"><a class="viewcode-back" href="../../eLCS.html#eLCS.Timer.Timer.reportTimes">[docs]</a>    <span class="k">def</span> <span class="nf">reportTimes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Reports the time summaries for this run. Returns a string ready to be printed out.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Reports the time summaries for this run.</span>
+
+<span class="sd">        Returns a string ready to be printed out.</span>
+
+<span class="sd">        :return: The time summaries for the run</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">outputTime</span> <span class="o">=</span> <span class="s2">&quot;Global Time</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">globalTime</span> <span class="o">/</span> <span class="mf">60.0</span><span class="p">)</span> <span class="o">+</span> \
                      <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Matching Time</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">globalMatching</span> <span class="o">/</span> <span class="mf">60.0</span><span class="p">)</span> <span class="o">+</span> \
                      <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Deletion Time</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">globalDeletion</span> <span class="o">/</span> <span class="mf">60.0</span><span class="p">)</span> <span class="o">+</span> \
@@ -228,6 +205,10 @@
 
 
 <h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../eLCS.html">eLCS package</a></li>
+</ul>
 
 <div class="relations">
 <h3>Related Topics</h3>

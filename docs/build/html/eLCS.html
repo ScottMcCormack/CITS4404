@@ -23,6 +23,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to CITS4404-G1’s documentation!" href="index.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -45,55 +46,83 @@
 </div>
 <div class="section" id="module-eLCS.Algorithm">
 <span id="elcs-algorithm-module"></span><h2>eLCS.Algorithm module<a class="headerlink" href="#module-eLCS.Algorithm" title="Permalink to this headline">¶</a></h2>
-<p>Name:        eLCS_Algorithm.py
-Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA
-Contact:     <a class="reference external" href="mailto:ryan&#46;j&#46;urbanowicz&#37;&#52;&#48;darmouth&#46;edu">ryan<span>&#46;</span>j<span>&#46;</span>urbanowicz<span>&#64;</span>darmouth<span>&#46;</span>edu</a>
-Created:     November 1, 2013
-Description: The major controlling module of eLCS.  Includes the major run loop which controls learning over a specified number of iterations.  Also includes</p>
-<blockquote>
-<div>periodic tracking of estimated performance, and checkpoints where complete evaluations of the eLCS rule population is performed.</div></blockquote>
-<p>algorithm published by Stewart Wilson (1995).</p>
-<p>Copyright (C) 2013 Ryan Urbanowicz 
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
-Free Software Foundation; either version 3 of the License, or (at your option) any later version.</p>
-<p>This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY 
-or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</p>
-<p>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 
-Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
-———————————————————————————————————————————————————</p>
 <dl class="class">
 <dt id="eLCS.Algorithm.eLCS">
 <em class="property">class </em><code class="descclassname">eLCS.Algorithm.</code><code class="descname">eLCS</code><a class="reference internal" href="_modules/eLCS/Algorithm.html#eLCS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Algorithm.eLCS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>The major controlling module of eLCS.</p>
+<p>Includes the major run loop which controls learning over a specified number of iterations.
+Also includes periodic tracking of estimated performance, and checkpoints where complete
+evaluations of the eLCS rule population is performed.</p>
+<p>Two options are available for the initialisation of the algorithm
+1.  Do a Population reboot using an existing saved rule population, or
+2.  Build the Population from scratch from given data</p>
 <dl class="method">
 <dt id="eLCS.Algorithm.eLCS.doContPopEvaluation">
 <code class="descname">doContPopEvaluation</code><span class="sig-paren">(</span><em>isTrain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Algorithm.html#eLCS.doContPopEvaluation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Algorithm.eLCS.doContPopEvaluation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Performs evaluation of population via the copied environment. Specifically developed for continuous phenotype evaulation.  
-The population is maintained unchanging throughout the evaluation.  Works on both training and testing data.</p>
+<dd><p>Performs evaluation of population via the copied environment.</p>
+<p>Specifically developed for continuous phenotype evaulation. The population is maintained unchanging
+throughout the evaluation.  Works on both training and testing data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>isTrain</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.Algorithm.eLCS.doPopEvaluation">
 <code class="descname">doPopEvaluation</code><span class="sig-paren">(</span><em>isTrain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Algorithm.html#eLCS.doPopEvaluation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Algorithm.eLCS.doPopEvaluation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Performs a complete evaluation of the current rule population.  The population is unchanged throughout this evaluation. Works on both training and testing data.</p>
+<dd><p>Performs a complete evaluation of the current rule population.</p>
+<p>The population is unchanged throughout this evaluation. Works on both training and testing data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>isTrain</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.Algorithm.eLCS.populationReboot">
 <code class="descname">populationReboot</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Algorithm.html#eLCS.populationReboot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Algorithm.eLCS.populationReboot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Manages the reformation of a previously saved eLCS classifier population.</p>
+<dd><p>Manages the reformation of a previously saved eLCS classifier population</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.Algorithm.eLCS.runIteration">
 <code class="descname">runIteration</code><span class="sig-paren">(</span><em>state_phenotype</em>, <em>exploreIter</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Algorithm.html#eLCS.runIteration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Algorithm.eLCS.runIteration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run a single eLCS learning iteration.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>state_phenotype</strong> (<em>list</em>) – Listing consisting of the training state and training phenotype</li>
+<li><strong>exploreIter</strong> (<em>int</em>) – The current iteration</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.Algorithm.eLCS.run_eLCS">
 <code class="descname">run_eLCS</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Algorithm.html#eLCS.run_eLCS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Algorithm.eLCS.run_eLCS" title="Permalink to this definition">¶</a></dt>
-<dd><p>Runs the initialized eLCS algorithm.</p>
+<dd><p>Runs eLCS algorithm, runs by default after the class has been initialised</p>
 </dd></dl>
 
 </dd></dl>
@@ -101,34 +130,34 @@ The population is maintained unchanging throughout the evaluation.  Works on bot
 </div>
 <div class="section" id="module-eLCS.ClassAccuracy">
 <span id="elcs-classaccuracy-module"></span><h2>eLCS.ClassAccuracy module<a class="headerlink" href="#module-eLCS.ClassAccuracy" title="Permalink to this headline">¶</a></h2>
-<p>Name:        eLCS_ClassAccuracy.py
-Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA
-Contact:     <a class="reference external" href="mailto:ryan&#46;j&#46;urbanowicz&#37;&#52;&#48;darmouth&#46;edu">ryan<span>&#46;</span>j<span>&#46;</span>urbanowicz<span>&#64;</span>darmouth<span>&#46;</span>edu</a>
-Created:     November 1, 2013
-Description: Manages the logistical aspects of balance accuracy calculations which can handle unbalanced datasets, and/or datasets with multiple discrete classes.</p>
-<p>algorithm published by Stewart Wilson (1995).</p>
-<p>Copyright (C) 2013 Ryan Urbanowicz 
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
-Free Software Foundation; either version 3 of the License, or (at your option) any later version.</p>
-<p>This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY 
-or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</p>
-<p>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 
-Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
-———————————————————————————————————————————————————</p>
 <dl class="class">
 <dt id="eLCS.ClassAccuracy.ClassAccuracy">
 <em class="property">class </em><code class="descclassname">eLCS.ClassAccuracy.</code><code class="descname">ClassAccuracy</code><a class="reference internal" href="_modules/eLCS/ClassAccuracy.html#ClassAccuracy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassAccuracy.ClassAccuracy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Manages the logistical aspects of balance accuracy calculations.</p>
+<p>These can handle unbalanced datasets, and/or datasets with multiple discrete classes.</p>
 <dl class="method">
 <dt id="eLCS.ClassAccuracy.ClassAccuracy.reportClassAccuracy">
 <code class="descname">reportClassAccuracy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassAccuracy.html#ClassAccuracy.reportClassAccuracy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassAccuracy.ClassAccuracy.reportClassAccuracy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print to standard out, summary on the class accuracy.</p>
+<dd><p>Print to standard out, summary on the class accuracy</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.ClassAccuracy.ClassAccuracy.updateAccuracy">
 <code class="descname">updateAccuracy</code><span class="sig-paren">(</span><em>thisIsMe</em>, <em>accurateClass</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassAccuracy.html#ClassAccuracy.updateAccuracy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassAccuracy.ClassAccuracy.updateAccuracy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Increment the appropriate cell of the confusion matrix</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>thisIsMe</strong> – </li>
+<li><strong>accurateClass</strong> – </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -136,27 +165,13 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 </div>
 <div class="section" id="module-eLCS.Classifier">
 <span id="elcs-classifier-module"></span><h2>eLCS.Classifier module<a class="headerlink" href="#module-eLCS.Classifier" title="Permalink to this headline">¶</a></h2>
-<p>Name:        eLCS_Classifier.py
-Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA
-Contact:     <a class="reference external" href="mailto:ryan&#46;j&#46;urbanowicz&#37;&#52;&#48;darmouth&#46;edu">ryan<span>&#46;</span>j<span>&#46;</span>urbanowicz<span>&#64;</span>darmouth<span>&#46;</span>edu</a>
-Created:     November 1, 2013
-Description: This module defines an individual classifier within the rule population, along with all respective parameters.</p>
-<blockquote>
-<div>Also included are classifier-level methods, including constructors(covering, copy, reboot) matching, subsumption, 
-crossover, and mutation.  Parameter update methods are also included.</div></blockquote>
-<p>algorithm published by Stewart Wilson (1995).</p>
-<p>Copyright (C) 2013 Ryan Urbanowicz 
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
-Free Software Foundation; either version 3 of the License, or (at your option) any later version.</p>
-<p>This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY 
-or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</p>
-<p>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 
-Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
-———————————————————————————————————————————————————</p>
 <dl class="class">
 <dt id="eLCS.Classifier.Classifier">
 <em class="property">class </em><code class="descclassname">eLCS.Classifier.</code><code class="descname">Classifier</code><span class="sig-paren">(</span><em>a=None</em>, <em>b=None</em>, <em>c=None</em>, <em>d=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Classifier.html#Classifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Classifier.Classifier" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This module defines an individual classifier within the rule population, along with all respective parameters.</p>
+<p>Also included are classifier-level methods, including constructors(covering, copy, reboot)
+matching, subsumption, crossover, and mutation.  Parameter update methods are also included</p>
 <dl class="method">
 <dt id="eLCS.Classifier.Classifier.Mutation">
 <code class="descname">Mutation</code><span class="sig-paren">(</span><em>state</em>, <em>phenotype</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Classifier.html#Classifier.Mutation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Classifier.Classifier.Mutation" title="Permalink to this definition">¶</a></dt>
@@ -180,8 +195,26 @@ offspring based on parent classifiers.</p>
 <dl class="method">
 <dt id="eLCS.Classifier.Classifier.classifierCovering">
 <code class="descname">classifierCovering</code><span class="sig-paren">(</span><em>setSize</em>, <em>exploreIter</em>, <em>state</em>, <em>phenotype</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Classifier.html#Classifier.classifierCovering"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Classifier.Classifier.classifierCovering" title="Permalink to this definition">¶</a></dt>
-<dd><p>Makes a new classifier when the covering mechanism is triggered.  The new classifier will match the current training instance. 
+<dd><p>Makes a new classifier when the covering mechanism is triggered.</p>
+<p>The new classifier will match the current training instance.
 Covering will NOT produce a default rule (i.e. a rule with a completely general condition).</p>
+<p>The classifier constructs phenotypes for:
+1.  Discrete Phenotypes
+2.  Continous Phenotypes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>setSize</strong> (<em>int</em>) – The set numerosity sum</li>
+<li><strong>exploreIter</strong> (<em>int</em>) – The current iteration</li>
+<li><strong>state</strong> (<em>list</em>) – The state</li>
+<li><strong>phenotype</strong> (<em>int</em>) – The state’s phenotype</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -317,28 +350,35 @@ Covering will NOT produce a default rule (i.e. a rule with a completely general 
 </div>
 <div class="section" id="module-eLCS.ClassifierSet">
 <span id="elcs-classifierset-module"></span><h2>eLCS.ClassifierSet module<a class="headerlink" href="#module-eLCS.ClassifierSet" title="Permalink to this headline">¶</a></h2>
-<p>Name:        eLCS_ClassifierSet.py
-Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA
-Contact:     <a class="reference external" href="mailto:ryan&#46;j&#46;urbanowicz&#37;&#52;&#48;darmouth&#46;edu">ryan<span>&#46;</span>j<span>&#46;</span>urbanowicz<span>&#64;</span>darmouth<span>&#46;</span>edu</a>
-Created:     November 1, 2013
-Description: This module handles all classifier sets (population, match set, correct set) along with mechanisms and heuristics that act on these sets.</p>
-<p>algorithm published by Stewart Wilson (1995).</p>
-<p>Copyright (C) 2013 Ryan Urbanowicz 
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
-Free Software Foundation; either version 3 of the License, or (at your option) any later version.</p>
-<p>This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY 
-or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</p>
-<p>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 
-Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
-———————————————————————————————————————————————————</p>
 <dl class="class">
 <dt id="eLCS.ClassifierSet.ClassifierSet">
-<em class="property">class </em><code class="descclassname">eLCS.ClassifierSet.</code><code class="descname">ClassifierSet</code><span class="sig-paren">(</span><em>a=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">eLCS.ClassifierSet.</code><code class="descname">ClassifierSet</code><span class="sig-paren">(</span><em>pop_reboot_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This module handles all the classifier sets</p>
+<p>This includes the population, match set and correct sets along with mechanisms and
+heuristics that act on these sets.</p>
+<p>This class can be initialized with the:
+1.  Creation of a new population, or
+2.  Reboots the population (i.e. read in from a previously saved population)</p>
 <dl class="method">
 <dt id="eLCS.ClassifierSet.ClassifierSet.addClassifierToPopulation">
 <code class="descname">addClassifierToPopulation</code><span class="sig-paren">(</span><em>cl</em>, <em>covering</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.addClassifierToPopulation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.addClassifierToPopulation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a classifier to the set and increases the microPopSize value accordingly.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>cl</strong> – </li>
+<li><strong>covering</strong> – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -351,31 +391,63 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 <dt id="eLCS.ClassifierSet.ClassifierSet.deleteFromCorrectSet">
 <code class="descname">deleteFromCorrectSet</code><span class="sig-paren">(</span><em>deleteRef</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.deleteFromCorrectSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.deleteFromCorrectSet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete reference to classifier in population, contained in self.corectSet.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>deleteRef</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.ClassifierSet.ClassifierSet.deleteFromMatchSet">
 <code class="descname">deleteFromMatchSet</code><span class="sig-paren">(</span><em>deleteRef</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.deleteFromMatchSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.deleteFromMatchSet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete reference to classifier in population, contained in self.matchSet.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>deleteRef</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.ClassifierSet.ClassifierSet.deleteFromPopulation">
 <code class="descname">deleteFromPopulation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.deleteFromPopulation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.deleteFromPopulation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Deletes one classifier in the population.  The classifier that will be deleted is chosen by roulette wheel selection
-considering the deletion vote. Returns the macro-classifier which got decreased by one micro-classifier.</p>
+<dd><p>Deletes one classifier in the population.</p>
+<p>The classifier that will be deleted is chosen by roulette wheel selection considering the deletion vote.
+Returns the macro-classifier which got decreased by one micro-classifier.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.ClassifierSet.ClassifierSet.deletion">
 <code class="descname">deletion</code><span class="sig-paren">(</span><em>exploreIter</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.deletion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.deletion" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the population size back to the maximum set by the user by deleting rules.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>exploreIter</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.ClassifierSet.ClassifierSet.doCorrectSetSubsumption">
 <code class="descname">doCorrectSetSubsumption</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.doCorrectSetSubsumption"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.doCorrectSetSubsumption" title="Permalink to this definition">¶</a></dt>
-<dd><p>Executes correct set subsumption.  The correct set subsumption looks for the most general subsumer classifier in the correct set
+<dd><p>Executes correct set subsumption.</p>
+<p>The correct set subsumption looks for the most general subsumer classifier in the correct set
 and subsumes all classifiers that are more specific than the selected one.</p>
 </dd></dl>
 
@@ -383,12 +455,32 @@ and subsumes all classifiers that are more specific than the selected one.</p>
 <dt id="eLCS.ClassifierSet.ClassifierSet.getFitnessSum">
 <code class="descname">getFitnessSum</code><span class="sig-paren">(</span><em>setList</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.getFitnessSum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.getFitnessSum" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the sum of the fitnesses of all classifiers in the set.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>setList</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.ClassifierSet.ClassifierSet.getIdenticalClassifier">
 <code class="descname">getIdenticalClassifier</code><span class="sig-paren">(</span><em>newCl</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.getIdenticalClassifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.getIdenticalClassifier" title="Permalink to this definition">¶</a></dt>
 <dd><p>Looks for an identical classifier in the population.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>newCl</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -407,73 +499,206 @@ and subsumes all classifiers that are more specific than the selected one.</p>
 <dt id="eLCS.ClassifierSet.ClassifierSet.getPopTrack">
 <code class="descname">getPopTrack</code><span class="sig-paren">(</span><em>accuracy</em>, <em>exploreIter</em>, <em>trackingFrequency</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.getPopTrack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.getPopTrack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a formated output string to be printed to the Learn Track output file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>accuracy</strong> – </li>
+<li><strong>exploreIter</strong> – </li>
+<li><strong>trackingFrequency</strong> – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.ClassifierSet.ClassifierSet.insertDiscoveredClassifiers">
 <code class="descname">insertDiscoveredClassifiers</code><span class="sig-paren">(</span><em>cl1</em>, <em>cl2</em>, <em>clP1</em>, <em>clP2</em>, <em>exploreIter</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.insertDiscoveredClassifiers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.insertDiscoveredClassifiers" title="Permalink to this definition">¶</a></dt>
-<dd><p>Inserts both discovered classifiers and activates GA subsumption if turned on. Also checks for default rule (i.e. rule with completely general condition) and 
-prevents such rules from being added to the population, as it offers no predictive value within eLCS.</p>
+<dd><p>Inserts both discovered classifiers and activates GA subsumption if turned on.</p>
+<p>Also checks for default rule (i.e. rule with completely general condition)
+and prevents such rules from being added to the population, as it offers no predictive value within eLCS.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>cl1</strong> – </li>
+<li><strong>cl2</strong> – </li>
+<li><strong>clP1</strong> – </li>
+<li><strong>clP2</strong> – </li>
+<li><strong>exploreIter</strong> – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.ClassifierSet.ClassifierSet.makeCorrectSet">
 <code class="descname">makeCorrectSet</code><span class="sig-paren">(</span><em>phenotype</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.makeCorrectSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.makeCorrectSet" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructs a correct set out of the given match set.</p>
+<dd><p>Constructs a correct set out of the given match set</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>phenotype</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.ClassifierSet.ClassifierSet.makeEvalMatchSet">
 <code class="descname">makeEvalMatchSet</code><span class="sig-paren">(</span><em>state</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.makeEvalMatchSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.makeEvalMatchSet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs a match set for evaluation purposes which does not activate either covering or deletion.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>state</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.ClassifierSet.ClassifierSet.makeMatchSet">
 <code class="descname">makeMatchSet</code><span class="sig-paren">(</span><em>state_phenotype</em>, <em>exploreIter</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.makeMatchSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.makeMatchSet" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructs a match set from the population. Covering is initiated if the match set is empty or a rule with the current correct phenotype is absent.</p>
+<dd><p>Constructs a match set from the population</p>
+<p>Covering is initiated if the match set is empty or a rule with the current correct phenotype is absent.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>state_phenotype</strong> (<em>list</em>) – Listing consisting of the training state and training phenotype</li>
+<li><strong>exploreIter</strong> (<em>int</em>) – The current iteration</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.ClassifierSet.ClassifierSet.makePop">
 <code class="descname">makePop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.makePop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.makePop" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initializes the rule population</p>
+<dd><p>Initializes the rule population, as an empty list</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.ClassifierSet.ClassifierSet.rebootPop">
-<code class="descname">rebootPop</code><span class="sig-paren">(</span><em>remakeFile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.rebootPop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.rebootPop" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remakes a previously evolved population from a saved text file.</p>
+<code class="descname">rebootPop</code><span class="sig-paren">(</span><em>pop_reboot_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.rebootPop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.rebootPop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remakes a previously evolved population from a saved text file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pop_reboot_path</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.ClassifierSet.ClassifierSet.removeMacroClassifier">
 <code class="descname">removeMacroClassifier</code><span class="sig-paren">(</span><em>ref</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.removeMacroClassifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.removeMacroClassifier" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes the specified (macro-) classifier from the population.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ref</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.ClassifierSet.ClassifierSet.runAttGeneralitySum">
 <code class="descname">runAttGeneralitySum</code><span class="sig-paren">(</span><em>isEvaluationSummary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.runAttGeneralitySum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.runAttGeneralitySum" title="Permalink to this definition">¶</a></dt>
-<dd><p>Determine the population-wide frequency of attribute specification, and accuracy weighted specification.  Used in complete rule population evaluations.</p>
+<dd><p>Determine the population-wide frequency of attribute specification, and accuracy weighted specification.</p>
+<p>Used in complete rule population evaluations.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>isEvaluationSummary</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.ClassifierSet.ClassifierSet.runGA">
 <code class="descname">runGA</code><span class="sig-paren">(</span><em>exploreIter</em>, <em>state</em>, <em>phenotype</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.runGA"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.runGA" title="Permalink to this definition">¶</a></dt>
 <dd><p>The genetic discovery mechanism in eLCS is controlled here.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>exploreIter</strong> – </li>
+<li><strong>state</strong> – </li>
+<li><strong>phenotype</strong> – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.ClassifierSet.ClassifierSet.runPopAveEval">
 <code class="descname">runPopAveEval</code><span class="sig-paren">(</span><em>exploreIter</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.runPopAveEval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.runPopAveEval" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates some summary evaluations across the rule population including average generality.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>exploreIter</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.ClassifierSet.ClassifierSet.selectClassifierRW">
 <code class="descname">selectClassifierRW</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.selectClassifierRW"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.selectClassifierRW" title="Permalink to this definition">¶</a></dt>
 <dd><p>Selects parents using roulette wheel selection according to the fitness of the classifiers.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -485,122 +710,75 @@ prevents such rules from being added to the population, as it offers no predicti
 <dl class="method">
 <dt id="eLCS.ClassifierSet.ClassifierSet.setIterStamps">
 <code class="descname">setIterStamps</code><span class="sig-paren">(</span><em>exploreIter</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.setIterStamps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.setIterStamps" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets the time stamp of all classifiers in the set to the current time. The current time
-is the number of exploration steps executed so far.</p>
+<dd><p>Sets the time stamp of all classifiers in the set to the current time.</p>
+<p>The current time is the number of exploration steps executed so far.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>exploreIter</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.ClassifierSet.ClassifierSet.subsumeClassifier">
 <code class="descname">subsumeClassifier</code><span class="sig-paren">(</span><em>cl=None</em>, <em>cl1P=None</em>, <em>cl2P=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.subsumeClassifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.subsumeClassifier" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tries to subsume a classifier in the parents. If no subsumption is possible it tries to subsume it in the current set.</p>
+<dd><p>Tries to subsume a classifier in the parents.</p>
+<p>If no subsumption is possible it tries to subsume it in the current set.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>cl</strong> – </li>
+<li><strong>cl1P</strong> – </li>
+<li><strong>cl2P</strong> – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.ClassifierSet.ClassifierSet.subsumeClassifier2">
 <code class="descname">subsumeClassifier2</code><span class="sig-paren">(</span><em>cl</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.subsumeClassifier2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.subsumeClassifier2" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tries to subsume a classifier in the correct set. If no subsumption is possible the classifier is simply added to the population considering
-the possibility that there exists an identical classifier.</p>
+<dd><p>Tries to subsume a classifier in the correct set.</p>
+<p>If no subsumption is possible the classifier is simply added to the population considering the
+possibility that there exists an identical classifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>cl</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.ClassifierSet.ClassifierSet.updateSets">
 <code class="descname">updateSets</code><span class="sig-paren">(</span><em>exploreIter</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.updateSets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.updateSets" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates all relevant parameters in the current match and correct sets.</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-eLCS.ConfigParser">
-<span id="elcs-configparser-module"></span><h2>eLCS.ConfigParser module<a class="headerlink" href="#module-eLCS.ConfigParser" title="Permalink to this headline">¶</a></h2>
-<p>Name:        eLCS_ConfigPars.py
-Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA
-Contact:     <a class="reference external" href="mailto:ryan&#46;j&#46;urbanowicz&#37;&#52;&#48;darmouth&#46;edu">ryan<span>&#46;</span>j<span>&#46;</span>urbanowicz<span>&#64;</span>darmouth<span>&#46;</span>edu</a>
-Created:     November 1, 2013
-Description: Manages the configuration file, by loading it, parsing it and passing values to the ‘Constants’ module.</p>
-<p>algorithm published by Stewart Wilson (1995).</p>
-<p>Copyright (C) 2013 Ryan Urbanowicz 
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
-Free Software Foundation; either version 3 of the License, or (at your option) any later version.</p>
-<p>This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY 
-or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</p>
-<p>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 
-Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
-———————————————————————————————————————————————————</p>
-<dl class="class">
-<dt id="eLCS.ConfigParser.ConfigParser">
-<em class="property">class </em><code class="descclassname">eLCS.ConfigParser.</code><code class="descname">ConfigParser</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ConfigParser.html#ConfigParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ConfigParser.ConfigParser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>This class docstring shows how to use sphinx and rst syntax</p>
-<p>The first line is brief explanation, which may be completed with
-a longer one. For instance to discuss about its methods. The only
-method here is <code class="xref py py-func docutils literal"><span class="pre">function1()</span></code>’s. The main idea is to document
-the class and methods’s arguments with</p>
-<ul>
-<li><p class="first"><strong>parameters</strong>, <strong>types</strong>, <strong>return</strong> and <strong>return types</strong>:</p>
-<div class="highlight-default"><div class="highlight"><pre><span class="p">:</span><span class="n">param</span> <span class="n">arg1</span><span class="p">:</span> <span class="n">description</span>
-<span class="p">:</span><span class="n">param</span> <span class="n">arg2</span><span class="p">:</span> <span class="n">description</span>
-<span class="p">:</span><span class="nb">type</span> <span class="n">arg1</span><span class="p">:</span> <span class="nb">type</span> <span class="n">description</span>
-<span class="p">:</span><span class="nb">type</span> <span class="n">arg1</span><span class="p">:</span> <span class="nb">type</span> <span class="n">description</span>
-<span class="p">:</span><span class="k">return</span><span class="p">:</span> <span class="k">return</span> <span class="n">description</span>
-<span class="p">:</span><span class="n">rtype</span><span class="p">:</span> <span class="n">the</span> <span class="k">return</span> <span class="nb">type</span> <span class="n">description</span>
-</pre></div>
-</div>
-</li>
-<li><p class="first">and to provide sections such as <strong>Example</strong> using the double commas syntax:</p>
-<div class="highlight-default"><div class="highlight"><pre>:Example:
-
-followed by a blank line !
-</pre></div>
-</div>
-<p>which appears as follow:</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>exploreIter</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
 </tr>
 </tbody>
 </table>
-<p>followed by a blank line</p>
-</li>
-<li><p class="first">Finally special sections such as <strong>See Also</strong>, <strong>Warnings</strong>, <strong>Notes</strong>
-use the sphinx syntax (<em>paragraph directives</em>):</p>
-<div class="highlight-default"><div class="highlight"><pre><span class="o">..</span> <span class="n">seealso</span><span class="p">::</span> <span class="n">blabla</span>
-<span class="o">..</span> <span class="n">warnings</span> <span class="n">also</span><span class="p">::</span> <span class="n">blabla</span>
-<span class="o">..</span> <span class="n">note</span><span class="p">::</span> <span class="n">blabla</span>
-<span class="o">..</span> <span class="n">todo</span><span class="p">::</span> <span class="n">blabla</span>
-</pre></div>
-</div>
-</li>
-</ul>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<dl class="last docutils">
-<dt>There are many other Info fields but they may be redundant:</dt>
-<dd><ul class="first last simple">
-<li>param, parameter, arg, argument, key, keyword: Description of a
-parameter.</li>
-<li>type: Type of a parameter.</li>
-<li>raises, raise, except, exception: That (and when) a specific
-exception is raised.</li>
-<li>var, ivar, cvar: Description of a variable.</li>
-<li>returns, return: Description of the return value.</li>
-<li>rtype: Return type.</li>
-</ul>
-</dd>
-</dl>
-</div>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">There are many other directives such as versionadded, versionchanged,
-rubric, centered, … See the sphinx documentation for more details.</p>
-</div>
-<p>Here below is the results of the <code class="xref py py-func docutils literal"><span class="pre">function1()</span></code> docstring.</p>
-<dl class="method">
-<dt id="eLCS.ConfigParser.ConfigParser.parseConfig">
-<code class="descname">parseConfig</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ConfigParser.html#ConfigParser.parseConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ConfigParser.ConfigParser.parseConfig" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parses the configuration file.</p>
 </dd></dl>
 
 </dd></dl>
@@ -608,46 +786,77 @@ rubric, centered, … See the sphinx documentation for more details.</p>
 </div>
 <div class="section" id="module-eLCS.Constants">
 <span id="elcs-constants-module"></span><h2>eLCS.Constants module<a class="headerlink" href="#module-eLCS.Constants" title="Permalink to this headline">¶</a></h2>
-<p>Name:        eLCS_Constants.py
-Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA
-Contact:     <a class="reference external" href="mailto:ryan&#46;j&#46;urbanowicz&#37;&#52;&#48;darmouth&#46;edu">ryan<span>&#46;</span>j<span>&#46;</span>urbanowicz<span>&#64;</span>darmouth<span>&#46;</span>edu</a>
-Created:     November 1, 2013
-Description: Stores and manages all algorithm run parameters, making them accessible anywhere in the rest of the algorithm code by (cons.) .</p>
-<p>algorithm published by Stewart Wilson (1995).</p>
-<p>Copyright (C) 2013 Ryan Urbanowicz 
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
-Free Software Foundation; either version 3 of the License, or (at your option) any later version.</p>
-<p>This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY 
-or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</p>
-<p>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 
-Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
-———————————————————————————————————————————————————</p>
 <dl class="class">
 <dt id="eLCS.Constants.Constants">
 <em class="property">class </em><code class="descclassname">eLCS.Constants.</code><code class="descname">Constants</code><a class="reference internal" href="_modules/eLCS/Constants.html#Constants"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Constants.Constants" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Stores and manages all algorithm run parameters</p>
+<p>Parameters are accessible anywhere in the rest of the algorithm code by importing <cite>cons</cite></p>
+<dl class="method">
+<dt id="eLCS.Constants.Constants.loadParameters">
+<code class="descname">loadParameters</code><span class="sig-paren">(</span><em>config_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Constants.html#Constants.loadParameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Constants.Constants.loadParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the environment parameters from yaml configuration file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config_file</strong> (<em>str</em>) – Path to the configuration yaml file</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Parameters read from yaml file</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="eLCS.Constants.Constants.parseIterations">
 <code class="descname">parseIterations</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Constants.html#Constants.parseIterations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Constants.Constants.parseIterations" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse the ‘learningIterations’ string to identify the maximum number of learning iterations as well as evaluation checkpoints.</p>
+<dd><p>Parse the ‘learningIterations’ string</p>
+<p>Identify the maximum number of learning iterations as well as evaluation checkpoints</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.Constants.Constants.referenceEnv">
-<code class="descname">referenceEnv</code><span class="sig-paren">(</span><em>e</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Constants.html#Constants.referenceEnv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Constants.Constants.referenceEnv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Store reference to environment object.</p>
+<code class="descname">referenceEnv</code><span class="sig-paren">(</span><em>env</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Constants.html#Constants.referenceEnv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Constants.Constants.referenceEnv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store reference to <cite>OfflineEnvironment</cite> object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>env</strong> (<em>Environment</em>) – An <cite>OfflineEnvironment</cite> file</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.Constants.Constants.referenceTimer">
 <code class="descname">referenceTimer</code><span class="sig-paren">(</span><em>timer</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Constants.html#Constants.referenceTimer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Constants.Constants.referenceTimer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Store reference to the timer object.</p>
+<dd><p>Store reference to the Timer object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>timer</strong> – A timer object</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.Constants.Constants.setConstants">
-<code class="descname">setConstants</code><span class="sig-paren">(</span><em>par</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Constants.html#Constants.setConstants"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Constants.Constants.setConstants" title="Permalink to this definition">¶</a></dt>
-<dd><p>Takes the parameters parsed as a dictionary from eLCS_ConfigParser and saves them as global constants.</p>
+<code class="descname">setConstants</code><span class="sig-paren">(</span><em>config_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Constants.html#Constants.setConstants"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Constants.Constants.setConstants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse the configuration file and save them as global constants</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config_file</strong> (<em>str</em>) – Path to the configuration yaml file</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -655,78 +864,161 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 </div>
 <div class="section" id="module-eLCS.DataManagement">
 <span id="elcs-datamanagement-module"></span><h2>eLCS.DataManagement module<a class="headerlink" href="#module-eLCS.DataManagement" title="Permalink to this headline">¶</a></h2>
-<p>Name:        eLCS_DataManagement.py
-Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA
-Contact:     <a class="reference external" href="mailto:ryan&#46;j&#46;urbanowicz&#37;&#52;&#48;darmouth&#46;edu">ryan<span>&#46;</span>j<span>&#46;</span>urbanowicz<span>&#64;</span>darmouth<span>&#46;</span>edu</a>
-Created:     November 1, 2013
-Description: Able to manage both training and testing data.  This module loads the dataset, detects and characterizes all attributes in the dataset,</p>
-<blockquote>
-<div>handles missing data, and finally formats the data so that it may be conveniently utilized by eLCS.</div></blockquote>
-<p>algorithm published by Stewart Wilson (1995).</p>
-<p>Copyright (C) 2013 Ryan Urbanowicz 
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
-Free Software Foundation; either version 3 of the License, or (at your option) any later version.</p>
-<p>This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY 
-or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</p>
-<p>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 
-Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
-———————————————————————————————————————————————————</p>
 <dl class="class">
 <dt id="eLCS.DataManagement.DataManagement">
 <em class="property">class </em><code class="descclassname">eLCS.DataManagement.</code><code class="descname">DataManagement</code><span class="sig-paren">(</span><em>trainFile</em>, <em>testFile</em>, <em>infoList=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/DataManagement.html#DataManagement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.DataManagement.DataManagement" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Able to manage both training and testing data.</p>
+<p>This module loads the dataset, detects and characterizes all attributes in the dataset,
+handles missing data, and finally formats the data so that it may be conveniently utilized by eLCS.</p>
 <dl class="method">
 <dt id="eLCS.DataManagement.DataManagement.characterizeAttributes">
 <code class="descname">characterizeAttributes</code><span class="sig-paren">(</span><em>rawData</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/DataManagement.html#DataManagement.characterizeAttributes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.DataManagement.DataManagement.characterizeAttributes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determine range (if continuous) or states (if discrete) for each attribute and saves this information</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rawData</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.DataManagement.DataManagement.characterizeDataset">
 <code class="descname">characterizeDataset</code><span class="sig-paren">(</span><em>rawTrainData</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/DataManagement.html#DataManagement.characterizeDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.DataManagement.DataManagement.characterizeDataset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Detect basic dataset parameters</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rawTrainData</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.DataManagement.DataManagement.characterizePhenotype">
 <code class="descname">characterizePhenotype</code><span class="sig-paren">(</span><em>rawData</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/DataManagement.html#DataManagement.characterizePhenotype"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.DataManagement.DataManagement.characterizePhenotype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determine range of phenotype values.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rawData</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.DataManagement.DataManagement.compareDataset">
 <code class="descname">compareDataset</code><span class="sig-paren">(</span><em>rawTestData</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/DataManagement.html#DataManagement.compareDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.DataManagement.DataManagement.compareDataset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Ensures that the attributes in the testing data match those in the training data.  Also stores some information about the testing data.</p>
+<dd><p>Ensures that the attributes in the testing data match those in the training data.</p>
+<p>Also stores some information about the testing data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rawTestData</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.DataManagement.DataManagement.discriminateAttributes">
 <code class="descname">discriminateAttributes</code><span class="sig-paren">(</span><em>rawData</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/DataManagement.html#DataManagement.discriminateAttributes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.DataManagement.DataManagement.discriminateAttributes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determine whether attributes in dataset are discrete or continuous and saves this information.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rawData</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.DataManagement.DataManagement.discriminateClasses">
 <code class="descname">discriminateClasses</code><span class="sig-paren">(</span><em>rawData</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/DataManagement.html#DataManagement.discriminateClasses"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.DataManagement.DataManagement.discriminateClasses" title="Permalink to this definition">¶</a></dt>
-<dd><p>Determines number of classes and their identifiers. Only used if phenotype is discrete.</p>
+<dd><p>Determines number of classes and their identifiers.</p>
+<p>Only used if phenotype is discrete.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rawData</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.DataManagement.DataManagement.discriminatePhenotype">
 <code class="descname">discriminatePhenotype</code><span class="sig-paren">(</span><em>rawData</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/DataManagement.html#DataManagement.discriminatePhenotype"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.DataManagement.DataManagement.discriminatePhenotype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determine whether the phenotype is Discrete(class-based) or Continuous</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rawData</strong> (<em>list</em>) – </td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.DataManagement.DataManagement.formatData">
 <code class="descname">formatData</code><span class="sig-paren">(</span><em>rawData</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/DataManagement.html#DataManagement.formatData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.DataManagement.DataManagement.formatData" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the data into a format convenient for the algorithm to interact with. Specifically each instance is stored in a list as follows; [Attribute States, Phenotype, InstanceID]</p>
+<dd><p>Get the data into a format convenient for the algorithm to interact with.</p>
+<p>Specifically each instance is stored in a list as follows; [Attribute States, Phenotype, InstanceID]</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rawData</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.DataManagement.DataManagement.loadData">
 <code class="descname">loadData</code><span class="sig-paren">(</span><em>dataFile</em>, <em>doTrain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/DataManagement.html#DataManagement.loadData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.DataManagement.DataManagement.loadData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load the data file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>dataFile</strong> – </li>
+<li><strong>doTrain</strong> – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -734,26 +1026,15 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 </div>
 <div class="section" id="module-eLCS.OfflineEnvironment">
 <span id="elcs-offlineenvironment-module"></span><h2>eLCS.OfflineEnvironment module<a class="headerlink" href="#module-eLCS.OfflineEnvironment" title="Permalink to this headline">¶</a></h2>
-<p>Name:        eLCS_Offline_Environment.py
-Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA
-Contact:     <a class="reference external" href="mailto:ryan&#46;j&#46;urbanowicz&#37;&#52;&#48;darmouth&#46;edu">ryan<span>&#46;</span>j<span>&#46;</span>urbanowicz<span>&#64;</span>darmouth<span>&#46;</span>edu</a>
-Created:     November 1, 2013
-Description: In the context of data mining and classification tasks, the environment is a data set with a limited number of instances with X attributes</p>
-<blockquote>
-<div>and some endpoint (typically a discrete phenotype or class) of interest.  This module loads the data set, automatically detects features of the data.</div></blockquote>
-<p>algorithm published by Stewart Wilson (1995).</p>
-<p>Copyright (C) 2013 Ryan Urbanowicz 
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
-Free Software Foundation; either version 3 of the License, or (at your option) any later version.</p>
-<p>This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY 
-or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</p>
-<p>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 
-Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
-———————————————————————————————————————————————————</p>
 <dl class="class">
 <dt id="eLCS.OfflineEnvironment.OfflineEnvironment">
 <em class="property">class </em><code class="descclassname">eLCS.OfflineEnvironment.</code><code class="descname">OfflineEnvironment</code><a class="reference internal" href="_modules/eLCS/OfflineEnvironment.html#OfflineEnvironment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.OfflineEnvironment.OfflineEnvironment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>In the context of data mining and classification tasks,
+the environment is a data set with a limited number of instances with X attributes
+and some endpoint (typically a discrete phenotype or class) of interest.</p>
+<p>This module loads the data set, automatically detects features of the data by executing
+the DataManagement module</p>
 <dl class="method">
 <dt id="eLCS.OfflineEnvironment.OfflineEnvironment.getTestInstance">
 <code class="descname">getTestInstance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/OfflineEnvironment.html#OfflineEnvironment.getTestInstance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.OfflineEnvironment.OfflineEnvironment.getTestInstance" title="Permalink to this definition">¶</a></dt>
@@ -763,19 +1044,39 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 <dl class="method">
 <dt id="eLCS.OfflineEnvironment.OfflineEnvironment.getTrainInstance">
 <code class="descname">getTrainInstance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/OfflineEnvironment.html#OfflineEnvironment.getTrainInstance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.OfflineEnvironment.OfflineEnvironment.getTrainInstance" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the current training instance.</p>
+<dd><p>Returns the current training instance</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.OfflineEnvironment.OfflineEnvironment.newInstance">
 <code class="descname">newInstance</code><span class="sig-paren">(</span><em>isTraining</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/OfflineEnvironment.html#OfflineEnvironment.newInstance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.OfflineEnvironment.OfflineEnvironment.newInstance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shifts the environment to the next instance in the data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>isTraining</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.OfflineEnvironment.OfflineEnvironment.resetDataRef">
 <code class="descname">resetDataRef</code><span class="sig-paren">(</span><em>isTraining</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/OfflineEnvironment.html#OfflineEnvironment.resetDataRef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.OfflineEnvironment.OfflineEnvironment.resetDataRef" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resets the environment back to the first instance in the current data set.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>isTraining</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -795,38 +1096,61 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 </div>
 <div class="section" id="module-eLCS.OutputFileManager">
 <span id="elcs-outputfilemanager-module"></span><h2>eLCS.OutputFileManager module<a class="headerlink" href="#module-eLCS.OutputFileManager" title="Permalink to this headline">¶</a></h2>
-<p>Name:        eLCS_OutputFileManager.py
-Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA
-Contact:     <a class="reference external" href="mailto:ryan&#46;j&#46;urbanowicz&#37;&#52;&#48;darmouth&#46;edu">ryan<span>&#46;</span>j<span>&#46;</span>urbanowicz<span>&#64;</span>darmouth<span>&#46;</span>edu</a>
-Created:     November 1, 2013
-Description: This module contains the methods for generating the different output files generated by eLCS.</p>
-<blockquote>
-<div>These files are generated at each learning checkpoint, and the last iteration.  These include…
-writePopStats:   Summary of the population statistics
-writePop:        Outputs a snapshot of the entire rule population including classifier conditions, classes, and parameters.</div></blockquote>
-<p>algorithm published by Stewart Wilson (1995).</p>
-<p>Copyright (C) 2013 Ryan Urbanowicz 
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
-Free Software Foundation; either version 3 of the License, or (at your option) any later version.</p>
-<p>This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY 
-or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</p>
-<p>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 
-Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
-———————————————————————————————————————————————————</p>
 <dl class="class">
 <dt id="eLCS.OutputFileManager.OutputFileManager">
 <em class="property">class </em><code class="descclassname">eLCS.OutputFileManager.</code><code class="descname">OutputFileManager</code><a class="reference internal" href="_modules/eLCS/OutputFileManager.html#OutputFileManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.OutputFileManager.OutputFileManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This module contains the methods for generating the different output files generated by eLCS.</p>
+<p>These files are generated at each learning checkpoint, and the last iteration.  These include…
+* writePopStats: Summary of the population statistics
+* writePop: Outputs a snapshot of the entire rule population including classifier conditions, classes, and parameters.</p>
 <dl class="method">
 <dt id="eLCS.OutputFileManager.OutputFileManager.writePop">
 <code class="descname">writePop</code><span class="sig-paren">(</span><em>outFile</em>, <em>exploreIter</em>, <em>pop</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/OutputFileManager.html#OutputFileManager.writePop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.OutputFileManager.OutputFileManager.writePop" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes a tab delimited text file outputting the entire evolved rule population, including conditions, phenotypes, and all rule parameters.</p>
+<dd><p>Writes a tab delimited text file outputting the entire evolved rule population, including conditions,
+phenotypes, and all rule parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>outFile</strong> – </li>
+<li><strong>exploreIter</strong> – </li>
+<li><strong>pop</strong> – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.OutputFileManager.OutputFileManager.writePopStats">
 <code class="descname">writePopStats</code><span class="sig-paren">(</span><em>outFile</em>, <em>trainEval</em>, <em>testEval</em>, <em>exploreIter</em>, <em>pop</em>, <em>correct</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/OutputFileManager.html#OutputFileManager.writePopStats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.OutputFileManager.OutputFileManager.writePopStats" title="Permalink to this definition">¶</a></dt>
-<dd><p>Makes output text file which includes all of the evaluation statistics for a complete analysis of all training and testing data on the current eLCS rule population.</p>
+<dd><p>Makes output text file which includes all of the evaluation statistics for a complete analysis
+of all training and testing data on the current eLCS rule population.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>outFile</strong> – </li>
+<li><strong>trainEval</strong> – </li>
+<li><strong>testEval</strong> – </li>
+<li><strong>exploreIter</strong> – </li>
+<li><strong>pop</strong> – </li>
+<li><strong>correct</strong> – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -834,36 +1158,47 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 </div>
 <div class="section" id="module-eLCS.Prediction">
 <span id="elcs-prediction-module"></span><h2>eLCS.Prediction module<a class="headerlink" href="#module-eLCS.Prediction" title="Permalink to this headline">¶</a></h2>
-<p>Name:        eLCS_Prediction.py
-Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA
-Contact:     <a class="reference external" href="mailto:ryan&#46;j&#46;urbanowicz&#37;&#52;&#48;darmouth&#46;edu">ryan<span>&#46;</span>j<span>&#46;</span>urbanowicz<span>&#64;</span>darmouth<span>&#46;</span>edu</a>
-Created:     November 1, 2013
-Description: Given a match set, this module uses a voting scheme to select the phenotype prediction.  Set up to handle both discrete and continuous phenotypes.</p>
-<blockquote>
-<div>Also set up to try and handle prediction ties if possible.</div></blockquote>
-<p>algorithm published by Stewart Wilson (1995).</p>
-<p>Copyright (C) 2013 Ryan Urbanowicz 
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
-Free Software Foundation; either version 3 of the License, or (at your option) any later version.</p>
-<p>This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY 
-or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</p>
-<p>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 
-Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
-———————————————————————————————————————————————————</p>
 <dl class="class">
 <dt id="eLCS.Prediction.Prediction">
 <em class="property">class </em><code class="descclassname">eLCS.Prediction.</code><code class="descname">Prediction</code><span class="sig-paren">(</span><em>population</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Prediction.html#Prediction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Prediction.Prediction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Given a match set, this module uses a voting scheme to select the phenotype prediction.</p>
+<p>Set up to handle both discrete and continuous phenotypes.
+Also set up to try and handle prediction ties if possible.</p>
 <dl class="method">
 <dt id="eLCS.Prediction.Prediction.getDecision">
 <code class="descname">getDecision</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Prediction.html#Prediction.getDecision"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Prediction.Prediction.getDecision" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns prediction decision.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.Prediction.Prediction.getFitnessSum">
 <code class="descname">getFitnessSum</code><span class="sig-paren">(</span><em>population</em>, <em>low</em>, <em>high</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Prediction.html#Prediction.getFitnessSum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Prediction.Prediction.getFitnessSum" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the fitness sum of rules in the rule-set. For continuous phenotype prediction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>population</strong> – </li>
+<li><strong>low</strong> – </li>
+<li><strong>high</strong> – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -871,40 +1206,56 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 </div>
 <div class="section" id="module-eLCS.Timer">
 <span id="elcs-timer-module"></span><h2>eLCS.Timer module<a class="headerlink" href="#module-eLCS.Timer" title="Permalink to this headline">¶</a></h2>
-<p>Name:        eLCS_Timer.py
-Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA
-Contact:     <a class="reference external" href="mailto:ryan&#46;j&#46;urbanowicz&#37;&#52;&#48;darmouth&#46;edu">ryan<span>&#46;</span>j<span>&#46;</span>urbanowicz<span>&#64;</span>darmouth<span>&#46;</span>edu</a>
-Created:     November 1, 2013
-Description: Tracks and stores the run time of algorithm and some of it’s major components</p>
-<p>algorithm published by Stewart Wilson (1995).</p>
-<p>Copyright (C) 2013 Ryan Urbanowicz 
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
-Free Software Foundation; either version 3 of the License, or (at your option) any later version.</p>
-<p>This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY 
-or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</p>
-<p>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 
-Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
-———————————————————————————————————————————————————</p>
 <dl class="class">
 <dt id="eLCS.Timer.Timer">
 <em class="property">class </em><code class="descclassname">eLCS.Timer.</code><code class="descname">Timer</code><a class="reference internal" href="_modules/eLCS/Timer.html#Timer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Timer.Timer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Tracks and stores the run time of algorithm and some of it’s major components</p>
 <dl class="method">
 <dt id="eLCS.Timer.Timer.reportTimes">
 <code class="descname">reportTimes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Timer.html#Timer.reportTimes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Timer.Timer.reportTimes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reports the time summaries for this run. Returns a string ready to be printed out.</p>
+<dd><p>Reports the time summaries for this run.</p>
+<p>Returns a string ready to be printed out.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The time summaries for the run</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.Timer.Timer.returnGlobalTimer">
 <code class="descname">returnGlobalTimer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Timer.html#Timer.returnGlobalTimer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Timer.Timer.returnGlobalTimer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the global end timer, call at very end of algorithm.</p>
+<dd><p>Set the global end timer, call at very end of algorithm</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The global time returned in minutes</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="eLCS.Timer.Timer.setTimerRestart">
 <code class="descname">setTimerRestart</code><span class="sig-paren">(</span><em>remakeFile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Timer.html#Timer.setTimerRestart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Timer.Timer.setTimerRestart" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets all time values to the those previously evolved in the loaded popFile.</p>
+<dd><p>Sets all time values to the those previously evolved in the loaded popFile</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>remakeFile</strong> (<em>str</em>) – File path to the remakeFile</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -970,9 +1321,6 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 </dd></dl>
 
 </div>
-<div class="section" id="module-eLCS">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-eLCS" title="Permalink to this headline">¶</a></h2>
-</div>
 </div>
 
 
@@ -991,11 +1339,29 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 
 <h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">eLCS package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-eLCS.Algorithm">eLCS.Algorithm module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-eLCS.ClassAccuracy">eLCS.ClassAccuracy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-eLCS.Classifier">eLCS.Classifier module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-eLCS.ClassifierSet">eLCS.ClassifierSet module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-eLCS.Constants">eLCS.Constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-eLCS.DataManagement">eLCS.DataManagement module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-eLCS.OfflineEnvironment">eLCS.OfflineEnvironment module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-eLCS.OutputFileManager">eLCS.OutputFileManager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-eLCS.Prediction">eLCS.Prediction module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-eLCS.Timer">eLCS.Timer module</a></li>
+</ul>
+</li>
+</ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to CITS4404-G1’s documentation!</a></li>
   </ul></li>
 </ul>
 </div>
