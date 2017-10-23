@@ -10,7 +10,7 @@ Welcome to CITS4404-G1's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-    eLCS
+   eLCS
 
 Indices and tables
 ==================

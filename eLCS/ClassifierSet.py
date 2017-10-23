@@ -1,79 +1,74 @@
-"""
-Name:        eLCS_ClassifierSet.py
-Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA
-Contact:     ryan.j.urbanowicz@darmouth.edu
-Created:     November 1, 2013
-Description: This module handles all classifier sets (population, match set, correct set) along with mechanisms and heuristics that act on these sets.  
-             
----------------------------------------------------------------------------------------------------------------------------------------------------------
-eLCS: Educational Learning Classifier System - A basic LCS coded for educational purposes.  This LCS algorithm uses supervised learning, and thus is most 
-similar to "UCS", an LCS algorithm published by Ester Bernado-Mansilla and Josep Garrell-Guiu (2003) which in turn is based heavily on "XCS", an LCS 
-algorithm published by Stewart Wilson (1995).  
-
-Copyright (C) 2013 Ryan Urbanowicz 
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
-Free Software Foundation; either version 3 of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY 
-or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 
-Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
----------------------------------------------------------------------------------------------------------------------------------------------------------
-"""
-
-# Import Required Modules---------------------
 from eLCS.Constants import cons
 from eLCS.Classifier import Classifier
+
 import random
 import copy
 
 
-# --------------------------------------------
+class ClassifierSet(object):
+    """This module handles all the classifier sets
 
-class ClassifierSet:
-    def __init__(self, a=None):
-        """ Overloaded initialization: Handles creation of a new population or a rebooted population (i.e. a previously saved population). """
+    This includes the population, match set and correct sets along with mechanisms and
+    heuristics that act on these sets.
+
+    This class can be initialized with the:
+    1.  Creation of a new population, or
+    2.  Reboots the population (i.e. read in from a previously saved population)
+    """
+
+    def __init__(self, pop_reboot_path=None):
+        """Initializes the Classifier Set
+
+        :param str pop_reboot_path: Path to the population, defaults to None
+        """
+
         # Major Parameters
-        self.popSet = []  # List of classifiers/rules
+        self.popSet = []  # List of classifiers/rules (list of ClassiferSet objects)
         self.matchSet = []  # List of references to rules in population that match
         self.correctSet = []  # List of references to rules in population that both match and specify correct phenotype
         self.microPopSize = 0  # Tracks the current micro population size, i.e. the population size which takes rule numerosity into account.
 
-        # Evaluation Parameters-------------------------------
+        # Evaluation Parameters
         self.aveGenerality = 0.0
         self.expRules = 0.0
         self.attributeSpecList = []
         self.attributeAccList = []
         self.avePhenotypeRange = 0.0
 
-        # Set Constructors-------------------------------------
-        if a == None:
-            self.makePop()  # Initialize a new population
-        elif isinstance(a, str):
-            self.rebootPop(a)  # Initialize a population based on an existing saved rule population
+        # Set Constructors
+        if pop_reboot_path == None:
+            # Initialize a new population
+            self.makePop()
+
+        elif isinstance(pop_reboot_path, str):
+            # Initialize a population based on an existing saved rule population
+            self.rebootPop(pop_reboot_path)
+
         else:
             print("ClassifierSet: Error building population.")
 
-    # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    # POPULATION CONSTRUCTOR METHODS
-    # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Population Constructor Methods
     def makePop(self):
-        """ Initializes the rule population """
+        """ Initializes the rule population, as an empty list"""
         self.popSet = []
 
-    def rebootPop(self, remakeFile):
-        """ Remakes a previously evolved population from a saved text file. """
-        print("Rebooting the following population: " + str(remakeFile) + "_RulePop.txt")
+    def rebootPop(self, pop_reboot_path):
+        """Remakes a previously evolved population from a saved text file
+
+        :param pop_reboot_path:
+        :return:
+        """
+
+        print("Rebooting the following population: " + str(pop_reboot_path) + "_RulePop.txt")
         # *******************Initial file handling**********************************************************
         datasetList = []
         try:
-            f = open(remakeFile + "_RulePop.txt", 'r')
+            f = open(pop_reboot_path + "_RulePop.txt", 'r')
         except Exception as inst:
             print(type(inst))
             print(inst.args)
             print(inst)
-            print('cannot open', remakeFile + "_RulePop.txt")
+            print('cannot open', pop_reboot_path + "_RulePop.txt")
             raise
         else:
             self.headerList = f.readline().rstrip('\n').split('\t')  # strip off first row
@@ -90,21 +85,29 @@ class ClassifierSet:
             self.microPopSize += int(each[numerosityRef])
         print("Rebooted Rule Population has " + str(len(self.popSet)) + " Macro Pop Size.")
 
-    # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    # CLASSIFIER SET CONSTRUCTOR METHODS
-    # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Classifier set constructor methods
     def makeMatchSet(self, state_phenotype, exploreIter):
-        """ Constructs a match set from the population. Covering is initiated if the match set is empty or a rule with the current correct phenotype is absent. """
+        """Constructs a match set from the population
+
+        Covering is initiated if the match set is empty or a rule with the current correct phenotype is absent.
+
+        :param list state_phenotype: Listing consisting of the training state and training phenotype
+        :param int exploreIter: The current iteration
+        """
+
         # Initial values
         state = state_phenotype[0]
         phenotype = state_phenotype[1]
-        doCovering = True  # Covering check: Twofold (1)checks that a match is present, and (2) that at least one match dictates the correct phenotype.
+
+        # Covering check:
+        # 1.  Checks that a match is present, and
+        # 2.  That at least one match dictates the correct phenotype.
+        doCovering = True
         setNumerositySum = 0
 
-        # -------------------------------------------------------
-        # MATCHING
-        # -------------------------------------------------------
+        # Carry out matching
         cons.timer.startTimeMatching()
+
         for i in range(len(self.popSet)):  # Go through the population
             cl = self.popSet[i]  # One classifier at a time
             if cl.match(state):  # Check for match
@@ -131,7 +134,11 @@ class ClassifierSet:
             doCovering = False
 
     def makeCorrectSet(self, phenotype):
-        """ Constructs a correct set out of the given match set. """
+        """Constructs a correct set out of the given match set
+
+        :param phenotype:
+        :return:
+        """
         for i in range(len(self.matchSet)):
             ref = self.matchSet[i]
             # -------------------------------------------------------
@@ -149,7 +156,11 @@ class ClassifierSet:
                     self.correctSet.append(ref)
 
     def makeEvalMatchSet(self, state):
-        """ Constructs a match set for evaluation purposes which does not activate either covering or deletion. """
+        """Constructs a match set for evaluation purposes which does not activate either covering or deletion.
+
+        :param state:
+        :return:
+        """
         for i in range(len(self.popSet)):  # Go through the population
             cl = self.popSet[i]  # A single classifier
             if cl.match(state):  # Check for match
@@ -159,15 +170,22 @@ class ClassifierSet:
     # CLASSIFIER DELETION METHODS
     # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     def deletion(self, exploreIter):
-        """ Returns the population size back to the maximum set by the user by deleting rules. """
+        """Returns the population size back to the maximum set by the user by deleting rules.
+
+        :param exploreIter:
+        :return:
+        """
         cons.timer.startTimeDeletion()
         while self.microPopSize > cons.N:
             self.deleteFromPopulation()
         cons.timer.stopTimeDeletion()
 
     def deleteFromPopulation(self):
-        """ Deletes one classifier in the population.  The classifier that will be deleted is chosen by roulette wheel selection
-        considering the deletion vote. Returns the macro-classifier which got decreased by one micro-classifier. """
+        """ Deletes one classifier in the population.
+
+        The classifier that will be deleted is chosen by roulette wheel selection considering the deletion vote.
+        Returns the macro-classifier which got decreased by one micro-classifier.
+        """
         meanFitness = self.getPopFitnessSum() / float(self.microPopSize)
 
         # Calculate total wheel size------------------------------
@@ -198,11 +216,19 @@ class ClassifierSet:
         return
 
     def removeMacroClassifier(self, ref):
-        """ Removes the specified (macro-) classifier from the population. """
+        """Removes the specified (macro-) classifier from the population.
+
+        :param ref:
+        :return:
+        """
         self.popSet.pop(ref)
 
     def deleteFromMatchSet(self, deleteRef):
-        """ Delete reference to classifier in population, contained in self.matchSet."""
+        """Delete reference to classifier in population, contained in self.matchSet.
+
+        :param deleteRef:
+        :return:
+        """
         if deleteRef in self.matchSet:
             self.matchSet.remove(deleteRef)
 
@@ -213,7 +239,11 @@ class ClassifierSet:
                 self.matchSet[j] -= 1
 
     def deleteFromCorrectSet(self, deleteRef):
-        """ Delete reference to classifier in population, contained in self.corectSet."""
+        """Delete reference to classifier in population, contained in self.corectSet.
+
+        :param deleteRef:
+        :return:
+        """
         if deleteRef in self.correctSet:
             self.correctSet.remove(deleteRef)
 
@@ -227,12 +257,19 @@ class ClassifierSet:
     # GENETIC ALGORITHM
     # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     def runGA(self, exploreIter, state, phenotype):
-        """ The genetic discovery mechanism in eLCS is controlled here. """
+        """The genetic discovery mechanism in eLCS is controlled here.
+
+        :param exploreIter:
+        :param state:
+        :param phenotype:
+        :return:
+        """
         # -------------------------------------------------------
         # GA RUN REQUIREMENT
         # -------------------------------------------------------
-        if (
-            exploreIter - self.getIterStampAverage()) < cons.theta_GA:  # Does the correct set meet the requirements for activating the GA?
+
+        # Does the correct set meet the requirements for activating the GA?
+        if (exploreIter - self.getIterStampAverage()) < cons.theta_GA:
             return
 
         self.setIterStamps(
@@ -298,14 +335,17 @@ class ClassifierSet:
     # SELECTION METHODS
     # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     def selectClassifierRW(self):
-        """ Selects parents using roulette wheel selection according to the fitness of the classifiers. """
+        """Selects parents using roulette wheel selection according to the fitness of the classifiers.
+
+        :return:
+        """
         # Prepare for correct set or 'niche' selection.
         setList = copy.deepcopy(self.correctSet)
 
         if len(setList) > 2:
             selectList = [None, None]
             currentCount = 0  # Pick two parents
-            # -----------------------------------------------
+
             while currentCount < 2:
                 fitSum = self.getFitnessSum(setList)
 
@@ -319,7 +359,7 @@ class ClassifierSet:
                 selectList[currentCount] = self.popSet[setList[i]]
                 setList.remove(setList[i])
                 currentCount += 1
-                # -----------------------------------------------
+
         elif len(setList) == 2:
             selectList = [self.popSet[setList[0]], self.popSet[setList[1]]]
         elif len(setList) == 1:
@@ -330,7 +370,7 @@ class ClassifierSet:
         return selectList
 
     def selectClassifierT(self):
-        """  Selects parents using tournament selection according to the fitness of the classifiers. """
+        """Selects parents using tournament selection according to the fitness of the classifiers."""
         selectList = [None, None]
         currentCount = 0
         setList = self.correctSet  # correct set is a list of reference IDs
@@ -357,7 +397,15 @@ class ClassifierSet:
     # SUBSUMPTION METHODS
     # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     def subsumeClassifier(self, cl=None, cl1P=None, cl2P=None):
-        """ Tries to subsume a classifier in the parents. If no subsumption is possible it tries to subsume it in the current set. """
+        """Tries to subsume a classifier in the parents.
+
+        If no subsumption is possible it tries to subsume it in the current set.
+
+        :param cl:
+        :param cl1P:
+        :param cl2P:
+        :return:
+        """
         if cl1P != None and cl1P.subsumes(cl):
             self.microPopSize += 1
             cl1P.updateNumerosity(1)
@@ -368,8 +416,14 @@ class ClassifierSet:
             self.subsumeClassifier2(cl);  # Try to subsume in the correct set.
 
     def subsumeClassifier2(self, cl):
-        """ Tries to subsume a classifier in the correct set. If no subsumption is possible the classifier is simply added to the population considering
-        the possibility that there exists an identical classifier. """
+        """Tries to subsume a classifier in the correct set.
+
+        If no subsumption is possible the classifier is simply added to the population considering the
+        possibility that there exists an identical classifier.
+
+        :param cl:
+        :return:
+        """
         choices = []
         for ref in self.correctSet:
             if self.popSet[ref].subsumes(cl):
@@ -385,8 +439,11 @@ class ClassifierSet:
                                        False)  # If no subsumer was found, check for identical classifier, if not then add the classifier to the population
 
     def doCorrectSetSubsumption(self):
-        """ Executes correct set subsumption.  The correct set subsumption looks for the most general subsumer classifier in the correct set
-        and subsumes all classifiers that are more specific than the selected one. """
+        """ Executes correct set subsumption.
+
+        The correct set subsumption looks for the most general subsumer classifier in the correct set
+        and subsumes all classifiers that are more specific than the selected one.
+        """
         subsumer = None
         for ref in self.correctSet:
             cl = self.popSet[ref]
@@ -410,7 +467,12 @@ class ClassifierSet:
     # OTHER KEY METHODS
     # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     def addClassifierToPopulation(self, cl, covering):
-        """ Adds a classifier to the set and increases the microPopSize value accordingly."""
+        """Adds a classifier to the set and increases the microPopSize value accordingly.
+
+        :param cl:
+        :param covering:
+        :return:
+        """
         oldCl = None
         if not covering:
             oldCl = self.getIdenticalClassifier(cl)
@@ -422,8 +484,18 @@ class ClassifierSet:
             self.microPopSize += 1
 
     def insertDiscoveredClassifiers(self, cl1, cl2, clP1, clP2, exploreIter):
-        """ Inserts both discovered classifiers and activates GA subsumption if turned on. Also checks for default rule (i.e. rule with completely general condition) and 
-        prevents such rules from being added to the population, as it offers no predictive value within eLCS. """
+        """Inserts both discovered classifiers and activates GA subsumption if turned on.
+
+        Also checks for default rule (i.e. rule with completely general condition)
+        and prevents such rules from being added to the population, as it offers no predictive value within eLCS.
+
+        :param cl1:
+        :param cl2:
+        :param clP1:
+        :param clP2:
+        :param exploreIter:
+        :return:
+        """
         # -------------------------------------------------------
         # SUBSUMPTION
         # -------------------------------------------------------
@@ -448,7 +520,11 @@ class ClassifierSet:
                                                False)  # False passed because this is not called for a covered rule.
 
     def updateSets(self, exploreIter):
-        """ Updates all relevant parameters in the current match and correct sets. """
+        """Updates all relevant parameters in the current match and correct sets.
+
+        :param exploreIter:
+        :return:
+        """
         matchSetNumerosity = 0
         for ref in self.matchSet:
             matchSetNumerosity += self.popSet[ref].numerosity
@@ -466,7 +542,7 @@ class ClassifierSet:
     # OTHER METHODS
     # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     def getIterStampAverage(self):
-        """ Returns the average of the time stamps in the correct set. """
+        """Returns the average of the time stamps in the correct set."""
         sumCl = 0.0
         numSum = 0.0
         for i in range(len(self.correctSet)):
@@ -476,14 +552,23 @@ class ClassifierSet:
         return sumCl / float(numSum)
 
     def setIterStamps(self, exploreIter):
-        """ Sets the time stamp of all classifiers in the set to the current time. The current time
-        is the number of exploration steps executed so far.  """
+        """ Sets the time stamp of all classifiers in the set to the current time.
+
+        The current time is the number of exploration steps executed so far.
+
+        :param exploreIter:
+        :return:
+        """
         for i in range(len(self.correctSet)):
             ref = self.correctSet[i]
             self.popSet[ref].updateTimeStamp(exploreIter)
 
     def getFitnessSum(self, setList):
-        """ Returns the sum of the fitnesses of all classifiers in the set. """
+        """Returns the sum of the fitnesses of all classifiers in the set.
+
+        :param setList:
+        :return:
+        """
         sumCl = 0.0
         for i in range(len(setList)):
             ref = setList[i]
@@ -498,14 +583,18 @@ class ClassifierSet:
         return sumCl
 
     def getIdenticalClassifier(self, newCl):
-        """ Looks for an identical classifier in the population. """
+        """Looks for an identical classifier in the population.
+
+        :param newCl:
+        :return:
+        """
         for cl in self.popSet:
             if newCl.equals(cl):
                 return cl
         return None
 
     def clearSets(self):
-        """ Clears out references in the match and correct sets for the next learning iteration. """
+        """Clears out references in the match and correct sets for the next learning iteration."""
         self.matchSet = []
         self.correctSet = []
 
@@ -513,7 +602,11 @@ class ClassifierSet:
     # EVALUTATION METHODS
     # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     def runPopAveEval(self, exploreIter):
-        """ Calculates some summary evaluations across the rule population including average generality. """
+        """Calculates some summary evaluations across the rule population including average generality.
+
+        :param exploreIter:
+        :return:
+        """
         genSum = 0
         agedCount = 0
         for cl in self.popSet:
@@ -535,7 +628,13 @@ class ClassifierSet:
             self.avePhenotypeRange = (sumRuleRange / float(self.microPopSize)) / float(phenotypeRange)
 
     def runAttGeneralitySum(self, isEvaluationSummary):
-        """ Determine the population-wide frequency of attribute specification, and accuracy weighted specification.  Used in complete rule population evaluations. """
+        """Determine the population-wide frequency of attribute specification, and accuracy weighted specification.
+
+        Used in complete rule population evaluations.
+
+        :param isEvaluationSummary:
+        :return:
+        """
         if isEvaluationSummary:
             self.attributeSpecList = []
             self.attributeAccList = []
@@ -548,7 +647,13 @@ class ClassifierSet:
                     self.attributeAccList[ref] += cl.numerosity * cl.accuracy
 
     def getPopTrack(self, accuracy, exploreIter, trackingFrequency):
-        """ Returns a formated output string to be printed to the Learn Track output file. """
+        """Returns a formated output string to be printed to the Learn Track output file.
+
+        :param accuracy:
+        :param exploreIter:
+        :param trackingFrequency:
+        :return:
+        """
         trackString = str(exploreIter) + "\t" + str(len(self.popSet)) + "\t" + str(self.microPopSize) + "\t" + str(
             accuracy) + "\t" + str(self.aveGenerality) + "\t" + str(cons.timer.returnGlobalTimer()) + "\n"
         if cons.env.formatData.discretePhenotype:  # discrete phenotype

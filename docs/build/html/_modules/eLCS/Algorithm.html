@@ -39,32 +39,6 @@
           <div class="body" role="main">
             
   <h1>Source code for eLCS.Algorithm</h1><div class="highlight"><pre>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Name:        eLCS_Algorithm.py</span>
-<span class="sd">Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA</span>
-<span class="sd">Contact:     ryan.j.urbanowicz@darmouth.edu</span>
-<span class="sd">Created:     November 1, 2013</span>
-<span class="sd">Description: The major controlling module of eLCS.  Includes the major run loop which controls learning over a specified number of iterations.  Also includes</span>
-<span class="sd">             periodic tracking of estimated performance, and checkpoints where complete evaluations of the eLCS rule population is performed.</span>
-<span class="sd">             </span>
-<span class="sd">---------------------------------------------------------------------------------------------------------------------------------------------------------</span>
-<span class="sd">eLCS: Educational Learning Classifier System - A basic LCS coded for educational purposes.  This LCS algorithm uses supervised learning, and thus is most </span>
-<span class="sd">similar to &quot;UCS&quot;, an LCS algorithm published by Ester Bernado-Mansilla and Josep Garrell-Guiu (2003) which in turn is based heavily on &quot;XCS&quot;, an LCS </span>
-<span class="sd">algorithm published by Stewart Wilson (1995).  </span>
-
-<span class="sd">Copyright (C) 2013 Ryan Urbanowicz </span>
-<span class="sd">This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the </span>
-<span class="sd">Free Software Foundation; either version 3 of the License, or (at your option) any later version.</span>
-
-<span class="sd">This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY </span>
-<span class="sd">or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</span>
-
-<span class="sd">You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, </span>
-<span class="sd">Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA</span>
-<span class="sd">---------------------------------------------------------------------------------------------------------------------------------------------------------</span>
-<span class="sd">&quot;&quot;&quot;</span>
-
-<span class="c1"># Import Required Modules-------------------------------</span>
 <span class="kn">from</span> <span class="nn">eLCS.Constants</span> <span class="k">import</span> <span class="n">cons</span>
 <span class="kn">from</span> <span class="nn">eLCS.ClassifierSet</span> <span class="k">import</span> <span class="n">ClassifierSet</span>
 <span class="kn">from</span> <span class="nn">eLCS.Prediction</span> <span class="k">import</span> <span class="n">Prediction</span>
@@ -75,74 +49,74 @@
 <span class="kn">import</span> <span class="nn">math</span>
 
 
-<span class="c1"># ------------------------------------------------------</span>
+<div class="viewcode-block" id="eLCS"><a class="viewcode-back" href="../../eLCS.html#eLCS.Algorithm.eLCS">[docs]</a><span class="k">class</span> <span class="nc">eLCS</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The major controlling module of eLCS.</span>
 
-<div class="viewcode-block" id="eLCS"><a class="viewcode-back" href="../../eLCS.html#eLCS.Algorithm.eLCS">[docs]</a><span class="k">class</span> <span class="nc">eLCS</span><span class="p">:</span>
+<span class="sd">    Includes the major run loop which controls learning over a specified number of iterations.</span>
+<span class="sd">    Also includes periodic tracking of estimated performance, and checkpoints where complete</span>
+<span class="sd">    evaluations of the eLCS rule population is performed.</span>
+
+<span class="sd">    Two options are available for the initialisation of the algorithm</span>
+<span class="sd">    1.  Do a Population reboot using an existing saved rule population, or</span>
+<span class="sd">    2.  Build the Population from scratch from given data</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Initializes the eLCS algorithm &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Initializes the eLCS algorithm&quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;eLCS: Initializing Algorithm...&quot;</span><span class="p">)</span>
-        <span class="c1"># Global Parameters-------------------------------------------------------------------------------------</span>
+
+        <span class="c1"># Global Parameters</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">population</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># The rule population (the &#39;solution/model&#39; evolved by eLCS)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">learnTrackOut</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Output file that will store tracking information during learning</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cons</span> <span class="o">=</span> <span class="n">cons</span>  <span class="c1"># Store a reference to the `cons` module</span>
 
-        <span class="c1"># -------------------------------------------------------</span>
         <span class="c1"># POPULATION REBOOT - Begin eLCS learning from an existing saved rule population</span>
-        <span class="c1"># -------------------------------------------------------</span>
-        <span class="k">if</span> <span class="n">cons</span><span class="o">.</span><span class="n">doPopulationReboot</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cons</span><span class="o">.</span><span class="n">doPopulationReboot</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">populationReboot</span><span class="p">()</span>
 
-        <span class="c1"># -------------------------------------------------------</span>
         <span class="c1"># NORMAL eLCS - Run eLCS from scratch on given data</span>
-        <span class="c1"># -------------------------------------------------------</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">learnTrackOut</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">cons</span><span class="o">.</span><span class="n">outFileName</span> <span class="o">+</span> <span class="s1">&#39;_LearnTrack.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">learnTrackOut</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cons</span><span class="o">.</span><span class="n">outFileName</span> <span class="o">+</span> <span class="s1">&#39;_LearnTrack.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">inst</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">inst</span><span class="p">))</span>
                 <span class="nb">print</span><span class="p">(</span><span class="n">inst</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="n">inst</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;cannot open&#39;</span><span class="p">,</span> <span class="n">cons</span><span class="o">.</span><span class="n">outFileName</span> <span class="o">+</span> <span class="s1">&#39;_LearnTrack.txt&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;cannot open&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cons</span><span class="o">.</span><span class="n">outFileName</span> <span class="o">+</span> <span class="s1">&#39;_LearnTrack.txt&#39;</span><span class="p">)</span>
                 <span class="k">raise</span>
             <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Write the header for the output file</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">learnTrackOut</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
-                    <span class="s2">&quot;Explore_Iteration</span><span class="se">\t</span><span class="s2">MacroPopSize</span><span class="se">\t</span><span class="s2">MicroPopSize</span><span class="se">\t</span><span class="s2">Accuracy_Estimate</span><span class="se">\t</span><span class="s2">AveGenerality</span><span class="se">\t</span><span class="s2">ExpRules</span><span class="se">\t</span><span class="s2">Time(min)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="s2">&quot;Explore_Iteration</span><span class="se">\t</span><span class="s2">MacroPopSize</span><span class="se">\t</span><span class="s2">MicroPopSize</span><span class="se">\t</span><span class="s2">&quot;</span>
+                    <span class="s2">&quot;Accuracy_Estimate</span><span class="se">\t</span><span class="s2">AveGenerality</span><span class="se">\t</span><span class="s2">ExpRules</span><span class="se">\t</span><span class="s2">Time(min)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
-            <span class="c1"># Instantiate Population---------</span>
+            <span class="c1"># Instantiate Population</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">population</span> <span class="o">=</span> <span class="n">ClassifierSet</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">exploreIter</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">exploreIter</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Start the iterations at</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">correct</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cons</span><span class="o">.</span><span class="n">trackingFrequency</span><span class="p">)]</span>
 
-        <span class="c1"># Run the eLCS algorithm-------------------------------------------------------------------------------</span>
+        <span class="c1"># Run the eLCS algorithm</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">run_eLCS</span><span class="p">()</span>
 
 <div class="viewcode-block" id="eLCS.run_eLCS"><a class="viewcode-back" href="../../eLCS.html#eLCS.Algorithm.eLCS.run_eLCS">[docs]</a>    <span class="k">def</span> <span class="nf">run_eLCS</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Runs the initialized eLCS algorithm. &quot;&quot;&quot;</span>
-        <span class="c1"># --------------------------------------------------------------</span>
+        <span class="sd">&quot;&quot;&quot;Runs eLCS algorithm, runs by default after the class has been initialised&quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Learning Checkpoints: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">cons</span><span class="o">.</span><span class="n">learningCheckpoints</span><span class="p">))</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Maximum Iterations: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">cons</span><span class="o">.</span><span class="n">maxLearningIterations</span><span class="p">))</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Beginning eLCS learning iterations.&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span>
             <span class="s2">&quot;------------------------------------------------------------------------------------------------------------------------------------------------------&quot;</span><span class="p">)</span>
 
-        <span class="c1"># -------------------------------------------------------</span>
-        <span class="c1"># MAJOR LEARNING LOOP</span>
-        <span class="c1"># -------------------------------------------------------</span>
+        <span class="c1"># Major learning iteration loop, represents the entire learning cycle</span>
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">exploreIter</span> <span class="o">&lt;</span> <span class="n">cons</span><span class="o">.</span><span class="n">maxLearningIterations</span><span class="p">:</span>
 
-            <span class="c1"># -------------------------------------------------------</span>
-            <span class="c1"># GET NEW INSTANCE AND RUN A LEARNING ITERATION</span>
-            <span class="c1"># -------------------------------------------------------</span>
+            <span class="c1"># Get new instance and run a learning iteration</span>
             <span class="n">state_phenotype</span> <span class="o">=</span> <span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">getTrainInstance</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">runIteration</span><span class="p">(</span><span class="n">state_phenotype</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">exploreIter</span><span class="p">)</span>
 
-            <span class="c1"># -------------------------------------------------------------------------------------------------------------------------------</span>
             <span class="c1"># EVALUATIONS OF ALGORITHM</span>
-            <span class="c1"># -------------------------------------------------------------------------------------------------------------------------------</span>
             <span class="n">cons</span><span class="o">.</span><span class="n">timer</span><span class="o">.</span><span class="n">startTimeEvaluation</span><span class="p">()</span>
 
-            <span class="c1"># -------------------------------------------------------</span>
             <span class="c1"># TRACK LEARNING ESTIMATES</span>
-            <span class="c1"># -------------------------------------------------------</span>
             <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exploreIter</span> <span class="o">%</span> <span class="n">cons</span><span class="o">.</span><span class="n">trackingFrequency</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="n">cons</span><span class="o">.</span><span class="n">trackingFrequency</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">exploreIter</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="o">.</span><span class="n">runPopAveEval</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exploreIter</span><span class="p">)</span>
                 <span class="n">trackedAccuracy</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">correct</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span>
@@ -151,9 +125,7 @@
                                                                      <span class="n">cons</span><span class="o">.</span><span class="n">trackingFrequency</span><span class="p">))</span>  <span class="c1"># Report learning progress to standard out and tracking file.</span>
             <span class="n">cons</span><span class="o">.</span><span class="n">timer</span><span class="o">.</span><span class="n">stopTimeEvaluation</span><span class="p">()</span>
 
-            <span class="c1"># -------------------------------------------------------</span>
             <span class="c1"># CHECKPOINT - COMPLETE EVALUTATION OF POPULATION - strategy different for discrete vs continuous phenotypes</span>
-            <span class="c1"># -------------------------------------------------------</span>
             <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exploreIter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">in</span> <span class="n">cons</span><span class="o">.</span><span class="n">learningCheckpoints</span><span class="p">:</span>
                 <span class="n">cons</span><span class="o">.</span><span class="n">timer</span><span class="o">.</span><span class="n">startTimeEvaluation</span><span class="p">()</span>
                 <span class="nb">print</span><span class="p">(</span>
@@ -203,14 +175,18 @@
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;eLCS Run Complete&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="eLCS.runIteration"><a class="viewcode-back" href="../../eLCS.html#eLCS.Algorithm.eLCS.runIteration">[docs]</a>    <span class="k">def</span> <span class="nf">runIteration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_phenotype</span><span class="p">,</span> <span class="n">exploreIter</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Run a single eLCS learning iteration. &quot;&quot;&quot;</span>
-        <span class="c1"># -----------------------------------------------------------------------------------------------------------------------------------------</span>
-        <span class="c1"># FORM A MATCH SET - includes covering</span>
-        <span class="c1"># -----------------------------------------------------------------------------------------------------------------------------------------</span>
+        <span class="sd">&quot;&quot;&quot;Run a single eLCS learning iteration.</span>
+
+<span class="sd">        :param list state_phenotype: Listing consisting of the training state and training phenotype</span>
+<span class="sd">        :param int exploreIter: The current iteration</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Form a Match Set (includes covering)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="o">.</span><span class="n">makeMatchSet</span><span class="p">(</span><span class="n">state_phenotype</span><span class="p">,</span> <span class="n">exploreIter</span><span class="p">)</span>
-        <span class="c1"># -----------------------------------------------------------------------------------------------------------------------------------------</span>
-        <span class="c1"># MAKE A PREDICTION - utilized here for tracking estimated learning progress.  Typically used in the explore phase of many LCS algorithms.</span>
-        <span class="c1"># -----------------------------------------------------------------------------------------------------------------------------------------</span>
+
+        <span class="c1"># MAKE A PREDICTION - utilized here for tracking estimated learning progress.</span>
+        <span class="c1"># Typically used in the explore phase of many LCS algorithms.</span>
         <span class="n">cons</span><span class="o">.</span><span class="n">timer</span><span class="o">.</span><span class="n">startTimeEvaluation</span><span class="p">()</span>
         <span class="n">prediction</span> <span class="o">=</span> <span class="n">Prediction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="p">)</span>
         <span class="n">phenotypePrediction</span> <span class="o">=</span> <span class="n">prediction</span><span class="o">.</span><span class="n">getDecision</span><span class="p">()</span>
@@ -223,8 +199,8 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">phenotypePrediction</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">phenotypeList</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                                                        <span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">phenotypeList</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">(</span>
-                                                       <span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">phenotypeList</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span>
-                                                       <span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">phenotypeList</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="mi">1000</span><span class="p">))</span>
+                                                           <span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">phenotypeList</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span>
+                                                           <span class="n">cons</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">formatData</span><span class="o">.</span><span class="n">phenotypeList</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="mi">1000</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>  <span class="c1"># Prediction Successful</span>
             <span class="c1"># -------------------------------------------------------</span>
             <span class="c1"># DISCRETE PHENOTYPE PREDICTION</span>
@@ -269,7 +245,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="o">.</span><span class="n">clearSets</span><span class="p">()</span>  <span class="c1"># Clears the match and correct sets for the next learning iteration</span></div>
 
 <div class="viewcode-block" id="eLCS.doPopEvaluation"><a class="viewcode-back" href="../../eLCS.html#eLCS.Algorithm.eLCS.doPopEvaluation">[docs]</a>    <span class="k">def</span> <span class="nf">doPopEvaluation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">isTrain</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Performs a complete evaluation of the current rule population.  The population is unchanged throughout this evaluation. Works on both training and testing data. &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Performs a complete evaluation of the current rule population.</span>
+
+<span class="sd">        The population is unchanged throughout this evaluation. Works on both training and testing data.</span>
+
+<span class="sd">        :param isTrain:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">if</span> <span class="n">isTrain</span><span class="p">:</span>
             <span class="n">myType</span> <span class="o">=</span> <span class="s2">&quot;TRAINING&quot;</span>
         <span class="k">else</span><span class="p">:</span>
@@ -336,7 +319,7 @@
             <span class="n">F_mySum</span> <span class="o">+=</span> <span class="n">classAccDict</span><span class="p">[</span><span class="n">each</span><span class="p">]</span><span class="o">.</span><span class="n">F_myClass</span>
             <span class="n">F_otherSum</span> <span class="o">+=</span> <span class="n">classAccDict</span><span class="p">[</span><span class="n">each</span><span class="p">]</span><span class="o">.</span><span class="n">F_otherClass</span>
         <span class="n">balancedAccuracy</span> <span class="o">=</span> <span class="p">((</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">T_mySum</span> <span class="o">/</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">T_mySum</span> <span class="o">+</span> <span class="n">F_otherSum</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">T_otherSum</span> <span class="o">/</span> <span class="p">(</span>
-        <span class="nb">float</span><span class="p">(</span><span class="n">T_otherSum</span> <span class="o">+</span> <span class="n">F_mySum</span><span class="p">))))</span>  <span class="c1"># BalancedAccuracy = (Specificity + Sensitivity)/2</span>
+            <span class="nb">float</span><span class="p">(</span><span class="n">T_otherSum</span> <span class="o">+</span> <span class="n">F_mySum</span><span class="p">))))</span>  <span class="c1"># BalancedAccuracy = (Specificity + Sensitivity)/2</span>
 
         <span class="c1"># Adjustment for uncovered instances - to avoid positive or negative bias we incorporate the probability of guessing a phenotype by chance (e.g. 50% if two phenotypes)</span>
         <span class="n">predictionFail</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">noMatch</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">instances</span><span class="p">)</span>
@@ -345,9 +328,9 @@
         <span class="n">predictionMade</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="p">(</span><span class="n">predictionFail</span> <span class="o">+</span> <span class="n">predictionTies</span><span class="p">)</span>
 
         <span class="n">adjustedStandardAccuracy</span> <span class="o">=</span> <span class="p">(</span><span class="n">standardAccuracy</span> <span class="o">*</span> <span class="n">predictionMade</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span>
-        <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">predictionMade</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">phenotypeList</span><span class="p">))))</span>
+            <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">predictionMade</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">phenotypeList</span><span class="p">))))</span>
         <span class="n">adjustedBalancedAccuracy</span> <span class="o">=</span> <span class="p">(</span><span class="n">balancedAccuracy</span> <span class="o">*</span> <span class="n">predictionMade</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span>
-        <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">predictionMade</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">phenotypeList</span><span class="p">))))</span>
+            <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">predictionMade</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">phenotypeList</span><span class="p">))))</span>
 
         <span class="c1"># Adjusted Balanced Accuracy is calculated such that instances that did not match have a consistent probability of being correctly classified in the reported accuracy.</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-----------------------------------------------&quot;</span><span class="p">)</span>
@@ -363,8 +346,14 @@
         <span class="k">return</span> <span class="n">resultList</span></div>
 
 <div class="viewcode-block" id="eLCS.doContPopEvaluation"><a class="viewcode-back" href="../../eLCS.html#eLCS.Algorithm.eLCS.doContPopEvaluation">[docs]</a>    <span class="k">def</span> <span class="nf">doContPopEvaluation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">isTrain</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Performs evaluation of population via the copied environment. Specifically developed for continuous phenotype evaulation.  </span>
-<span class="sd">        The population is maintained unchanging throughout the evaluation.  Works on both training and testing data. &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Performs evaluation of population via the copied environment.</span>
+
+<span class="sd">        Specifically developed for continuous phenotype evaulation. The population is maintained unchanging</span>
+<span class="sd">        throughout the evaluation.  Works on both training and testing data.</span>
+
+<span class="sd">        :param isTrain:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">isTrain</span><span class="p">:</span>
             <span class="n">myType</span> <span class="o">=</span> <span class="s2">&quot;TRAINING&quot;</span>
         <span class="k">else</span><span class="p">:</span>
@@ -419,7 +408,8 @@
         <span class="k">return</span> <span class="n">resultList</span></div>
 
 <div class="viewcode-block" id="eLCS.populationReboot"><a class="viewcode-back" href="../../eLCS.html#eLCS.Algorithm.eLCS.populationReboot">[docs]</a>    <span class="k">def</span> <span class="nf">populationReboot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Manages the reformation of a previously saved eLCS classifier population. &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Manages the reformation of a previously saved eLCS classifier population&quot;&quot;&quot;</span>
+
         <span class="n">cons</span><span class="o">.</span><span class="n">timer</span><span class="o">.</span><span class="n">setTimerRestart</span><span class="p">(</span><span class="n">cons</span><span class="o">.</span><span class="n">popRebootPath</span><span class="p">)</span>  <span class="c1"># Rebuild timer objects</span>
         <span class="c1"># --------------------------------------------------------------------</span>
         <span class="k">try</span><span class="p">:</span>  <span class="c1"># Re-open track learning file for continued tracking of progress.</span>
@@ -441,7 +431,7 @@
             <span class="n">cons</span><span class="o">.</span><span class="n">learningCheckpoints</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">completedIterations</span>
         <span class="n">cons</span><span class="o">.</span><span class="n">maxLearningIterations</span> <span class="o">+=</span> <span class="n">completedIterations</span>
 
-        <span class="c1"># Rebuild existing population from text file.--------</span>
+        <span class="c1"># Rebuild existing population from text file</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">population</span> <span class="o">=</span> <span class="n">ClassifierSet</span><span class="p">(</span><span class="n">cons</span><span class="o">.</span><span class="n">popRebootPath</span><span class="p">)</span>
         <span class="c1"># ---------------------------------------------------</span>
         <span class="k">try</span><span class="p">:</span>  <span class="c1"># Obtain correct track</span>
@@ -483,6 +473,10 @@
 
 
 <h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../eLCS.html">eLCS package</a></li>
+</ul>
 
 <div class="relations">
 <h3>Related Topics</h3>

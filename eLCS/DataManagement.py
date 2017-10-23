@@ -1,38 +1,23 @@
-"""
-Name:        eLCS_DataManagement.py
-Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA
-Contact:     ryan.j.urbanowicz@darmouth.edu
-Created:     November 1, 2013
-Description: Able to manage both training and testing data.  This module loads the dataset, detects and characterizes all attributes in the dataset, 
-             handles missing data, and finally formats the data so that it may be conveniently utilized by eLCS.
-             
----------------------------------------------------------------------------------------------------------------------------------------------------------
-eLCS: Educational Learning Classifier System - A basic LCS coded for educational purposes.  This LCS algorithm uses supervised learning, and thus is most 
-similar to "UCS", an LCS algorithm published by Ester Bernado-Mansilla and Josep Garrell-Guiu (2003) which in turn is based heavily on "XCS", an LCS 
-algorithm published by Stewart Wilson (1995).  
-
-Copyright (C) 2013 Ryan Urbanowicz 
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
-Free Software Foundation; either version 3 of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY 
-or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 
-Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
----------------------------------------------------------------------------------------------------------------------------------------------------------
-"""
-
-# Import Required Modules---------------
 from eLCS.Constants import cons
 import random
 
 
-# --------------------------------------
+class DataManagement(object):
+    """Able to manage both training and testing data.
 
-class DataManagement:
+    This module loads the dataset, detects and characterizes all attributes in the dataset,
+    handles missing data, and finally formats the data so that it may be conveniently utilized by eLCS.
+    """
+
     def __init__(self, trainFile, testFile, infoList=None):
-        # Set random seed if specified.-----------------------------------------------
+        """Initialize the DataManagement object
+
+        :param str trainFile: Path to the training data
+        :param str testFile: Path to the testing data
+        :param str infoList:
+        """
+
+        # Set random seed if specified
         if cons.useSeed:
             random.seed(cons.randomSeed)
         else:
@@ -91,7 +76,12 @@ class DataManagement:
         print("----------------------------------------------------------------------------")
 
     def loadData(self, dataFile, doTrain):
-        """ Load the data file. """
+        """Load the data file.
+
+        :param dataFile:
+        :param doTrain:
+        :return:
+        """
         print("DataManagement: Loading Data... " + str(dataFile))
         datasetList = []
         try:
@@ -115,7 +105,11 @@ class DataManagement:
         return datasetList
 
     def characterizeDataset(self, rawTrainData):
-        " Detect basic dataset parameters "
+        """Detect basic dataset parameters
+
+        :param rawTrainData:
+        :return:
+        """
         # Detect Instance ID's and save location if they occur.  Then save number of attributes in data.
         if cons.labelInstanceID in self.trainHeaderList:
             self.areInstanceIDs = True
@@ -151,7 +145,10 @@ class DataManagement:
         print("DataManagement: Number of Instances = " + str(self.numTrainInstances))
 
     def discriminatePhenotype(self, rawData):
-        """ Determine whether the phenotype is Discrete(class-based) or Continuous """
+        """Determine whether the phenotype is Discrete(class-based) or Continuous
+
+        :param list rawData:
+        """
         print("DataManagement: Analyzing Phenotype...")
         inst = 0
         classDict = {}
@@ -175,7 +172,13 @@ class DataManagement:
             print("DataManagement: Phenotype Detected as Discrete.")
 
     def discriminateClasses(self, rawData):
-        """ Determines number of classes and their identifiers. Only used if phenotype is discrete. """
+        """Determines number of classes and their identifiers.
+
+        Only used if phenotype is discrete.
+
+        :param rawData:
+        :return:
+        """
         print("DataManagement: Detecting Classes...")
         inst = 0
         classCount = {}
@@ -192,7 +195,13 @@ class DataManagement:
             print("Class: " + str(each) + " count = " + str(classCount[each]))
 
     def compareDataset(self, rawTestData):
-        " Ensures that the attributes in the testing data match those in the training data.  Also stores some information about the testing data. "
+        """Ensures that the attributes in the testing data match those in the training data.
+
+        Also stores some information about the testing data.
+
+        :param rawTestData:
+        :return:
+        """
         if self.areInstanceIDs:
             if self.phenotypeRef > self.instanceIDRef:
                 self.testHeaderList.pop(self.phenotypeRef)
@@ -212,7 +221,11 @@ class DataManagement:
         print("DataManagement: Number of Instances = " + str(self.numTestInstances))
 
     def discriminateAttributes(self, rawData):
-        """ Determine whether attributes in dataset are discrete or continuous and saves this information. """
+        """Determine whether attributes in dataset are discrete or continuous and saves this information.
+
+        :param rawData:
+        :return:
+        """
         print("DataManagement: Detecting Attributes...")
         self.discreteCount = 0
         self.continuousCount = 0
@@ -244,7 +257,11 @@ class DataManagement:
             self.continuousCount) + " continuous attributes.")  # Debug
 
     def characterizeAttributes(self, rawData):
-        """ Determine range (if continuous) or states (if discrete) for each attribute and saves this information"""
+        """Determine range (if continuous) or states (if discrete) for each attribute and saves this information
+
+        :param rawData:
+        :return:
+        """
         print("DataManagement: Characterizing Attributes...")
         attributeID = 0
         for att in range(len(rawData[0])):
@@ -270,7 +287,11 @@ class DataManagement:
                 attributeID += 1
 
     def characterizePhenotype(self, rawData):
-        """ Determine range of phenotype values. """
+        """Determine range of phenotype values.
+
+        :param rawData:
+        :return:
+        """
         print("DataManagement: Characterizing Phenotype...")
         for inst in range(len(rawData)):
             target = rawData[inst][self.phenotypeRef]
@@ -287,7 +308,13 @@ class DataManagement:
         self.phenotypeRange = self.phenotypeList[1] - self.phenotypeList[0]
 
     def formatData(self, rawData):
-        """ Get the data into a format convenient for the algorithm to interact with. Specifically each instance is stored in a list as follows; [Attribute States, Phenotype, InstanceID] """
+        """Get the data into a format convenient for the algorithm to interact with.
+
+        Specifically each instance is stored in a list as follows; [Attribute States, Phenotype, InstanceID]
+
+        :param rawData:
+        :return:
+        """
         formatted = []
         # Initialize data format---------------------------------------------------------
         for i in range(len(rawData)):

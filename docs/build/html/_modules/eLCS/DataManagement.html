@@ -39,41 +39,26 @@
           <div class="body" role="main">
             
   <h1>Source code for eLCS.DataManagement</h1><div class="highlight"><pre>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Name:        eLCS_DataManagement.py</span>
-<span class="sd">Authors:     Ryan Urbanowicz - Written at Dartmouth College, Hanover, NH, USA</span>
-<span class="sd">Contact:     ryan.j.urbanowicz@darmouth.edu</span>
-<span class="sd">Created:     November 1, 2013</span>
-<span class="sd">Description: Able to manage both training and testing data.  This module loads the dataset, detects and characterizes all attributes in the dataset, </span>
-<span class="sd">             handles missing data, and finally formats the data so that it may be conveniently utilized by eLCS.</span>
-<span class="sd">             </span>
-<span class="sd">---------------------------------------------------------------------------------------------------------------------------------------------------------</span>
-<span class="sd">eLCS: Educational Learning Classifier System - A basic LCS coded for educational purposes.  This LCS algorithm uses supervised learning, and thus is most </span>
-<span class="sd">similar to &quot;UCS&quot;, an LCS algorithm published by Ester Bernado-Mansilla and Josep Garrell-Guiu (2003) which in turn is based heavily on &quot;XCS&quot;, an LCS </span>
-<span class="sd">algorithm published by Stewart Wilson (1995).  </span>
-
-<span class="sd">Copyright (C) 2013 Ryan Urbanowicz </span>
-<span class="sd">This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the </span>
-<span class="sd">Free Software Foundation; either version 3 of the License, or (at your option) any later version.</span>
-
-<span class="sd">This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABLILITY </span>
-<span class="sd">or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</span>
-
-<span class="sd">You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, </span>
-<span class="sd">Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA</span>
-<span class="sd">---------------------------------------------------------------------------------------------------------------------------------------------------------</span>
-<span class="sd">&quot;&quot;&quot;</span>
-
-<span class="c1"># Import Required Modules---------------</span>
 <span class="kn">from</span> <span class="nn">eLCS.Constants</span> <span class="k">import</span> <span class="n">cons</span>
 <span class="kn">import</span> <span class="nn">random</span>
 
 
-<span class="c1"># --------------------------------------</span>
+<div class="viewcode-block" id="DataManagement"><a class="viewcode-back" href="../../eLCS.html#eLCS.DataManagement.DataManagement">[docs]</a><span class="k">class</span> <span class="nc">DataManagement</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Able to manage both training and testing data.</span>
 
-<div class="viewcode-block" id="DataManagement"><a class="viewcode-back" href="../../eLCS.html#eLCS.DataManagement.DataManagement">[docs]</a><span class="k">class</span> <span class="nc">DataManagement</span><span class="p">:</span>
+<span class="sd">    This module loads the dataset, detects and characterizes all attributes in the dataset,</span>
+<span class="sd">    handles missing data, and finally formats the data so that it may be conveniently utilized by eLCS.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trainFile</span><span class="p">,</span> <span class="n">testFile</span><span class="p">,</span> <span class="n">infoList</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="c1"># Set random seed if specified.-----------------------------------------------</span>
+        <span class="sd">&quot;&quot;&quot;Initialize the DataManagement object</span>
+
+<span class="sd">        :param str trainFile: Path to the training data</span>
+<span class="sd">        :param str testFile: Path to the testing data</span>
+<span class="sd">        :param str infoList:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Set random seed if specified</span>
         <span class="k">if</span> <span class="n">cons</span><span class="o">.</span><span class="n">useSeed</span><span class="p">:</span>
             <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">cons</span><span class="o">.</span><span class="n">randomSeed</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -132,7 +117,12 @@
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----------------------------------------------------------------------------&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DataManagement.loadData"><a class="viewcode-back" href="../../eLCS.html#eLCS.DataManagement.DataManagement.loadData">[docs]</a>    <span class="k">def</span> <span class="nf">loadData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataFile</span><span class="p">,</span> <span class="n">doTrain</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Load the data file. &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Load the data file.</span>
+
+<span class="sd">        :param dataFile:</span>
+<span class="sd">        :param doTrain:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DataManagement: Loading Data... &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">dataFile</span><span class="p">))</span>
         <span class="n">datasetList</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">try</span><span class="p">:</span>
@@ -156,7 +146,11 @@
         <span class="k">return</span> <span class="n">datasetList</span></div>
 
 <div class="viewcode-block" id="DataManagement.characterizeDataset"><a class="viewcode-back" href="../../eLCS.html#eLCS.DataManagement.DataManagement.characterizeDataset">[docs]</a>    <span class="k">def</span> <span class="nf">characterizeDataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rawTrainData</span><span class="p">):</span>
-        <span class="s2">&quot; Detect basic dataset parameters &quot;</span>
+        <span class="sd">&quot;&quot;&quot;Detect basic dataset parameters</span>
+
+<span class="sd">        :param rawTrainData:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Detect Instance ID&#39;s and save location if they occur.  Then save number of attributes in data.</span>
         <span class="k">if</span> <span class="n">cons</span><span class="o">.</span><span class="n">labelInstanceID</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">trainHeaderList</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">areInstanceIDs</span> <span class="o">=</span> <span class="kc">True</span>
@@ -192,7 +186,10 @@
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DataManagement: Number of Instances = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">numTrainInstances</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="DataManagement.discriminatePhenotype"><a class="viewcode-back" href="../../eLCS.html#eLCS.DataManagement.DataManagement.discriminatePhenotype">[docs]</a>    <span class="k">def</span> <span class="nf">discriminatePhenotype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rawData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Determine whether the phenotype is Discrete(class-based) or Continuous &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Determine whether the phenotype is Discrete(class-based) or Continuous</span>
+
+<span class="sd">        :param list rawData:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DataManagement: Analyzing Phenotype...&quot;</span><span class="p">)</span>
         <span class="n">inst</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">classDict</span> <span class="o">=</span> <span class="p">{}</span>
@@ -216,7 +213,13 @@
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DataManagement: Phenotype Detected as Discrete.&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DataManagement.discriminateClasses"><a class="viewcode-back" href="../../eLCS.html#eLCS.DataManagement.DataManagement.discriminateClasses">[docs]</a>    <span class="k">def</span> <span class="nf">discriminateClasses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rawData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Determines number of classes and their identifiers. Only used if phenotype is discrete. &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Determines number of classes and their identifiers.</span>
+
+<span class="sd">        Only used if phenotype is discrete.</span>
+
+<span class="sd">        :param rawData:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DataManagement: Detecting Classes...&quot;</span><span class="p">)</span>
         <span class="n">inst</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">classCount</span> <span class="o">=</span> <span class="p">{}</span>
@@ -233,7 +236,13 @@
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Class: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">each</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; count = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">classCount</span><span class="p">[</span><span class="n">each</span><span class="p">]))</span></div>
 
 <div class="viewcode-block" id="DataManagement.compareDataset"><a class="viewcode-back" href="../../eLCS.html#eLCS.DataManagement.DataManagement.compareDataset">[docs]</a>    <span class="k">def</span> <span class="nf">compareDataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rawTestData</span><span class="p">):</span>
-        <span class="s2">&quot; Ensures that the attributes in the testing data match those in the training data.  Also stores some information about the testing data. &quot;</span>
+        <span class="sd">&quot;&quot;&quot;Ensures that the attributes in the testing data match those in the training data.</span>
+
+<span class="sd">        Also stores some information about the testing data.</span>
+
+<span class="sd">        :param rawTestData:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">areInstanceIDs</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">phenotypeRef</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">instanceIDRef</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">testHeaderList</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phenotypeRef</span><span class="p">)</span>
@@ -253,7 +262,11 @@
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DataManagement: Number of Instances = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">numTestInstances</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="DataManagement.discriminateAttributes"><a class="viewcode-back" href="../../eLCS.html#eLCS.DataManagement.DataManagement.discriminateAttributes">[docs]</a>    <span class="k">def</span> <span class="nf">discriminateAttributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rawData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Determine whether attributes in dataset are discrete or continuous and saves this information. &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Determine whether attributes in dataset are discrete or continuous and saves this information.</span>
+
+<span class="sd">        :param rawData:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DataManagement: Detecting Attributes...&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">discreteCount</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">continuousCount</span> <span class="o">=</span> <span class="mi">0</span>
@@ -285,7 +298,11 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">continuousCount</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; continuous attributes.&quot;</span><span class="p">)</span>  <span class="c1"># Debug</span></div>
 
 <div class="viewcode-block" id="DataManagement.characterizeAttributes"><a class="viewcode-back" href="../../eLCS.html#eLCS.DataManagement.DataManagement.characterizeAttributes">[docs]</a>    <span class="k">def</span> <span class="nf">characterizeAttributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rawData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Determine range (if continuous) or states (if discrete) for each attribute and saves this information&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Determine range (if continuous) or states (if discrete) for each attribute and saves this information</span>
+
+<span class="sd">        :param rawData:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DataManagement: Characterizing Attributes...&quot;</span><span class="p">)</span>
         <span class="n">attributeID</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">att</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rawData</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
@@ -311,7 +328,11 @@
                 <span class="n">attributeID</span> <span class="o">+=</span> <span class="mi">1</span></div>
 
 <div class="viewcode-block" id="DataManagement.characterizePhenotype"><a class="viewcode-back" href="../../eLCS.html#eLCS.DataManagement.DataManagement.characterizePhenotype">[docs]</a>    <span class="k">def</span> <span class="nf">characterizePhenotype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rawData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Determine range of phenotype values. &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Determine range of phenotype values.</span>
+
+<span class="sd">        :param rawData:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DataManagement: Characterizing Phenotype...&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rawData</span><span class="p">)):</span>
             <span class="n">target</span> <span class="o">=</span> <span class="n">rawData</span><span class="p">[</span><span class="n">inst</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">phenotypeRef</span><span class="p">]</span>
@@ -328,7 +349,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">phenotypeRange</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phenotypeList</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">phenotypeList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="DataManagement.formatData"><a class="viewcode-back" href="../../eLCS.html#eLCS.DataManagement.DataManagement.formatData">[docs]</a>    <span class="k">def</span> <span class="nf">formatData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rawData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Get the data into a format convenient for the algorithm to interact with. Specifically each instance is stored in a list as follows; [Attribute States, Phenotype, InstanceID] &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get the data into a format convenient for the algorithm to interact with.</span>
+
+<span class="sd">        Specifically each instance is stored in a list as follows; [Attribute States, Phenotype, InstanceID]</span>
+
+<span class="sd">        :param rawData:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">formatted</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="c1"># Initialize data format---------------------------------------------------------</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rawData</span><span class="p">)):</span>
@@ -382,6 +409,10 @@
 
 
 <h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../eLCS.html">eLCS package</a></li>
+</ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
