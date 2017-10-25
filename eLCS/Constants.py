@@ -8,15 +8,16 @@ class Constants(object):
     Parameters are accessible anywhere in the rest of the algorithm code by importing `cons`
     """
 
-    def setConstants(self, config_file):
+    def setConstants(self, config_file, dataset_path):
         """Parse the configuration file and save them as global constants
 
         :param str config_file: Path to the configuration yaml file
+        :param str dataset_path: Directory to the datasets
         """
 
         # Static Run Parameters
         par = self.loadParameters(config_file)  # Load in the parameters from the yaml file
-        self.datasetPath = 'datasets'
+        self.datasetPath = dataset_path
         self.outputPath = 'output'
 
         # Major Run Parameters -----------------------------------------------------------------------------------------

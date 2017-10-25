@@ -654,18 +654,31 @@ class ClassifierSet(object):
         :param trackingFrequency:
         :return:
         """
+        epoch = str(int(exploreIter / trackingFrequency))
+        iteration = str(exploreIter)
+        macro_pop = str(len(self.popSet))
+
+
+
         trackString = str(exploreIter) + "\t" + str(len(self.popSet)) + "\t" + str(self.microPopSize) + "\t" + str(
             accuracy) + "\t" + str(self.aveGenerality) + "\t" + str(cons.timer.returnGlobalTimer()) + "\n"
         if cons.env.formatData.discretePhenotype:  # discrete phenotype
-            print(("Epoch: " + str(int(exploreIter / trackingFrequency)) + "\t Iteration: " + str(
+            print((
+                "Epoch: " + str(int(exploreIter / trackingFrequency)) +
+                "\t Iteration: " + str(
                 exploreIter) + "\t MacroPop: " + str(len(self.popSet)) + "\t MicroPop: " + str(
                 self.microPopSize) + "\t AccEstimate: " + str(accuracy) + "\t AveGen: " + str(
                 self.aveGenerality) + "\t Time: " + str(cons.timer.returnGlobalTimer())))
         else:  # continuous phenotype
-            print(("Epoch: " + str(int(exploreIter / trackingFrequency)) + "\t Iteration: " + str(
-                exploreIter) + "\t MacroPop: " + str(len(self.popSet)) + "\t MicroPop: " + str(
-                self.microPopSize) + "\t AccEstimate: " + str(accuracy) + "\t AveGen: " + str(
-                self.aveGenerality) + "\t PhenRange: " + str(self.avePhenotypeRange) + "\t Time: " + str(
-                cons.timer.returnGlobalTimer())))
+            print((
+                "Epoch: " + str(int(exploreIter / trackingFrequency)) +
+                "\t Iteration: " + str(exploreIter) +
+                "\t MacroPop: " + str(len(self.popSet)) +
+                "\t MicroPop: " + str(self.microPopSize) +
+                "\t AccEstimate: " + str(accuracy) +
+                "\t AveGen: " + str(self.aveGenerality) +
+                "\t PhenRange: " + str(self.avePhenotypeRange) +
+                "\t Time: " + str(cons.timer.returnGlobalTimer())
+            ))
 
         return trackString

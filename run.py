@@ -1,3 +1,5 @@
+import os
+
 from eLCS.Timer import Timer
 from eLCS.OfflineEnvironment import OfflineEnvironment
 from eLCS.Algorithm import eLCS
@@ -16,7 +18,8 @@ if __name__ == "__main__":
     config_txt = "config.yaml"
 
     # Obtain all run parameters from the configuration file and store them in the 'Constants' module.
-    cons.setConstants(config_txt)
+    dataset_path = os.path.join('data', 'multiplexer_data')
+    cons.setConstants(config_txt, dataset_path=dataset_path)
 
     # Initialize the 'Timer' module which tracks the run time of algorithm and it's different components.
     timer = Timer()
