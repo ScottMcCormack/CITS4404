@@ -2,11 +2,11 @@ import os
 
 files = {}
 os.chdir('..')
-print( os.getcwd() )
+print(os.getcwd())
 
 s = "A_0"
 
-for i in range(1,80):
+for i in range(1, 80):
     s += "\tA_" + str(i)
 s += "\tClass\n"
 
@@ -23,9 +23,9 @@ with open('data_3_formatted.txt', 'w') as dataFile_1:
             for line in dataFile:
                 print(line)
                 a = line.split('\t')
-                print( len(a) )
+                print(len(a))
                 if len(a) == 81:
-                    if j%4 == 0:
+                    if j % 4 == 0:
                         dataFile_test.write(line)
                         j += 1
                     else:

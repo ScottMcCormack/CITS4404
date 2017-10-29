@@ -18,7 +18,9 @@ class Constants(object):
         # Static Run Parameters
         par = self.loadParameters(config_file)  # Load in the parameters from the yaml file
         self.datasetPath = dataset_path
-        self.outputPath = 'output'
+        self.outputFolder = 'output'
+        self.outputSource = 'eLCS_out'
+        self.outputPath = os.path.join(self.outputFolder, self.outputSource)
 
         # Major Run Parameters -----------------------------------------------------------------------------------------
         self.trainFile = os.path.join(self.datasetPath, par['trainFile'])  # Saved as text
