@@ -27,6 +27,7 @@ class ClassifierSet(object):
         self.matchSet = []  # List of references to rules in population that match
         self.correctSet = []  # List of references to rules in population that both match and specify correct phenotype
         self.microPopSize = 0  # Tracks the current micro population size, i.e. the population size which takes rule numerosity into account.
+        self.runtimeParams = []  # List that stores the result at each iteration
 
         # Evaluation Parameters
         self.aveGenerality = 0.0
@@ -647,38 +648,67 @@ class ClassifierSet(object):
                     self.attributeAccList[ref] += cl.numerosity * cl.accuracy
 
     def getPopTrack(self, accuracy, exploreIter, trackingFrequency):
-        """Returns a formated output string to be printed to the Learn Track output file.
+        """Returns a formatted output string to be printed to the Learn Track output file.
 
         :param accuracy:
         :param exploreIter:
         :param trackingFrequency:
         :return:
         """
-        epoch = str(int(exploreIter / trackingFrequency))
-        iteration = str(exploreIter)
-        macro_pop = str(len(self.popSet))
 
+        # Runtime variables for classifier
+        epoch = int(exploreIter / trackingFrequency)
+        iteration = exploreIter
+        macro_pop = len(self.popSet)
+        micro_pop = self.microPopSize
+        acc_estimate = accuracy
+        ave_gen = self.aveGenerality
+        time = cons.timer.returnGlobalTimer()
 
+        # Add to runtime dictionary
+        iter_results = {
+            'epoch': epoch,
+            'iteration': iteration,
+            'macro_pop': macro_pop,
+            'micro_pop': micro_pop,
+            'acc_estimate': acc_estimate,
+            'ave_gen': ave_gen,
+            'time': time
+        }
 
-        trackString = str(exploreIter) + "\t" + str(len(self.popSet)) + "\t" + str(self.microPopSize) + "\t" + str(
-            accuracy) + "\t" + str(self.aveGenerality) + "\t" + str(cons.timer.returnGlobalTimer()) + "\n"
-        if cons.env.formatData.discretePhenotype:  # discrete phenotype
-            print((
-                "Epoch: " + str(int(exploreIter / trackingFrequency)) +
-                "\t Iteration: " + str(
-                exploreIter) + "\t MacroPop: " + str(len(self.popSet)) + "\t MicroPop: " + str(
-                self.microPopSize) + "\t AccEstimate: " + str(accuracy) + "\t AveGen: " + str(
-                self.aveGenerality) + "\t Time: " + str(cons.timer.returnGlobalTimer())))
-        else:  # continuous phenotype
-            print((
-                "Epoch: " + str(int(exploreIter / trackingFrequency)) +
-                "\t Iteration: " + str(exploreIter) +
-                "\t MacroPop: " + str(len(self.popSet)) +
-                "\t MicroPop: " + str(self.microPopSize) +
-                "\t AccEstimate: " + str(accuracy) +
-                "\t AveGen: " + str(self.aveGenerality) +
-                "\t PhenRange: " + str(self.avePhenotypeRange) +
-                "\t Time: " + str(cons.timer.returnGlobalTimer())
-            ))
+        # Print results from current iteration out to the console
+        if cons.env.formatData.discretePhenotype:
+            # Discrete phenotype
+            print("Epoch: {0}".format(epoch) +
+                  "\t Iteration: {0}".format(iteration) +
+                  "\t MacroPop: {0}".format(macro_pop) +
+                  "\t MicroPop: {0}".format(micro_pop) +
+                  "\t AccEstimate: {0}".format(acc_estimate) +
+                  "\t AveGen: {0}".format(ave_gen) +
+                  "\t Time: {0}".format(time))
+        else:
+            # Continuous phenotype
+            phen_range = self.avePhenotypeRange  # For continous phenotypes only
+            print("Epoch: {0}".format(epoch) +
+                  "\t Iteration: {0}".format(iteration) +
+                  "\t MacroPop: {0}".format(macro_pop) +
+                  "\t MicroPop: {0}".format(micro_pop) +
+                  "\t AccEstimate: {0}".format(acc_estimate) +
+                  "\t AveGen: {0}".format(ave_gen) +
+                  "\t PhenRange: {0}".format(phen_range) +
+                  "\t Time: {0}".format(time))
+
+            iter_results['phen_range'] = phen_range
+
+        # Store the results of the current iteration
+        self.runtimeParams.append(iter_results)
+
+        # Return results as \t separated string
+        trackString = str(iteration) + "\t" + \
+                      str(macro_pop) + "\t" + \
+                      str(micro_pop) + "\t" + \
+                      str(acc_estimate) + "\t" + \
+                      str(ave_gen) + "\t" + \
+                      str(time) + "\n"
 
         return trackString
