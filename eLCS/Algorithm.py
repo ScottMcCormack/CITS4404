@@ -420,6 +420,12 @@ class Algorithm(object):
                     self.correct[i] = float(self.correct[i])
             f.close()
 
+    def getRuntimeParams(self):
+        return self.population.runtimeParams
+
+
     def plotResult(self):
         """Plot the runtime params from the execution of the LCS"""
         pass
+
+

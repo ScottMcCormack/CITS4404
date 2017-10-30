@@ -33,3 +33,8 @@ if __name__ == "__main__":
 
     # Run the e-LCS algorithm.
     eLCS = Algorithm()
+
+    # Get the runtime params
+    runtimeParams = eLCS.getRuntimeParams()
+
+    print(runtimeParams)
