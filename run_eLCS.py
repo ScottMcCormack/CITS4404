@@ -2,7 +2,7 @@ import os
 
 from eLCS.Timer import Timer
 from eLCS.OfflineEnvironment import OfflineEnvironment
-from eLCS.Algorithm import eLCS
+from eLCS.Algorithm import Algorithm
 from eLCS.Constants import cons
 
 """To run e-LCS, run this module.  
@@ -32,4 +32,4 @@ if __name__ == "__main__":
     cons.parseIterations()  # Identify the maximum number of learning iterations as well as evaluation checkpoints.
 
     # Run the e-LCS algorithm.
-    eLCS()
+    eLCS = Algorithm()
