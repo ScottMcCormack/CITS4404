@@ -8,7 +8,7 @@ import random
 import math
 
 
-class eLCS(object):
+class Algorithm(object):
     """The major controlling module of eLCS.
 
     Includes the major run loop which controls learning over a specified number of iterations.
@@ -80,8 +80,12 @@ class eLCS(object):
                 self.population.runPopAveEval(self.exploreIter)
                 trackedAccuracy = sum(self.correct) / float(
                     cons.trackingFrequency)  # Accuracy over the last "trackingFrequency" number of iterations.
-                self.learnTrackOut.write(self.population.getPopTrack(trackedAccuracy, self.exploreIter + 1,
-                                                                     cons.trackingFrequency))  # Report learning progress to standard out and tracking file.
+
+                self.learnTrackOut.write(
+                    self.population.getPopTrack(
+                        trackedAccuracy, self.exploreIter + 1, cons.trackingFrequency)
+                )  # Report learning progress to standard out and tracking file.
+
             cons.timer.stopTimeEvaluation()
 
             # CHECKPOINT - COMPLETE EVALUTATION OF POPULATION - strategy different for discrete vs continuous phenotypes
@@ -415,3 +419,7 @@ class eLCS(object):
                 for i in range(len(self.correct)):
                     self.correct[i] = float(self.correct[i])
             f.close()
+
+    def plotResult(self):
+        """Plot the runtime params from the execution of the LCS"""
+        pass
