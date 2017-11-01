@@ -1,0 +1,956 @@
+[
+  {
+    'macro_pop': 996,
+    'micro_pop': 1000,
+    'epoch': 1,
+    'time': 0.5737151821454366,
+    'ave_gen': 0.5814000000000009,
+    'iteration': 4680,
+    'acc_estimate': 0.4822649572649573
+  },
+  {
+    'macro_pop': 984,
+    'micro_pop': 1000,
+    'epoch': 2,
+    'time': 1.4086798111597696,
+    'ave_gen': 0.6060749999999998,
+    'iteration': 9360,
+    'acc_estimate': 0.5388888888888889
+  },
+  {
+    'macro_pop': 991,
+    'micro_pop': 1000,
+    'epoch': 3,
+    'time': 2.153872470060984,
+    'ave_gen': 0.6213250000000008,
+    'iteration': 14040,
+    'acc_estimate': 0.5508547008547009
+  },
+  {
+    'macro_pop': 983,
+    'micro_pop': 1000,
+    'epoch': 4,
+    'time': 2.562608003616333,
+    'ave_gen': 0.630125,
+    'iteration': 18720,
+    'acc_estimate': 0.5568376068376069
+  },
+  {
+    'macro_pop': 995,
+    'micro_pop': 1000,
+    'epoch': 5,
+    'time': 3.0114224394162497,
+    'ave_gen': 0.6159750000000003,
+    'iteration': 23400,
+    'acc_estimate': 0.5826923076923077
+  },
+  {
+    'macro_pop': 992,
+    'micro_pop': 1000,
+    'epoch': 6,
+    'time': 3.4958556056022645,
+    'ave_gen': 0.6225875000000003,
+    'iteration': 28080,
+    'acc_estimate': 0.5807692307692308
+  },
+  {
+    'macro_pop': 994,
+    'micro_pop': 1000,
+    'epoch': 7,
+    'time': 4.30937911272049,
+    'ave_gen': 0.617825,
+    'iteration': 32760,
+    'acc_estimate': 0.5805555555555556
+  },
+  {
+    'macro_pop': 988,
+    'micro_pop': 1000,
+    'epoch': 8,
+    'time': 4.7656202952067055,
+    'ave_gen': 0.6163874999999994,
+    'iteration': 37440,
+    'acc_estimate': 0.5833333333333334
+  },
+  {
+    'macro_pop': 990,
+    'micro_pop': 1000,
+    'epoch': 9,
+    'time': 5.243669927120209,
+    'ave_gen': 0.6314999999999998,
+    'iteration': 42120,
+    'acc_estimate': 0.5873931623931624
+  },
+  {
+    'macro_pop': 989,
+    'micro_pop': 1000,
+    'epoch': 10,
+    'time': 5.713478795687357,
+    'ave_gen': 0.6350625000000001,
+    'iteration': 46800,
+    'acc_estimate': 0.582905982905983
+  },
+  {
+    'macro_pop': 996,
+    'micro_pop': 1000,
+    'epoch': 11,
+    'time': 6.207767407099406,
+    'ave_gen': 0.6167875000000003,
+    'iteration': 51480,
+    'acc_estimate': 0.5713675213675213
+  },
+  {
+    'macro_pop': 991,
+    'micro_pop': 1000,
+    'epoch': 12,
+    'time': 6.747518364588419,
+    'ave_gen': 0.6261250000000007,
+    'iteration': 56160,
+    'acc_estimate': 0.5852564102564103
+  },
+  {
+    'macro_pop': 995,
+    'micro_pop': 1000,
+    'epoch': 13,
+    'time': 7.193717102209727,
+    'ave_gen': 0.6290999999999993,
+    'iteration': 60840,
+    'acc_estimate': 0.5824786324786325
+  },
+  {
+    'macro_pop': 990,
+    'micro_pop': 1000,
+    'epoch': 14,
+    'time': 7.671007128556569,
+    'ave_gen': 0.6305,
+    'iteration': 65520,
+    'acc_estimate': 0.5976495726495726
+  },
+  {
+    'macro_pop': 992,
+    'micro_pop': 1000,
+    'epoch': 15,
+    'time': 8.14656773408254,
+    'ave_gen': 0.6380250000000012,
+    'iteration': 70200,
+    'acc_estimate': 0.5837606837606838
+  },
+  {
+    'macro_pop': 985,
+    'micro_pop': 1000,
+    'epoch': 16,
+    'time': 8.605089092254639,
+    'ave_gen': 0.6284000000000006,
+    'iteration': 74880,
+    'acc_estimate': 0.6153846153846154
+  },
+  {
+    'macro_pop': 990,
+    'micro_pop': 1000,
+    'epoch': 17,
+    'time': 9.003537464141846,
+    'ave_gen': 0.6312374999999993,
+    'iteration': 79560,
+    'acc_estimate': 0.6121794871794872
+  },
+  {
+    'macro_pop': 984,
+    'micro_pop': 1000,
+    'epoch': 18,
+    'time': 9.641737926006318,
+    'ave_gen': 0.6381,
+    'iteration': 84240,
+    'acc_estimate': 0.5997863247863248
+  },
+  {
+    'macro_pop': 991,
+    'micro_pop': 1000,
+    'epoch': 19,
+    'time': 10.059790341059367,
+    'ave_gen': 0.6349499999999998,
+    'iteration': 88920,
+    'acc_estimate': 0.5950854700854701
+  },
+  {
+    'macro_pop': 994,
+    'micro_pop': 1000,
+    'epoch': 20,
+    'time': 10.48267674446106,
+    'ave_gen': 0.6345250000000001,
+    'iteration': 93600,
+    'acc_estimate': 0.6019230769230769
+  },
+  {
+    'macro_pop': 985,
+    'micro_pop': 1000,
+    'epoch': 21,
+    'time': 10.917725888888041,
+    'ave_gen': 0.6247624999999997,
+    'iteration': 98280,
+    'acc_estimate': 0.6021367521367521
+  },
+  {
+    'macro_pop': 992,
+    'micro_pop': 1000,
+    'epoch': 22,
+    'time': 11.332330516974132,
+    'ave_gen': 0.631424999999999,
+    'iteration': 102960,
+    'acc_estimate': 0.5805555555555556
+  },
+  {
+    'macro_pop': 992,
+    'micro_pop': 1000,
+    'epoch': 23,
+    'time': 11.786713258425396,
+    'ave_gen': 0.6304624999999996,
+    'iteration': 107640,
+    'acc_estimate': 0.5952991452991453
+  },
+  {
+    'macro_pop': 989,
+    'micro_pop': 1000,
+    'epoch': 24,
+    'time': 12.172825205326081,
+    'ave_gen': 0.6291499999999998,
+    'iteration': 112320,
+    'acc_estimate': 0.5978632478632478
+  },
+  {
+    'macro_pop': 986,
+    'micro_pop': 1000,
+    'epoch': 25,
+    'time': 12.598655116558074,
+    'ave_gen': 0.6286750000000001,
+    'iteration': 117000,
+    'acc_estimate': 0.6032051282051282
+  },
+  {
+    'macro_pop': 988,
+    'micro_pop': 1000,
+    'epoch': 26,
+    'time': 13.047037847836812,
+    'ave_gen': 0.6395875000000001,
+    'iteration': 121680,
+    'acc_estimate': 0.6091880341880341
+  },
+  {
+    'macro_pop': 988,
+    'micro_pop': 1000,
+    'epoch': 27,
+    'time': 13.459903872013092,
+    'ave_gen': 0.6309000000000005,
+    'iteration': 126360,
+    'acc_estimate': 0.6036324786324786
+  },
+  {
+    'macro_pop': 989,
+    'micro_pop': 1000,
+    'epoch': 28,
+    'time': 14.161411503950754,
+    'ave_gen': 0.6313374999999998,
+    'iteration': 131040,
+    'acc_estimate': 0.6017094017094017
+  },
+  {
+    'macro_pop': 993,
+    'micro_pop': 1000,
+    'epoch': 29,
+    'time': 14.612106986840566,
+    'ave_gen': 0.6298249999999992,
+    'iteration': 135720,
+    'acc_estimate': 0.5903846153846154
+  },
+  {
+    'macro_pop': 997,
+    'micro_pop': 1000,
+    'epoch': 30,
+    'time': 15.044871151447296,
+    'ave_gen': 0.6306000000000003,
+    'iteration': 140400,
+    'acc_estimate': 0.5846153846153846
+  },
+  {
+    'macro_pop': 982,
+    'micro_pop': 1000,
+    'epoch': 31,
+    'time': 15.472230263551076,
+    'ave_gen': 0.6334999999999996,
+    'iteration': 145080,
+    'acc_estimate': 0.5903846153846154
+  },
+  {
+    'macro_pop': 992,
+    'micro_pop': 1000,
+    'epoch': 32,
+    'time': 15.921903642018636,
+    'ave_gen': 0.6337000000000002,
+    'iteration': 149760,
+    'acc_estimate': 0.5985042735042735
+  },
+  {
+    'macro_pop': 990,
+    'micro_pop': 1000,
+    'epoch': 33,
+    'time': 16.323788996537527,
+    'ave_gen': 0.6353875,
+    'iteration': 154440,
+    'acc_estimate': 0.5982905982905983
+  },
+  {
+    'macro_pop': 992,
+    'micro_pop': 1000,
+    'epoch': 34,
+    'time': 16.699385404586792,
+    'ave_gen': 0.6293749999999997,
+    'iteration': 159120,
+    'acc_estimate': 0.5967948717948718
+  },
+  {
+    'macro_pop': 992,
+    'micro_pop': 1000,
+    'epoch': 35,
+    'time': 17.101541376113893,
+    'ave_gen': 0.6368750000000001,
+    'iteration': 163800,
+    'acc_estimate': 0.5989316239316239
+  },
+  {
+    'macro_pop': 993,
+    'micro_pop': 1000,
+    'epoch': 36,
+    'time': 17.534610883394876,
+    'ave_gen': 0.6364625,
+    'iteration': 168480,
+    'acc_estimate': 0.6115384615384616
+  },
+  {
+    'macro_pop': 991,
+    'micro_pop': 1000,
+    'epoch': 37,
+    'time': 17.987661890188853,
+    'ave_gen': 0.6332249999999999,
+    'iteration': 173160,
+    'acc_estimate': 0.5997863247863248
+  },
+  {
+    'macro_pop': 983,
+    'micro_pop': 1000,
+    'epoch': 38,
+    'time': 18.43042338291804,
+    'ave_gen': 0.6350124999999994,
+    'iteration': 177840,
+    'acc_estimate': 0.5952991452991453
+  },
+  {
+    'macro_pop': 985,
+    'micro_pop': 1000,
+    'epoch': 39,
+    'time': 18.88382517894109,
+    'ave_gen': 0.636125,
+    'iteration': 182520,
+    'acc_estimate': 0.5846153846153846
+  },
+  {
+    'macro_pop': 990,
+    'micro_pop': 1000,
+    'epoch': 40,
+    'time': 19.298098043600717,
+    'ave_gen': 0.6284625000000001,
+    'iteration': 187200,
+    'acc_estimate': 0.582905982905983
+  },
+  {
+    'macro_pop': 993,
+    'micro_pop': 1000,
+    'epoch': 41,
+    'time': 19.779662827650707,
+    'ave_gen': 0.6377624999999997,
+    'iteration': 191880,
+    'acc_estimate': 0.5724358974358974
+  },
+  {
+    'macro_pop': 984,
+    'micro_pop': 1000,
+    'epoch': 42,
+    'time': 20.252963940302532,
+    'ave_gen': 0.6346875000000001,
+    'iteration': 196560,
+    'acc_estimate': 0.588034188034188
+  },
+  {
+    'macro_pop': 988,
+    'micro_pop': 1000,
+    'epoch': 43,
+    'time': 20.91089776357015,
+    'ave_gen': 0.6360374999999997,
+    'iteration': 201240,
+    'acc_estimate': 0.5905982905982906
+  },
+  {
+    'macro_pop': 992,
+    'micro_pop': 1000,
+    'epoch': 44,
+    'time': 21.393036059538524,
+    'ave_gen': 0.6286125000000007,
+    'iteration': 205920,
+    'acc_estimate': 0.5903846153846154
+  },
+  {
+    'macro_pop': 992,
+    'micro_pop': 1000,
+    'epoch': 45,
+    'time': 21.850312189261118,
+    'ave_gen': 0.6266000000000009,
+    'iteration': 210600,
+    'acc_estimate': 0.5895299145299145
+  },
+  {
+    'macro_pop': 991,
+    'micro_pop': 1000,
+    'epoch': 46,
+    'time': 22.281821620464324,
+    'ave_gen': 0.6332250000000014,
+    'iteration': 215280,
+    'acc_estimate': 0.5709401709401709
+  },
+  {
+    'macro_pop': 987,
+    'micro_pop': 1000,
+    'epoch': 47,
+    'time': 22.710395510991415,
+    'ave_gen': 0.6285749999999993,
+    'iteration': 219960,
+    'acc_estimate': 0.6017094017094017
+  },
+  {
+    'macro_pop': 989,
+    'micro_pop': 1000,
+    'epoch': 48,
+    'time': 23.160283521811166,
+    'ave_gen': 0.6338125000000004,
+    'iteration': 224640,
+    'acc_estimate': 0.5987179487179487
+  },
+  {
+    'macro_pop': 994,
+    'micro_pop': 1000,
+    'epoch': 49,
+    'time': 23.568916308879853,
+    'ave_gen': 0.6375875000000003,
+    'iteration': 229320,
+    'acc_estimate': 0.5920940170940171
+  },
+  {
+    'macro_pop': 989,
+    'micro_pop': 1000,
+    'epoch': 50,
+    'time': 24.032349773248036,
+    'ave_gen': 0.6293999999999992,
+    'iteration': 234000,
+    'acc_estimate': 0.5852564102564103
+  },
+  {
+    'macro_pop': 993,
+    'micro_pop': 1000,
+    'epoch': 51,
+    'time': 24.452995550632476,
+    'ave_gen': 0.6264624999999987,
+    'iteration': 238680,
+    'acc_estimate': 0.5925213675213675
+  },
+  {
+    'macro_pop': 990,
+    'micro_pop': 1000,
+    'epoch': 52,
+    'time': 24.88664267063141,
+    'ave_gen': 0.6374375000000002,
+    'iteration': 243360,
+    'acc_estimate': 0.580982905982906
+  },
+  {
+    'macro_pop': 989,
+    'micro_pop': 1000,
+    'epoch': 53,
+    'time': 25.289878646532696,
+    'ave_gen': 0.6237125,
+    'iteration': 248040,
+    'acc_estimate': 0.5897435897435898
+  },
+  {
+    'macro_pop': 992,
+    'micro_pop': 1000,
+    'epoch': 54,
+    'time': 25.98795819679896,
+    'ave_gen': 0.6291624999999998,
+    'iteration': 252720,
+    'acc_estimate': 0.5920940170940171
+  },
+  {
+    'macro_pop': 990,
+    'micro_pop': 1000,
+    'epoch': 55,
+    'time': 26.456400287151336,
+    'ave_gen': 0.6224624999999994,
+    'iteration': 257400,
+    'acc_estimate': 0.5918803418803419
+  },
+  {
+    'macro_pop': 990,
+    'micro_pop': 1000,
+    'epoch': 56,
+    'time': 26.88119883139928,
+    'ave_gen': 0.6311125000000005,
+    'iteration': 262080,
+    'acc_estimate': 0.5850427350427351
+  },
+  {
+    'macro_pop': 996,
+    'micro_pop': 1000,
+    'epoch': 57,
+    'time': 27.31872924963633,
+    'ave_gen': 0.6289750000000007,
+    'iteration': 266760,
+    'acc_estimate': 0.5946581196581197
+  },
+  {
+    'macro_pop': 984,
+    'micro_pop': 1000,
+    'epoch': 58,
+    'time': 27.766547123591106,
+    'ave_gen': 0.6259499999999997,
+    'iteration': 271440,
+    'acc_estimate': 0.5775641025641025
+  },
+  {
+    'macro_pop': 982,
+    'micro_pop': 1000,
+    'epoch': 59,
+    'time': 28.199330043792724,
+    'ave_gen': 0.6294875000000003,
+    'iteration': 276120,
+    'acc_estimate': 0.5865384615384616
+  },
+  {
+    'macro_pop': 987,
+    'micro_pop': 1000,
+    'epoch': 60,
+    'time': 28.643617085615794,
+    'ave_gen': 0.6372999999999996,
+    'iteration': 280800,
+    'acc_estimate': 0.5850427350427351
+  },
+  {
+    'macro_pop': 983,
+    'micro_pop': 1000,
+    'epoch': 61,
+    'time': 29.12827932437261,
+    'ave_gen': 0.6362125000000001,
+    'iteration': 285480,
+    'acc_estimate': 0.5784188034188035
+  },
+  {
+    'macro_pop': 987,
+    'micro_pop': 1000,
+    'epoch': 62,
+    'time': 29.58984690507253,
+    'ave_gen': 0.6456000000000001,
+    'iteration': 290160,
+    'acc_estimate': 0.5814102564102565
+  },
+  {
+    'macro_pop': 992,
+    'micro_pop': 1000,
+    'epoch': 63,
+    'time': 30.00728927453359,
+    'ave_gen': 0.6390374999999994,
+    'iteration': 294840,
+    'acc_estimate': 0.5884615384615385
+  },
+  {
+    'macro_pop': 986,
+    'micro_pop': 1000,
+    'epoch': 64,
+    'time': 30.428372049331664,
+    'ave_gen': 0.6379374999999993,
+    'iteration': 299520,
+    'acc_estimate': 0.5754273504273504
+  },
+  {
+    'macro_pop': 989,
+    'micro_pop': 1000,
+    'epoch': 65,
+    'time': 31.07417223850886,
+    'ave_gen': 0.6277499999999998,
+    'iteration': 304200,
+    'acc_estimate': 0.5935897435897436
+  },
+  {
+    'macro_pop': 990,
+    'micro_pop': 1000,
+    'epoch': 66,
+    'time': 31.498625592390695,
+    'ave_gen': 0.6338625000000012,
+    'iteration': 308880,
+    'acc_estimate': 0.5888888888888889
+  },
+  {
+    'macro_pop': 998,
+    'micro_pop': 1000,
+    'epoch': 67,
+    'time': 31.936856790383658,
+    'ave_gen': 0.6452749999999997,
+    'iteration': 313560,
+    'acc_estimate': 0.5735042735042735
+  },
+  {
+    'macro_pop': 991,
+    'micro_pop': 1000,
+    'epoch': 68,
+    'time': 32.39747589031855,
+    'ave_gen': 0.6461500000000003,
+    'iteration': 318240,
+    'acc_estimate': 0.5993589743589743
+  },
+  {
+    'macro_pop': 989,
+    'micro_pop': 1000,
+    'epoch': 69,
+    'time': 32.83109590212504,
+    'ave_gen': 0.6336625000000004,
+    'iteration': 322920,
+    'acc_estimate': 0.5726495726495726
+  },
+  {
+    'macro_pop': 992,
+    'micro_pop': 1000,
+    'epoch': 70,
+    'time': 33.28903167247772,
+    'ave_gen': 0.6261375000000005,
+    'iteration': 327600,
+    'acc_estimate': 0.6072649572649572
+  },
+  {
+    'macro_pop': 992,
+    'micro_pop': 1000,
+    'epoch': 71,
+    'time': 33.69969015916188,
+    'ave_gen': 0.624324999999999,
+    'iteration': 332280,
+    'acc_estimate': 0.6017094017094017
+  },
+  {
+    'macro_pop': 995,
+    'micro_pop': 1000,
+    'epoch': 72,
+    'time': 34.20714974403381,
+    'ave_gen': 0.6355625000000008,
+    'iteration': 336960,
+    'acc_estimate': 0.5987179487179487
+  },
+  {
+    'macro_pop': 989,
+    'micro_pop': 1000,
+    'epoch': 73,
+    'time': 34.61504385471344,
+    'ave_gen': 0.6244875000000003,
+    'iteration': 341640,
+    'acc_estimate': 0.586965811965812
+  },
+  {
+    'macro_pop': 989,
+    'micro_pop': 1000,
+    'epoch': 74,
+    'time': 35.017509841918944,
+    'ave_gen': 0.6295500000000003,
+    'iteration': 346320,
+    'acc_estimate': 0.601068376068376
+  },
+  {
+    'macro_pop': 984,
+    'micro_pop': 1000,
+    'epoch': 75,
+    'time': 35.68300471305847,
+    'ave_gen': 0.6317125000000005,
+    'iteration': 351000,
+    'acc_estimate': 0.5980769230769231
+  },
+  {
+    'macro_pop': 997,
+    'micro_pop': 1000,
+    'epoch': 76,
+    'time': 36.13395472367605,
+    'ave_gen': 0.6295124999999997,
+    'iteration': 355680,
+    'acc_estimate': 0.5871794871794872
+  },
+  {
+    'macro_pop': 990,
+    'micro_pop': 1000,
+    'epoch': 77,
+    'time': 36.556838329633074,
+    'ave_gen': 0.6192125000000004,
+    'iteration': 360360,
+    'acc_estimate': 0.5779914529914529
+  },
+  {
+    'macro_pop': 990,
+    'micro_pop': 1000,
+    'epoch': 78,
+    'time': 36.95676896969477,
+    'ave_gen': 0.6297750000000005,
+    'iteration': 365040,
+    'acc_estimate': 0.572008547008547
+  },
+  {
+    'macro_pop': 984,
+    'micro_pop': 1000,
+    'epoch': 79,
+    'time': 37.38929399649302,
+    'ave_gen': 0.6237374999999995,
+    'iteration': 369720,
+    'acc_estimate': 0.5846153846153846
+  },
+  {
+    'macro_pop': 991,
+    'micro_pop': 1000,
+    'epoch': 80,
+    'time': 37.764512888590495,
+    'ave_gen': 0.6175624999999999,
+    'iteration': 374400,
+    'acc_estimate': 0.5835470085470086
+  },
+  {
+    'macro_pop': 989,
+    'micro_pop': 1000,
+    'epoch': 81,
+    'time': 38.212577585379286,
+    'ave_gen': 0.6336625000000002,
+    'iteration': 379080,
+    'acc_estimate': 0.5974358974358974
+  },
+  {
+    'macro_pop': 992,
+    'micro_pop': 1000,
+    'epoch': 82,
+    'time': 38.606696752707165,
+    'ave_gen': 0.6400375000000007,
+    'iteration': 383760,
+    'acc_estimate': 0.6002136752136752
+  },
+  {
+    'macro_pop': 990,
+    'micro_pop': 1000,
+    'epoch': 83,
+    'time': 39.01094019810359,
+    'ave_gen': 0.6288874999999999,
+    'iteration': 388440,
+    'acc_estimate': 0.5944444444444444
+  },
+  {
+    'macro_pop': 990,
+    'micro_pop': 1000,
+    'epoch': 84,
+    'time': 39.45347322225571,
+    'ave_gen': 0.6385250000000005,
+    'iteration': 393120,
+    'acc_estimate': 0.5863247863247864
+  },
+  {
+    'macro_pop': 992,
+    'micro_pop': 1000,
+    'epoch': 85,
+    'time': 39.8639164129893,
+    'ave_gen': 0.6221624999999997,
+    'iteration': 397800,
+    'acc_estimate': 0.6123931623931624
+  },
+  {
+    'macro_pop': 983,
+    'micro_pop': 1000,
+    'epoch': 86,
+    'time': 40.61102077960968,
+    'ave_gen': 0.6326124999999991,
+    'iteration': 402480,
+    'acc_estimate': 0.589957264957265
+  },
+  {
+    'macro_pop': 991,
+    'micro_pop': 1000,
+    'epoch': 87,
+    'time': 41.02472500801086,
+    'ave_gen': 0.6339375000000007,
+    'iteration': 407160,
+    'acc_estimate': 0.6014957264957265
+  },
+  {
+    'macro_pop': 988,
+    'micro_pop': 1000,
+    'epoch': 88,
+    'time': 41.42134289344152,
+    'ave_gen': 0.6384624999999992,
+    'iteration': 411840,
+    'acc_estimate': 0.588034188034188
+  },
+  {
+    'macro_pop': 991,
+    'micro_pop': 1000,
+    'epoch': 89,
+    'time': 41.847454436620076,
+    'ave_gen': 0.6356375000000003,
+    'iteration': 416520,
+    'acc_estimate': 0.5974358974358974
+  },
+  {
+    'macro_pop': 994,
+    'micro_pop': 1000,
+    'epoch': 90,
+    'time': 42.30003632307053,
+    'ave_gen': 0.6437499999999984,
+    'iteration': 421200,
+    'acc_estimate': 0.6025641025641025
+  },
+  {
+    'macro_pop': 990,
+    'micro_pop': 1000,
+    'epoch': 91,
+    'time': 42.719171583652496,
+    'ave_gen': 0.6372374999999996,
+    'iteration': 425880,
+    'acc_estimate': 0.5972222222222222
+  },
+  {
+    'macro_pop': 991,
+    'micro_pop': 1000,
+    'epoch': 92,
+    'time': 43.185504376888275,
+    'ave_gen': 0.6286250000000004,
+    'iteration': 430560,
+    'acc_estimate': 0.5965811965811966
+  },
+  {
+    'macro_pop': 988,
+    'micro_pop': 1000,
+    'epoch': 93,
+    'time': 43.651154053211215,
+    'ave_gen': 0.6482374999999997,
+    'iteration': 435240,
+    'acc_estimate': 0.6085470085470085
+  },
+  {
+    'macro_pop': 984,
+    'micro_pop': 1000,
+    'epoch': 94,
+    'time': 44.08015366792679,
+    'ave_gen': 0.6541874999999994,
+    'iteration': 439920,
+    'acc_estimate': 0.5957264957264957
+  },
+  {
+    'macro_pop': 992,
+    'micro_pop': 1000,
+    'epoch': 95,
+    'time': 44.53073766628901,
+    'ave_gen': 0.6422249999999996,
+    'iteration': 444600,
+    'acc_estimate': 0.5886752136752137
+  },
+  {
+    'macro_pop': 988,
+    'micro_pop': 1000,
+    'epoch': 96,
+    'time': 45.064209636052446,
+    'ave_gen': 0.6360500000000007,
+    'iteration': 449280,
+    'acc_estimate': 0.5959401709401709
+  },
+  {
+    'macro_pop': 983,
+    'micro_pop': 1000,
+    'epoch': 97,
+    'time': 45.46453862190246,
+    'ave_gen': 0.635362500000001,
+    'iteration': 453960,
+    'acc_estimate': 0.5871794871794872
+  },
+  {
+    'macro_pop': 995,
+    'micro_pop': 1000,
+    'epoch': 98,
+    'time': 45.90894099473953,
+    'ave_gen': 0.6450625,
+    'iteration': 458640,
+    'acc_estimate': 0.5927350427350427
+  },
+  {
+    'macro_pop': 991,
+    'micro_pop': 1000,
+    'epoch': 99,
+    'time': 46.316851981480916,
+    'ave_gen': 0.6378249999999993,
+    'iteration': 463320,
+    'acc_estimate': 0.6008547008547008
+  },
+  {
+    'macro_pop': 992,
+    'micro_pop': 1000,
+    'epoch': 100,
+    'time': 46.72308931350708,
+    'ave_gen': 0.6311000000000003,
+    'iteration': 468000,
+    'acc_estimate': 0.6002136752136752
+  },
+  {
+    'macro_pop': 991,
+    'micro_pop': 1000,
+    'epoch': 101,
+    'time': 47.10586694876353,
+    'ave_gen': 0.6337124999999997,
+    'iteration': 472680,
+    'acc_estimate': 0.5762820512820512
+  },
+  {
+    'macro_pop': 992,
+    'micro_pop': 1000,
+    'epoch': 102,
+    'time': 47.501674930254616,
+    'ave_gen': 0.6269125000000002,
+    'iteration': 477360,
+    'acc_estimate': 0.5888888888888889
+  },
+  {
+    'macro_pop': 994,
+    'micro_pop': 1000,
+    'epoch': 103,
+    'time': 47.894968914985654,
+    'ave_gen': 0.6362374999999991,
+    'iteration': 482040,
+    'acc_estimate': 0.5942307692307692
+  },
+  {
+    'macro_pop': 994,
+    'micro_pop': 1000,
+    'epoch': 104,
+    'time': 48.30679675340652,
+    'ave_gen': 0.6390124999999991,
+    'iteration': 486720,
+    'acc_estimate': 0.6008547008547008
+  },
+  {
+    'macro_pop': 997,
+    'micro_pop': 1000,
+    'epoch': 105,
+    'time': 48.683536108334856,
+    'ave_gen': 0.637499999999999,
+    'iteration': 491400,
+    'acc_estimate': 0.5852564102564103
+  },
+  {
+    'macro_pop': 990,
+    'micro_pop': 1000,
+    'epoch': 106,
+    'time': 49.09842072327932,
+    'ave_gen': 0.6407875000000005,
+    'iteration': 496080,
+    'acc_estimate': 0.6014957264957265
+  }
+]
