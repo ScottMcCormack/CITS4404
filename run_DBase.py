@@ -15,10 +15,10 @@ if __name__ == "__main__":
     helpstr = """Failed attempt to run e-LCS.  Please ensure that a configuration file giving all run parameters has been specified."""
 
     # Specify the name and file path for the configuration file.
-    config_txt = os.path.join('config', 'DBase_config.yaml')
+    config_txt = os.path.join('config', 'DBASE_config.yaml')
 
     # Obtain all run parameters from the configuration file and store them in the 'Constants' module.
-    dataset_path = os.path.join('data', 'eLCS')
+    dataset_path = os.path.join('data', 'DCASE')
     cons.setConstants(config_txt, dataset_path=dataset_path)
 
     # Initialize the 'Timer' module which tracks the run time of algorithm and it's different components.
@@ -32,4 +32,9 @@ if __name__ == "__main__":
     cons.parseIterations()  # Identify the maximum number of learning iterations as well as evaluation checkpoints.
 
     # Run the e-LCS algorithm.
-    Algorithm()
+    eLCS = Algorithm()
+
+    # Get the runtime params
+    runtimeParams = eLCS.getRuntimeParams()
+
+    print(runtimeParams)
