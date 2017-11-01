@@ -1,0 +1,94 @@
+{
+  "data": [
+    {
+      "epoch": 1,
+      "iteration": 4680,
+      "macro_pop": 1000,
+      "micro_pop": 1000,
+      "acc_estimate": 0.676923076923077,
+      "ave_gen": 0.5131375,
+      "time": 1.2094486554463704
+    },
+    {
+      "epoch": 2,
+      "iteration": 9360,
+      "macro_pop": 1000,
+      "micro_pop": 1000,
+      "acc_estimate": 0.6852564102564103,
+      "ave_gen": 0.5142500000000003,
+      "time": 3.080315899848938
+    },
+    {
+      "epoch": 3,
+      "iteration": 14040,
+      "macro_pop": 1000,
+      "micro_pop": 1000,
+      "acc_estimate": 0.6856837606837607,
+      "ave_gen": 0.5059062499999997,
+      "time": 5.044036897023519
+    },
+    {
+      "epoch": 4,
+      "iteration": 18720,
+      "macro_pop": 1000,
+      "micro_pop": 1000,
+      "acc_estimate": 0.6726495726495727,
+      "ave_gen": 0.5101531250000004,
+      "time": 6.1842003981272375
+    },
+    {
+      "epoch": 5,
+      "iteration": 23400,
+      "macro_pop": 1000,
+      "micro_pop": 1000,
+      "acc_estimate": 0.6786324786324787,
+      "ave_gen": 0.5093250000000008,
+      "time": 8.113722614447276
+    },
+    {
+      "epoch": 6,
+      "iteration": 28080,
+      "macro_pop": 1000,
+      "micro_pop": 1000,
+      "acc_estimate": 0.6873931623931624,
+      "ave_gen": 0.5094374999999995,
+      "time": 9.264791174729664
+    },
+    {
+      "epoch": 7,
+      "iteration": 32760,
+      "macro_pop": 1000,
+      "micro_pop": 1000,
+      "acc_estimate": 0.6844017094017094,
+      "ave_gen": 0.5135906249999994,
+      "time": 11.436705919106801
+    },
+    {
+      "epoch": 8,
+      "iteration": 37440,
+      "macro_pop": 1000,
+      "micro_pop": 1000,
+      "acc_estimate": 0.6848290598290598,
+      "ave_gen": 0.5116906250000005,
+      "time": 12.668413519859314
+    },
+    {
+      "epoch": 9,
+      "iteration": 42120,
+      "macro_pop": 1000,
+      "micro_pop": 1000,
+      "acc_estimate": 0.6897435897435897,
+      "ave_gen": 0.5107875000000005,
+      "time": 14.876853346824646
+    },
+    {
+      "epoch": 10,
+      "iteration": 46800,
+      "macro_pop": 1000,
+      "micro_pop": 1000,
+      "acc_estimate": 0.677991452991453,
+      "ave_gen": 0.511328125,
+      "time": 16.08841460943222
+    }
+  ]
+}
