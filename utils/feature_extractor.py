@@ -3,12 +3,12 @@ import pickle
 import numpy as np
 import re
 
-# run this script with no arguments in the folder with all the cpickle files.
-# will create a file called data.txt if it doesn't exist already, otherwise will overwrite it
+data_dir = os.path.join('..', 'data', 'DCASE') # Parent directory containing '*.cpickle' files
+meta_path = os.path.join(data_dir, 'meta.txt') # Path to the 'meta.txt' file
 
-data_dir = os.path.join('..', 'data', 'DCASE')
-meta_path = os.path.join(data_dir, 'meta.txt')
-dirs_to_eval = ['evaluator', 'feature_extractor']
+# Runtime params
+num_segments = 4
+
 
 # Load the meta file and parse the file
 files = {}
@@ -19,10 +19,13 @@ with open(meta_path, 'r') as metaFile:
         clss = line[1]
         files[name] = clss
 
-output = '' # Output to be passed to the
+training_output = '' # Output for the training data
+testing_output = ''
+testing_to_training_ratio = 1
 count = 0 # Count the number of processed cpickle files
 
-# Walk through the parent directory and load all the .cpickle files that are found
+# 1.  Walk through the parent directory
+# 2.  Load all the .cpickle files that are found
 for dirName, subdirList, fileList in os.walk(data_dir):
     for filename in fileList:
         if filename.endswith('.cpickle'):
@@ -31,16 +34,20 @@ for dirName, subdirList, fileList in os.walk(data_dir):
             pickle_data = pickle.load(open(os.path.join(dirName, filename), 'rb'))
             feat_data = np.array(pickle_data['feat'][0])
 
+            # Create features by splitting and taking the mean and std
             instanceFeatures = ''
             for i in feat_data.transpose():
-                for j in np.array_split(i, 4):
+                for j in np.array_split(i, num_segments):
                     instanceFeatures += str(np.mean(j)) + '\t'
                     instanceFeatures += str(np.std(j)) + '\t'
 
-            output += instanceFeatures + files[nameId] + '\n'
+            # Add the output to either training or testing data
+            training_output += instanceFeatures + files[nameId] + '\n'
+
+# 3.  Subdivide the cpickle files
 
 # Write the file out to the parent folder where it sourced the cpickle files from
 filename_out = os.path.join(data_dir, 'data_{0}_all.txt'.format(count))
 
 with open(filename_out, 'w') as saveFile:
-    saveFile.write(output)
+    saveFile.write(training_output)
