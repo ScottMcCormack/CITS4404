@@ -1,0 +1,177 @@
+\begin{sphinxtheindex}
+\def\bigletter#1{{\Large\sffamily#1}\nopagebreak\vspace{1mm}}
+
+  \bigletter A
+  \item addClassifierToPopulation() (eLCS.ClassifierSet.ClassifierSet method), \hyperpage{4}
+  \item Algorithm (class in eLCS.Algorithm), \hyperpage{1}
+
+  \indexspace
+  \bigletter B
+  \item buildMatch() (eLCS.Classifier.Classifier method), \hyperpage{2}
+
+  \indexspace
+  \bigletter C
+  \item characterizeAttributes() (eLCS.DataManagement.DataManagement method), \hyperpage{8}
+  \item characterizeDataset() (eLCS.DataManagement.DataManagement method), \hyperpage{8}
+  \item characterizePhenotype() (eLCS.DataManagement.DataManagement method), \hyperpage{8}
+  \item ClassAccuracy (class in eLCS.ClassAccuracy), \hyperpage{2}
+  \item Classifier (class in eLCS.Classifier), \hyperpage{2}
+  \item classifierCopy() (eLCS.Classifier.Classifier method), \hyperpage{2}
+  \item classifierCovering() (eLCS.Classifier.Classifier method), \hyperpage{2}
+  \item ClassifierSet (class in eLCS.ClassifierSet), \hyperpage{4}
+  \item clearSets() (eLCS.ClassifierSet.ClassifierSet method), \hyperpage{4}
+  \item compareDataset() (eLCS.DataManagement.DataManagement method), \hyperpage{8}
+  \item Constants (class in eLCS.Constants), \hyperpage{7}
+  \item continuousPhenotypeMutation() (eLCS.Classifier.Classifier method), \hyperpage{3}
+
+  \indexspace
+  \bigletter D
+  \item DataManagement (class in eLCS.DataManagement), \hyperpage{8}
+  \item deleteFromCorrectSet() (eLCS.ClassifierSet.ClassifierSet method), \hyperpage{4}
+  \item deleteFromMatchSet() (eLCS.ClassifierSet.ClassifierSet method), \hyperpage{4}
+  \item deleteFromPopulation() (eLCS.ClassifierSet.ClassifierSet method), \hyperpage{4}
+  \item deletion() (eLCS.ClassifierSet.ClassifierSet method), \hyperpage{4}
+  \item discretePhenotypeMutation() (eLCS.Classifier.Classifier method), \hyperpage{3}
+  \item discriminateAttributes() (eLCS.DataManagement.DataManagement method), \hyperpage{8}
+  \item discriminateClasses() (eLCS.DataManagement.DataManagement method), \hyperpage{9}
+  \item discriminatePhenotype() (eLCS.DataManagement.DataManagement method), \hyperpage{9}
+  \item doContPopEvaluation() (eLCS.Algorithm.Algorithm method), \hyperpage{1}
+  \item doCorrectSetSubsumption() (eLCS.ClassifierSet.ClassifierSet method), \hyperpage{5}
+  \item doPopEvaluation() (eLCS.Algorithm.Algorithm method), \hyperpage{1}
+
+  \indexspace
+  \bigletter E
+  \item eLCS (module), \hyperpage{12}
+  \item eLCS.Algorithm (module), \hyperpage{1}
+  \item eLCS.ClassAccuracy (module), \hyperpage{2}
+  \item eLCS.Classifier (module), \hyperpage{2}
+  \item eLCS.ClassifierSet (module), \hyperpage{4}
+  \item eLCS.Constants (module), \hyperpage{7}
+  \item eLCS.DataManagement (module), \hyperpage{8}
+  \item eLCS.OfflineEnvironment (module), \hyperpage{9}
+  \item eLCS.OutputFileManager (module), \hyperpage{10}
+  \item eLCS.Prediction (module), \hyperpage{11}
+  \item eLCS.Timer (module), \hyperpage{11}
+  \item equals() (eLCS.Classifier.Classifier method), \hyperpage{3}
+
+  \indexspace
+  \bigletter F
+  \item formatData() (eLCS.DataManagement.DataManagement method), \hyperpage{9}
+
+  \indexspace
+  \bigletter G
+  \item getDecision() (eLCS.Prediction.Prediction method), \hyperpage{11}
+  \item getDelProp() (eLCS.Classifier.Classifier method), \hyperpage{3}
+  \item getFitnessSum() (eLCS.ClassifierSet.ClassifierSet method), \hyperpage{5}
+  \item getFitnessSum() (eLCS.Prediction.Prediction method), \hyperpage{11}
+  \item getIdenticalClassifier() (eLCS.ClassifierSet.ClassifierSet method), \hyperpage{5}
+  \item getIterStampAverage() (eLCS.ClassifierSet.ClassifierSet method), \hyperpage{5}
+  \item getPopFitnessSum() (eLCS.ClassifierSet.ClassifierSet method), \hyperpage{5}
+  \item getPopTrack() (eLCS.ClassifierSet.ClassifierSet method), \hyperpage{5}
+  \item getRuntimeParams() (eLCS.Algorithm.Algorithm method), \hyperpage{1}
+  \item getTestInstance() (eLCS.OfflineEnvironment.OfflineEnvironment method), \hyperpage{9}
+  \item getTrainInstance() (eLCS.OfflineEnvironment.OfflineEnvironment method), \hyperpage{9}
+
+  \indexspace
+  \bigletter I
+  \item insertDiscoveredClassifiers() (eLCS.ClassifierSet.ClassifierSet method), \hyperpage{5}
+  \item isMoreGeneral() (eLCS.Classifier.Classifier method), \hyperpage{3}
+  \item isSubsumer() (eLCS.Classifier.Classifier method), \hyperpage{3}
+
+  \indexspace
+  \bigletter L
+  \item loadData() (eLCS.DataManagement.DataManagement method), \hyperpage{9}
+  \item loadParameters() (eLCS.Constants.Constants method), \hyperpage{7}
+
+  \indexspace
+  \bigletter M
+  \item makeCorrectSet() (eLCS.ClassifierSet.ClassifierSet method), \hyperpage{5}
+  \item makeEvalMatchSet() (eLCS.ClassifierSet.ClassifierSet method), \hyperpage{6}
+  \item makeMatchSet() (eLCS.ClassifierSet.ClassifierSet method), \hyperpage{6}
+  \item makePop() (eLCS.ClassifierSet.ClassifierSet method), \hyperpage{6}
+  \item match() (eLCS.Classifier.Classifier method), \hyperpage{3}
+  \item Mutation() (eLCS.Classifier.Classifier method), \hyperpage{2}
+
+  \indexspace
+  \bigletter N
+  \item newInstance() (eLCS.OfflineEnvironment.OfflineEnvironment method), \hyperpage{9}
+
+  \indexspace
+  \bigletter O
+  \item OfflineEnvironment (class in eLCS.OfflineEnvironment), \hyperpage{9}
+  \item OutputFileManager (class in eLCS.OutputFileManager), \hyperpage{10}
+
+  \indexspace
+  \bigletter P
+  \item parseIterations() (eLCS.Constants.Constants method), \hyperpage{8}
+  \item phenotypeCrossover() (eLCS.Classifier.Classifier method), \hyperpage{3}
+  \item plotResult() (eLCS.Algorithm.Algorithm method), \hyperpage{1}
+  \item populationReboot() (eLCS.Algorithm.Algorithm method), \hyperpage{1}
+  \item Prediction (class in eLCS.Prediction), \hyperpage{11}
+  \item printClassifier() (eLCS.Classifier.Classifier method), \hyperpage{3}
+
+  \indexspace
+  \bigletter R
+  \item rebootClassifier() (eLCS.Classifier.Classifier method), \hyperpage{3}
+  \item rebootPop() (eLCS.ClassifierSet.ClassifierSet method), \hyperpage{6}
+  \item referenceEnv() (eLCS.Constants.Constants method), \hyperpage{8}
+  \item referenceTimer() (eLCS.Constants.Constants method), \hyperpage{8}
+  \item removeMacroClassifier() (eLCS.ClassifierSet.ClassifierSet method), \hyperpage{6}
+  \item reportClassAccuracy() (eLCS.ClassAccuracy.ClassAccuracy method), \hyperpage{2}
+  \item reportTimes() (eLCS.Timer.Timer method), \hyperpage{11}
+  \item resetDataRef() (eLCS.OfflineEnvironment.OfflineEnvironment method), \hyperpage{9}
+  \item returnGlobalTimer() (eLCS.Timer.Timer method), \hyperpage{11}
+  \item run\_eLCS() (eLCS.Algorithm.Algorithm method), \hyperpage{2}
+  \item runAttGeneralitySum() (eLCS.ClassifierSet.ClassifierSet method), \hyperpage{6}
+  \item runGA() (eLCS.ClassifierSet.ClassifierSet method), \hyperpage{6}
+  \item runIteration() (eLCS.Algorithm.Algorithm method), \hyperpage{1}
+  \item runPopAveEval() (eLCS.ClassifierSet.ClassifierSet method), \hyperpage{6}
+
+  \indexspace
+  \bigletter S
+  \item selectClassifierRW() (eLCS.ClassifierSet.ClassifierSet method), \hyperpage{6}
+  \item selectClassifierT() (eLCS.ClassifierSet.ClassifierSet method), \hyperpage{7}
+  \item setAccuracy() (eLCS.Classifier.Classifier method), \hyperpage{3}
+  \item setConstants() (eLCS.Constants.Constants method), \hyperpage{8}
+  \item setFitness() (eLCS.Classifier.Classifier method), \hyperpage{3}
+  \item setIterStamps() (eLCS.ClassifierSet.ClassifierSet method), \hyperpage{7}
+  \item setTimerRestart() (eLCS.Timer.Timer method), \hyperpage{11}
+  \item startEvaluationMode() (eLCS.OfflineEnvironment.OfflineEnvironment method), \hyperpage{10}
+  \item startTimeDeletion() (eLCS.Timer.Timer method), \hyperpage{11}
+  \item startTimeEvaluation() (eLCS.Timer.Timer method), \hyperpage{11}
+  \item startTimeMatching() (eLCS.Timer.Timer method), \hyperpage{11}
+  \item startTimeSelection() (eLCS.Timer.Timer method), \hyperpage{12}
+  \item startTimeSubsumption() (eLCS.Timer.Timer method), \hyperpage{12}
+  \item stopEvaluationMode() (eLCS.OfflineEnvironment.OfflineEnvironment method), \hyperpage{10}
+  \item stopTimeDeletion() (eLCS.Timer.Timer method), \hyperpage{12}
+  \item stopTimeEvaluation() (eLCS.Timer.Timer method), \hyperpage{12}
+  \item stopTimeMatching() (eLCS.Timer.Timer method), \hyperpage{12}
+  \item stopTimeSelection() (eLCS.Timer.Timer method), \hyperpage{12}
+  \item stopTimeSubsumption() (eLCS.Timer.Timer method), \hyperpage{12}
+  \item subsumeClassifier() (eLCS.ClassifierSet.ClassifierSet method), \hyperpage{7}
+  \item subsumeClassifier2() (eLCS.ClassifierSet.ClassifierSet method), \hyperpage{7}
+  \item subsumes() (eLCS.Classifier.Classifier method), \hyperpage{3}
+
+  \indexspace
+  \bigletter T
+  \item Timer (class in eLCS.Timer), \hyperpage{11}
+
+  \indexspace
+  \bigletter U
+  \item uniformCrossover() (eLCS.Classifier.Classifier method), \hyperpage{3}
+  \item updateAccuracy() (eLCS.ClassAccuracy.ClassAccuracy method), \hyperpage{2}
+  \item updateAccuracy() (eLCS.Classifier.Classifier method), \hyperpage{3}
+  \item updateCorrect() (eLCS.Classifier.Classifier method), \hyperpage{3}
+  \item updateExperience() (eLCS.Classifier.Classifier method), \hyperpage{3}
+  \item updateFitness() (eLCS.Classifier.Classifier method), \hyperpage{4}
+  \item updateMatchSetSize() (eLCS.Classifier.Classifier method), \hyperpage{4}
+  \item updateNumerosity() (eLCS.Classifier.Classifier method), \hyperpage{4}
+  \item updateSets() (eLCS.ClassifierSet.ClassifierSet method), \hyperpage{7}
+  \item updateTimeStamp() (eLCS.Classifier.Classifier method), \hyperpage{4}
+
+  \indexspace
+  \bigletter W
+  \item writePop() (eLCS.OutputFileManager.OutputFileManager method), \hyperpage{10}
+  \item writePopStats() (eLCS.OutputFileManager.OutputFileManager method), \hyperpage{10}
+
+\end{sphinxtheindex}

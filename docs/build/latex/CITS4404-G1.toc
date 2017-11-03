@@ -1,0 +1,17 @@
+\select@language {english}
+\contentsline {chapter}{\numberline {1}eLCS package}{1}{chapter.1}
+\contentsline {section}{\numberline {1.1}Submodules}{1}{section.1.1}
+\contentsline {section}{\numberline {1.2}eLCS.Algorithm module}{1}{section.1.2}
+\contentsline {section}{\numberline {1.3}eLCS.ClassAccuracy module}{2}{section.1.3}
+\contentsline {section}{\numberline {1.4}eLCS.Classifier module}{2}{section.1.4}
+\contentsline {section}{\numberline {1.5}eLCS.ClassifierSet module}{4}{section.1.5}
+\contentsline {section}{\numberline {1.6}eLCS.Constants module}{7}{section.1.6}
+\contentsline {section}{\numberline {1.7}eLCS.DataManagement module}{8}{section.1.7}
+\contentsline {section}{\numberline {1.8}eLCS.OfflineEnvironment module}{9}{section.1.8}
+\contentsline {section}{\numberline {1.9}eLCS.OutputFileManager module}{10}{section.1.9}
+\contentsline {section}{\numberline {1.10}eLCS.Prediction module}{11}{section.1.10}
+\contentsline {section}{\numberline {1.11}eLCS.Timer module}{11}{section.1.11}
+\contentsline {section}{\numberline {1.12}Module contents}{12}{section.1.12}
+\contentsline {chapter}{\numberline {2}Indices and tables}{13}{chapter.2}
+\contentsline {chapter}{Python Module Index}{15}{section*.112}
+\contentsline {chapter}{Index}{17}{section*.113}
