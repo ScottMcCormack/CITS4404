@@ -47,8 +47,8 @@
 <div class="section" id="module-eLCS.Algorithm">
 <span id="elcs-algorithm-module"></span><h2>eLCS.Algorithm module<a class="headerlink" href="#module-eLCS.Algorithm" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="eLCS.Algorithm.eLCS">
-<em class="property">class </em><code class="descclassname">eLCS.Algorithm.</code><code class="descname">eLCS</code><a class="reference internal" href="_modules/eLCS/Algorithm.html#eLCS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Algorithm.eLCS" title="Permalink to this definition">¶</a></dt>
+<dt id="eLCS.Algorithm.Algorithm">
+<em class="property">class </em><code class="descclassname">eLCS.Algorithm.</code><code class="descname">Algorithm</code><a class="reference internal" href="_modules/eLCS/Algorithm.html#Algorithm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Algorithm.Algorithm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>The major controlling module of eLCS.</p>
 <p>Includes the major run loop which controls learning over a specified number of iterations.
@@ -58,8 +58,8 @@ evaluations of the eLCS rule population is performed.</p>
 1.  Do a Population reboot using an existing saved rule population, or
 2.  Build the Population from scratch from given data</p>
 <dl class="method">
-<dt id="eLCS.Algorithm.eLCS.doContPopEvaluation">
-<code class="descname">doContPopEvaluation</code><span class="sig-paren">(</span><em>isTrain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Algorithm.html#eLCS.doContPopEvaluation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Algorithm.eLCS.doContPopEvaluation" title="Permalink to this definition">¶</a></dt>
+<dt id="eLCS.Algorithm.Algorithm.doContPopEvaluation">
+<code class="descname">doContPopEvaluation</code><span class="sig-paren">(</span><em>isTrain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Algorithm.html#Algorithm.doContPopEvaluation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Algorithm.Algorithm.doContPopEvaluation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs evaluation of population via the copied environment.</p>
 <p>Specifically developed for continuous phenotype evaulation. The population is maintained unchanging
 throughout the evaluation.  Works on both training and testing data.</p>
@@ -76,8 +76,8 @@ throughout the evaluation.  Works on both training and testing data.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="eLCS.Algorithm.eLCS.doPopEvaluation">
-<code class="descname">doPopEvaluation</code><span class="sig-paren">(</span><em>isTrain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Algorithm.html#eLCS.doPopEvaluation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Algorithm.eLCS.doPopEvaluation" title="Permalink to this definition">¶</a></dt>
+<dt id="eLCS.Algorithm.Algorithm.doPopEvaluation">
+<code class="descname">doPopEvaluation</code><span class="sig-paren">(</span><em>isTrain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Algorithm.html#Algorithm.doPopEvaluation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Algorithm.Algorithm.doPopEvaluation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs a complete evaluation of the current rule population.</p>
 <p>The population is unchanged throughout this evaluation. Works on both training and testing data.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -93,14 +93,25 @@ throughout the evaluation.  Works on both training and testing data.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="eLCS.Algorithm.eLCS.populationReboot">
-<code class="descname">populationReboot</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Algorithm.html#eLCS.populationReboot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Algorithm.eLCS.populationReboot" title="Permalink to this definition">¶</a></dt>
+<dt id="eLCS.Algorithm.Algorithm.getRuntimeParams">
+<code class="descname">getRuntimeParams</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Algorithm.html#Algorithm.getRuntimeParams"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Algorithm.Algorithm.getRuntimeParams" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Algorithm.Algorithm.plotResult">
+<code class="descname">plotResult</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Algorithm.html#Algorithm.plotResult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Algorithm.Algorithm.plotResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the runtime params from the execution of the LCS</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eLCS.Algorithm.Algorithm.populationReboot">
+<code class="descname">populationReboot</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Algorithm.html#Algorithm.populationReboot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Algorithm.Algorithm.populationReboot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Manages the reformation of a previously saved eLCS classifier population</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="eLCS.Algorithm.eLCS.runIteration">
-<code class="descname">runIteration</code><span class="sig-paren">(</span><em>state_phenotype</em>, <em>exploreIter</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Algorithm.html#eLCS.runIteration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Algorithm.eLCS.runIteration" title="Permalink to this definition">¶</a></dt>
+<dt id="eLCS.Algorithm.Algorithm.runIteration">
+<code class="descname">runIteration</code><span class="sig-paren">(</span><em>state_phenotype</em>, <em>exploreIter</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Algorithm.html#Algorithm.runIteration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Algorithm.Algorithm.runIteration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run a single eLCS learning iteration.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -120,8 +131,8 @@ throughout the evaluation.  Works on both training and testing data.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="eLCS.Algorithm.eLCS.run_eLCS">
-<code class="descname">run_eLCS</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Algorithm.html#eLCS.run_eLCS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Algorithm.eLCS.run_eLCS" title="Permalink to this definition">¶</a></dt>
+<dt id="eLCS.Algorithm.Algorithm.run_eLCS">
+<code class="descname">run_eLCS</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Algorithm.html#Algorithm.run_eLCS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Algorithm.Algorithm.run_eLCS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs eLCS algorithm, runs by default after the class has been initialised</p>
 </dd></dl>
 
@@ -498,7 +509,7 @@ and subsumes all classifiers that are more specific than the selected one.</p>
 <dl class="method">
 <dt id="eLCS.ClassifierSet.ClassifierSet.getPopTrack">
 <code class="descname">getPopTrack</code><span class="sig-paren">(</span><em>accuracy</em>, <em>exploreIter</em>, <em>trackingFrequency</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/ClassifierSet.html#ClassifierSet.getPopTrack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.ClassifierSet.ClassifierSet.getPopTrack" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a formated output string to be printed to the Learn Track output file.</p>
+<dd><p>Returns a formatted output string to be printed to the Learn Track output file.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -847,13 +858,17 @@ possibility that there exists an identical classifier.</p>
 
 <dl class="method">
 <dt id="eLCS.Constants.Constants.setConstants">
-<code class="descname">setConstants</code><span class="sig-paren">(</span><em>config_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Constants.html#Constants.setConstants"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Constants.Constants.setConstants" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setConstants</code><span class="sig-paren">(</span><em>config_file</em>, <em>dataset_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eLCS/Constants.html#Constants.setConstants"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eLCS.Constants.Constants.setConstants" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse the configuration file and save them as global constants</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config_file</strong> (<em>str</em>) – Path to the configuration yaml file</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>config_file</strong> (<em>str</em>) – Path to the configuration yaml file</li>
+<li><strong>dataset_path</strong> (<em>str</em>) – Directory to the datasets</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -977,7 +992,7 @@ handles missing data, and finally formats the data so that it may be convenientl
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rawData</strong> (<em>list</em>) – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rawData</strong> (<em>list</em>) – The raw data file loaded from</td>
 </tr>
 </tbody>
 </table>
@@ -1321,6 +1336,9 @@ Also set up to try and handle prediction ties if possible.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-eLCS">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-eLCS" title="Permalink to this headline">¶</a></h2>
+</div>
 </div>
 
 
@@ -1353,6 +1371,7 @@ Also set up to try and handle prediction ties if possible.</p>
 <li class="toctree-l2"><a class="reference internal" href="#module-eLCS.OutputFileManager">eLCS.OutputFileManager module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-eLCS.Prediction">eLCS.Prediction module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-eLCS.Timer">eLCS.Timer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-eLCS">Module contents</a></li>
 </ul>
 </li>
 </ul>

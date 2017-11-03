@@ -49,7 +49,7 @@
 <span class="kn">import</span> <span class="nn">math</span>
 
 
-<div class="viewcode-block" id="eLCS"><a class="viewcode-back" href="../../eLCS.html#eLCS.Algorithm.eLCS">[docs]</a><span class="k">class</span> <span class="nc">eLCS</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="Algorithm"><a class="viewcode-back" href="../../eLCS.html#eLCS.Algorithm.Algorithm">[docs]</a><span class="k">class</span> <span class="nc">Algorithm</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;The major controlling module of eLCS.</span>
 
 <span class="sd">    Includes the major run loop which controls learning over a specified number of iterations.</span>
@@ -98,7 +98,7 @@
         <span class="c1"># Run the eLCS algorithm</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">run_eLCS</span><span class="p">()</span>
 
-<div class="viewcode-block" id="eLCS.run_eLCS"><a class="viewcode-back" href="../../eLCS.html#eLCS.Algorithm.eLCS.run_eLCS">[docs]</a>    <span class="k">def</span> <span class="nf">run_eLCS</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Algorithm.run_eLCS"><a class="viewcode-back" href="../../eLCS.html#eLCS.Algorithm.Algorithm.run_eLCS">[docs]</a>    <span class="k">def</span> <span class="nf">run_eLCS</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Runs eLCS algorithm, runs by default after the class has been initialised&quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Learning Checkpoints: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">cons</span><span class="o">.</span><span class="n">learningCheckpoints</span><span class="p">))</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Maximum Iterations: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">cons</span><span class="o">.</span><span class="n">maxLearningIterations</span><span class="p">))</span>
@@ -121,8 +121,12 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="o">.</span><span class="n">runPopAveEval</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exploreIter</span><span class="p">)</span>
                 <span class="n">trackedAccuracy</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">correct</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span>
                     <span class="n">cons</span><span class="o">.</span><span class="n">trackingFrequency</span><span class="p">)</span>  <span class="c1"># Accuracy over the last &quot;trackingFrequency&quot; number of iterations.</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">learnTrackOut</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="o">.</span><span class="n">getPopTrack</span><span class="p">(</span><span class="n">trackedAccuracy</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">exploreIter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
-                                                                     <span class="n">cons</span><span class="o">.</span><span class="n">trackingFrequency</span><span class="p">))</span>  <span class="c1"># Report learning progress to standard out and tracking file.</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">learnTrackOut</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="o">.</span><span class="n">getPopTrack</span><span class="p">(</span>
+                        <span class="n">trackedAccuracy</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">exploreIter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">cons</span><span class="o">.</span><span class="n">trackingFrequency</span><span class="p">)</span>
+                <span class="p">)</span>  <span class="c1"># Report learning progress to standard out and tracking file.</span>
+
             <span class="n">cons</span><span class="o">.</span><span class="n">timer</span><span class="o">.</span><span class="n">stopTimeEvaluation</span><span class="p">()</span>
 
             <span class="c1"># CHECKPOINT - COMPLETE EVALUTATION OF POPULATION - strategy different for discrete vs continuous phenotypes</span>
@@ -174,7 +178,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">learnTrackOut</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;eLCS Run Complete&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="eLCS.runIteration"><a class="viewcode-back" href="../../eLCS.html#eLCS.Algorithm.eLCS.runIteration">[docs]</a>    <span class="k">def</span> <span class="nf">runIteration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_phenotype</span><span class="p">,</span> <span class="n">exploreIter</span><span class="p">):</span>
+<div class="viewcode-block" id="Algorithm.runIteration"><a class="viewcode-back" href="../../eLCS.html#eLCS.Algorithm.Algorithm.runIteration">[docs]</a>    <span class="k">def</span> <span class="nf">runIteration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_phenotype</span><span class="p">,</span> <span class="n">exploreIter</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Run a single eLCS learning iteration.</span>
 
 <span class="sd">        :param list state_phenotype: Listing consisting of the training state and training phenotype</span>
@@ -244,7 +248,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="o">.</span><span class="n">deletion</span><span class="p">(</span><span class="n">exploreIter</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="o">.</span><span class="n">clearSets</span><span class="p">()</span>  <span class="c1"># Clears the match and correct sets for the next learning iteration</span></div>
 
-<div class="viewcode-block" id="eLCS.doPopEvaluation"><a class="viewcode-back" href="../../eLCS.html#eLCS.Algorithm.eLCS.doPopEvaluation">[docs]</a>    <span class="k">def</span> <span class="nf">doPopEvaluation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">isTrain</span><span class="p">):</span>
+<div class="viewcode-block" id="Algorithm.doPopEvaluation"><a class="viewcode-back" href="../../eLCS.html#eLCS.Algorithm.Algorithm.doPopEvaluation">[docs]</a>    <span class="k">def</span> <span class="nf">doPopEvaluation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">isTrain</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Performs a complete evaluation of the current rule population.</span>
 
 <span class="sd">        The population is unchanged throughout this evaluation. Works on both training and testing data.</span>
@@ -345,7 +349,7 @@
         <span class="n">resultList</span> <span class="o">=</span> <span class="p">[</span><span class="n">adjustedBalancedAccuracy</span><span class="p">,</span> <span class="n">instanceCoverage</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">resultList</span></div>
 
-<div class="viewcode-block" id="eLCS.doContPopEvaluation"><a class="viewcode-back" href="../../eLCS.html#eLCS.Algorithm.eLCS.doContPopEvaluation">[docs]</a>    <span class="k">def</span> <span class="nf">doContPopEvaluation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">isTrain</span><span class="p">):</span>
+<div class="viewcode-block" id="Algorithm.doContPopEvaluation"><a class="viewcode-back" href="../../eLCS.html#eLCS.Algorithm.Algorithm.doContPopEvaluation">[docs]</a>    <span class="k">def</span> <span class="nf">doContPopEvaluation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">isTrain</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Performs evaluation of population via the copied environment.</span>
 
 <span class="sd">        Specifically developed for continuous phenotype evaulation. The population is maintained unchanging</span>
@@ -407,7 +411,7 @@
         <span class="n">resultList</span> <span class="o">=</span> <span class="p">[</span><span class="n">adjustedAccuracyEstimate</span><span class="p">,</span> <span class="n">instanceCoverage</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">resultList</span></div>
 
-<div class="viewcode-block" id="eLCS.populationReboot"><a class="viewcode-back" href="../../eLCS.html#eLCS.Algorithm.eLCS.populationReboot">[docs]</a>    <span class="k">def</span> <span class="nf">populationReboot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Algorithm.populationReboot"><a class="viewcode-back" href="../../eLCS.html#eLCS.Algorithm.Algorithm.populationReboot">[docs]</a>    <span class="k">def</span> <span class="nf">populationReboot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Manages the reformation of a previously saved eLCS classifier population&quot;&quot;&quot;</span>
 
         <span class="n">cons</span><span class="o">.</span><span class="n">timer</span><span class="o">.</span><span class="n">setTimerRestart</span><span class="p">(</span><span class="n">cons</span><span class="o">.</span><span class="n">popRebootPath</span><span class="p">)</span>  <span class="c1"># Rebuild timer objects</span>
@@ -455,7 +459,17 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">correct</span><span class="p">)):</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">correct</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">correct</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
+            <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Algorithm.getRuntimeParams"><a class="viewcode-back" href="../../eLCS.html#eLCS.Algorithm.Algorithm.getRuntimeParams">[docs]</a>    <span class="k">def</span> <span class="nf">getRuntimeParams</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="o">.</span><span class="n">runtimeParams</span></div>
+
+
+<div class="viewcode-block" id="Algorithm.plotResult"><a class="viewcode-back" href="../../eLCS.html#eLCS.Algorithm.Algorithm.plotResult">[docs]</a>    <span class="k">def</span> <span class="nf">plotResult</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Plot the runtime params from the execution of the LCS&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div></div>
+
+
 </pre></div>
 
           </div>

@@ -83,3 +83,12 @@ eLCS\.Timer module
     :members:
     :undoc-members:
     :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: eLCS
+    :members:
+    :undoc-members:
+    :show-inheritance:
